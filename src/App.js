@@ -1054,6 +1054,10 @@ function DiaryScreen({ user }) {
   const [draft, setDraft] = useState({ mood: "🌟", title: "", text: "", tag: "Consolación" });
   const [loadingEntries, setLoadingEntries] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [editingEntry, setEditingEntry] = useState(null); // entry being edited
+  const [editDraft, setEditDraft] = useState({});
+  const [savingEdit, setSavingEdit] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
 
   const moods = ["😔", "😐", "🙂", "😊", "🌊", "🙏", "🕊️", "🌟"];
   const tags = ["Consolación", "Discernimiento", "Acción de gracias", "Desolación"];
@@ -1082,6 +1086,26 @@ function DiaryScreen({ user }) {
     setSaving(false);
   }
 
+  async function saveEdit() {
+    if (!editDraft.title || !editDraft.text) return;
+    setSavingEdit(true);
+    const { error } = await supabase.from("diary_entries").update({
+      title: editDraft.title, text: editDraft.text, mood: editDraft.mood, tag: editDraft.tag,
+    }).eq("id", editingEntry.id).eq("user_id", user.id);
+    if (!error) {
+      setEntries(prev => prev.map(e => e.id === editingEntry.id ? { ...e, ...editDraft } : e));
+      setEditingEntry(null);
+    }
+    setSavingEdit(false);
+  }
+
+  async function deleteEntry(id) {
+    setDeletingId(id);
+    await supabase.from("diary_entries").delete().eq("id", id).eq("user_id", user.id);
+    setEntries(prev => prev.filter(e => e.id !== id));
+    setDeletingId(null);
+  }
+
   function formatDate(iso) {
     const d = new Date(iso);
     return d.toLocaleDateString("es-ES", { day: "numeric", month: "short" });
@@ -1089,6 +1113,41 @@ function DiaryScreen({ user }) {
 
   return (
     <div style={{ flex: 1, display: "flex", flexDirection: "column", background: gradients.diary }}>
+
+      {/* Modal editar entrada */}
+      {editingEntry && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: "flex-end" }}
+          onClick={() => setEditingEntry(null)}>
+          <div onClick={e => e.stopPropagation()} style={{ background: C.white, borderRadius: "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: 390, margin: "0 auto", maxHeight: "85vh", overflowY: "auto" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+              <p style={{ fontSize: 14, fontWeight: 700, color: C.blue, margin: 0, textTransform: "uppercase", letterSpacing: "0.1em" }}>Editar entrada</p>
+              <button onClick={() => setEditingEntry(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+            </div>
+
+            <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
+              {moods.map(m => (
+                <button key={m} onClick={() => setEditDraft(d => ({ ...d, mood: m }))} style={{ width: 36, height: 36, borderRadius: 10, border: "none", background: editDraft.mood === m ? `${C.blue}20` : `${C.mist}55`, fontSize: 18, cursor: "pointer", outline: editDraft.mood === m ? `2px solid ${C.blue}` : "none" }}>{m}</button>
+              ))}
+            </div>
+            <div style={{ display: "flex", gap: 6, marginBottom: 12, flexWrap: "wrap" }}>
+              {tags.map(t => (
+                <button key={t} onClick={() => setEditDraft(d => ({ ...d, tag: t }))} style={{ padding: "4px 10px", borderRadius: 100, border: "none", background: editDraft.tag === t ? `${tagColor[t]}30` : C.iceBlue, color: editDraft.tag === t ? tagColor[t] : C.slateLight, fontSize: 11, fontWeight: 600, cursor: "pointer" }}>{t}</button>
+              ))}
+            </div>
+            <input value={editDraft.title} onChange={e => setEditDraft(d => ({ ...d, title: e.target.value }))}
+              style={{ width: "100%", border: "none", outline: "none", borderBottom: `1.5px solid ${C.mist}`, padding: "8px 0", fontSize: 15, fontWeight: 700, color: C.inkDark, background: "transparent", fontFamily: "inherit", marginBottom: 10, boxSizing: "border-box" }} />
+            <textarea value={editDraft.text} onChange={e => setEditDraft(d => ({ ...d, text: e.target.value }))} rows={5}
+              style={{ width: "100%", border: "none", outline: "none", padding: "0", fontSize: 13.5, color: C.inkMid, background: "transparent", fontFamily: "inherit", lineHeight: 1.65, resize: "none", boxSizing: "border-box" }} />
+            <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 14, gap: 10 }}>
+              <button onClick={() => setEditingEntry(null)} style={{ background: "transparent", border: `1px solid ${C.mist}`, borderRadius: 10, padding: "8px 16px", fontSize: 12, color: C.slateLight, cursor: "pointer", fontFamily: "inherit" }}>Cancelar</button>
+              <button onClick={saveEdit} disabled={savingEdit} style={{ background: `linear-gradient(135deg, ${C.navy}, ${C.blue})`, border: "none", borderRadius: 10, padding: "8px 18px", fontSize: 12, fontWeight: 700, color: "#fff", cursor: "pointer", fontFamily: "inherit" }}>
+                {savingEdit ? "Guardando..." : "Guardar cambios"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div style={{ padding: "52px 22px 16px", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
         <div>
           <p style={{ fontSize: 12, color: C.slateLight, margin: "0 0 4px", letterSpacing: "0.08em", textTransform: "uppercase" }}>Mi diario</p>
@@ -1108,25 +1167,21 @@ function DiaryScreen({ user }) {
         {writing && (
           <div style={{ background: C.white, borderRadius: 20, padding: 18, marginBottom: 16, boxShadow: "0 6px 24px rgba(30,58,95,0.12)" }}>
             <p style={{ fontSize: 12, fontWeight: 700, color: C.blue, margin: "0 0 12px", textTransform: "uppercase", letterSpacing: "0.1em" }}>Nueva entrada</p>
-
             <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
               {moods.map(m => (
                 <button key={m} onClick={() => setDraft(d => ({ ...d, mood: m }))} style={{ width: 36, height: 36, borderRadius: 10, border: "none", background: draft.mood === m ? `${C.blue}20` : `${C.mist}55`, fontSize: 18, cursor: "pointer", outline: draft.mood === m ? `2px solid ${C.blue}` : "none" }}>{m}</button>
               ))}
             </div>
-
             <div style={{ display: "flex", gap: 6, marginBottom: 12, flexWrap: "wrap" }}>
               {tags.map(t => (
                 <button key={t} onClick={() => setDraft(d => ({ ...d, tag: t }))} style={{ padding: "4px 10px", borderRadius: 100, border: "none", background: draft.tag === t ? `${tagColor[t]}30` : C.iceBlue, color: draft.tag === t ? tagColor[t] : C.slateLight, fontSize: 11, fontWeight: 600, cursor: "pointer" }}>{t}</button>
               ))}
             </div>
-
             <input value={draft.title} onChange={e => setDraft(d => ({ ...d, title: e.target.value }))} placeholder="Título..."
               style={{ width: "100%", border: "none", outline: "none", borderBottom: `1.5px solid ${C.mist}`, padding: "8px 0", fontSize: 15, fontWeight: 700, color: C.inkDark, background: "transparent", fontFamily: "inherit", marginBottom: 10, boxSizing: "border-box" }} />
             <textarea value={draft.text} onChange={e => setDraft(d => ({ ...d, text: e.target.value }))}
               placeholder="¿Qué movimientos espirituales notaste hoy?" rows={4}
               style={{ width: "100%", border: "none", outline: "none", padding: "0", fontSize: 13.5, color: C.inkMid, background: "transparent", fontFamily: "inherit", lineHeight: 1.65, resize: "none", boxSizing: "border-box" }} />
-
             <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 14, gap: 10 }}>
               <button onClick={() => setWriting(false)} style={{ background: "transparent", border: `1px solid ${C.mist}`, borderRadius: 10, padding: "8px 16px", fontSize: 12, color: C.slateLight, cursor: "pointer", fontFamily: "inherit" }}>Cancelar</button>
               <button onClick={saveEntry} disabled={saving} style={{ background: `linear-gradient(135deg, ${C.navy}, ${C.blue})`, border: "none", borderRadius: 10, padding: "8px 18px", fontSize: 12, fontWeight: 700, color: "#fff", cursor: "pointer", fontFamily: "inherit", opacity: saving ? 0.7 : 1 }}>
@@ -1146,8 +1201,8 @@ function DiaryScreen({ user }) {
           </div>
         ) : (
           entries.map((e, i) => (
-            <div key={i} style={{ background: C.white, borderRadius: 18, padding: "16px 18px", marginBottom: 12, boxShadow: "0 2px 12px rgba(30,58,95,0.07)" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+            <div key={i} style={{ background: C.white, borderRadius: 18, padding: "16px 18px", marginBottom: 12, boxShadow: "0 2px 12px rgba(30,58,95,0.07)", opacity: deletingId === e.id ? 0.5 : 1, transition: "opacity 0.2s" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <span style={{ fontSize: 20 }}>{e.mood}</span>
                   <div>
@@ -1155,7 +1210,11 @@ function DiaryScreen({ user }) {
                     <p style={{ fontSize: 10, color: C.slateLight, margin: 0 }}>{formatDate(e.created_at)}</p>
                   </div>
                 </div>
-                <span style={pill(`${(tagColor[e.tag] || C.sky)}22`, tagColor[e.tag] || C.sky)}>{e.tag}</span>
+                <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                  <span style={pill(`${(tagColor[e.tag] || C.sky)}22`, tagColor[e.tag] || C.sky)}>{e.tag}</span>
+                  <button onClick={() => { setEditingEntry(e); setEditDraft({ mood: e.mood, title: e.title, text: e.text, tag: e.tag }); }} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 14, padding: "2px" }}>✏️</button>
+                  <button onClick={() => deleteEntry(e.id)} disabled={deletingId === e.id} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 14, padding: "2px" }}>🗑️</button>
+                </div>
               </div>
               <p style={{ fontSize: 12.5, color: C.inkMid, lineHeight: 1.65, margin: 0 }}>{e.text}</p>
             </div>
