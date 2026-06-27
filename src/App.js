@@ -1174,6 +1174,20 @@ function ProfileScreen({ user, profile, setProfile, onLogout }) {
   const [name, setName] = useState(profile?.name || "");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [activeModal, setActiveModal] = useState(null); // "notifications" | "privacy" | "about"
+  const [notifEnabled, setNotifEnabled] = useState(false);
+  const [notifTime, setNotifTime] = useState("08:00");
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    // Verificar si notificaciones están habilitadas
+    if ("Notification" in window) {
+      setNotifEnabled(Notification.permission === "granted");
+    }
+    const savedTime = localStorage.getItem("mater_notif_time");
+    if (savedTime) setNotifTime(savedTime);
+  }, []);
 
   async function saveName() {
     if (!name.trim()) return;
@@ -1186,75 +1200,201 @@ function ProfileScreen({ user, profile, setProfile, onLogout }) {
     setTimeout(() => setSaved(false), 2000);
   }
 
-  const stats = [
-    { label: "Días en Mater", value: "1", icon: "📅" },
-    { label: "Entradas en diario", value: "—", icon: "📓" },
-    { label: "Prácticas completadas", value: "3", icon: "✝️" },
-  ];
+  async function requestNotifications() {
+    if (!("Notification" in window)) {
+      alert("Tu navegador no soporta notificaciones.");
+      return;
+    }
+    const permission = await Notification.requestPermission();
+    if (permission === "granted") {
+      setNotifEnabled(true);
+      localStorage.setItem("mater_notif_time", notifTime);
+      new Notification("Mater 🕊️", {
+        body: "¡Notificaciones activadas! Te recordaremos cada día a las " + notifTime,
+        icon: "/logo.jpeg",
+      });
+    } else {
+      alert("Para activar notificaciones ve a Configuración → Safari → Notificaciones y permite Mater.");
+    }
+  }
+
+  function saveNotifTime() {
+    localStorage.setItem("mater_notif_time", notifTime);
+    setActiveModal(null);
+  }
+
+  async function deleteAccount() {
+    setDeleting(true);
+    try {
+      // Borrar todos los datos del usuario
+      await supabase.from("diary_entries").delete().eq("user_id", user.id);
+      await supabase.from("plan_progress").delete().eq("user_id", user.id);
+      await supabase.from("daily_practices").delete().eq("user_id", user.id);
+      await supabase.from("streaks").delete().eq("user_id", user.id);
+      await supabase.from("profiles").delete().eq("id", user.id);
+      await supabase.auth.signOut();
+    } catch (e) {
+      alert("Error al borrar la cuenta. Intenta de nuevo.");
+    }
+    setDeleting(false);
+  }
+
+  const modalStyle = {
+    position: "fixed", inset: 0, zIndex: 300,
+    background: "rgba(15,30,50,0.7)",
+    display: "flex", alignItems: "flex-end",
+  };
+  const sheetStyle = {
+    background: C.white, borderRadius: "24px 24px 0 0",
+    padding: "24px 22px 48px", width: "100%", maxWidth: 390, margin: "0 auto",
+    maxHeight: "80vh", overflowY: "auto",
+  };
 
   return (
     <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90 }}>
 
+      {/* Modal Notificaciones */}
+      {activeModal === "notifications" && (
+        <div style={modalStyle} onClick={() => setActiveModal(null)}>
+          <div style={sheetStyle} onClick={e => e.stopPropagation()}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+              <h2 style={{ fontSize: 18, fontWeight: 800, color: C.inkDark, margin: 0 }}>🔔 Notificaciones</h2>
+              <button onClick={() => setActiveModal(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+            </div>
+            <p style={{ fontSize: 13, color: C.inkMid, lineHeight: 1.7, marginBottom: 20 }}>
+              Recibe un recordatorio diario para tus prácticas espirituales. Las notificaciones funcionan cuando tienes Mater abierta o añadida a tu pantalla de inicio.
+            </p>
+            <div style={{ background: C.iceBlue, borderRadius: 14, padding: "16px", marginBottom: 16 }}>
+              <p style={{ fontSize: 12, fontWeight: 700, color: C.blue, margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.08em" }}>Hora del recordatorio</p>
+              <input type="time" value={notifTime} onChange={e => setNotifTime(e.target.value)}
+                style={{ border: "none", outline: "none", background: "transparent", fontSize: 28, fontWeight: 800, color: C.navy, fontFamily: "inherit", width: "100%" }} />
+            </div>
+            <div style={{ background: notifEnabled ? `${C.blue}15` : C.iceBlue, borderRadius: 14, padding: "14px 16px", marginBottom: 20, display: "flex", alignItems: "center", gap: 10 }}>
+              <span style={{ fontSize: 20 }}>{notifEnabled ? "✅" : "🔕"}</span>
+              <p style={{ fontSize: 13, color: C.inkMid, margin: 0 }}>
+                {notifEnabled ? "Notificaciones activadas" : "Notificaciones desactivadas"}
+              </p>
+            </div>
+            <button onClick={notifEnabled ? saveNotifTime : requestNotifications} style={{
+              width: "100%", padding: "14px", border: "none", borderRadius: 14,
+              background: `linear-gradient(135deg, ${C.navy}, ${C.blue})`,
+              color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
+            }}>
+              {notifEnabled ? "Guardar horario" : "Activar notificaciones"}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Privacidad */}
+      {activeModal === "privacy" && (
+        <div style={modalStyle} onClick={() => { setActiveModal(null); setDeleteConfirm(false); }}>
+          <div style={sheetStyle} onClick={e => e.stopPropagation()}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+              <h2 style={{ fontSize: 18, fontWeight: 800, color: C.inkDark, margin: 0 }}>🔒 Privacidad</h2>
+              <button onClick={() => { setActiveModal(null); setDeleteConfirm(false); }} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 24 }}>
+              {[
+                { icon: "🔐", title: "Tus datos son privados", desc: "Solo tú puedes ver tu diario, progreso y conversaciones con Mater." },
+                { icon: "🛡️", title: "Sin publicidad", desc: "Mater no comparte tus datos con anunciantes ni terceros." },
+                { icon: "☁️", title: "Almacenamiento seguro", desc: "Tus datos se guardan en Supabase con cifrado y políticas de acceso estrictas." },
+              ].map((item, i) => (
+                <div key={i} style={{ background: C.iceBlue, borderRadius: 14, padding: "14px 16px", display: "flex", gap: 12 }}>
+                  <span style={{ fontSize: 22, flexShrink: 0 }}>{item.icon}</span>
+                  <div>
+                    <p style={{ fontSize: 13, fontWeight: 700, color: C.inkDark, margin: "0 0 4px" }}>{item.title}</p>
+                    <p style={{ fontSize: 12, color: C.inkMid, margin: 0, lineHeight: 1.5 }}>{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {!deleteConfirm ? (
+              <button onClick={() => setDeleteConfirm(true)} style={{
+                width: "100%", padding: "14px", border: `1.5px solid #E8A0A0`,
+                borderRadius: 14, background: "#FFF0F0", color: "#C0392B",
+                fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
+              }}>Borrar mi cuenta y todos mis datos</button>
+            ) : (
+              <div style={{ background: "#FFF0F0", borderRadius: 14, padding: 16 }}>
+                <p style={{ fontSize: 13, fontWeight: 700, color: "#C0392B", margin: "0 0 8px" }}>⚠️ ¿Estás seguro?</p>
+                <p style={{ fontSize: 12, color: C.inkMid, margin: "0 0 14px", lineHeight: 1.5 }}>Esta acción borrará permanentemente tu cuenta, diario, progreso y todos tus datos. No se puede deshacer.</p>
+                <div style={{ display: "flex", gap: 10 }}>
+                  <button onClick={() => setDeleteConfirm(false)} style={{ flex: 1, padding: "12px", border: `1px solid ${C.mist}`, borderRadius: 10, background: C.white, color: C.inkMid, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>Cancelar</button>
+                  <button onClick={deleteAccount} disabled={deleting} style={{ flex: 1, padding: "12px", border: "none", borderRadius: 10, background: "#C0392B", color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
+                    {deleting ? "Borrando..." : "Sí, borrar todo"}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Modal Acerca de */}
+      {activeModal === "about" && (
+        <div style={modalStyle} onClick={() => setActiveModal(null)}>
+          <div style={sheetStyle} onClick={e => e.stopPropagation()}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+              <h2 style={{ fontSize: 18, fontWeight: 800, color: C.inkDark, margin: 0 }}>🕊️ Acerca de Mater</h2>
+              <button onClick={() => setActiveModal(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+            </div>
+            <div style={{ textAlign: "center", marginBottom: 24 }}>
+              <div style={{ width: 80, height: 80, borderRadius: 24, overflow: "hidden", margin: "0 auto 12px", boxShadow: `0 4px 16px ${C.navy}33` }}>
+                <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              </div>
+              <h3 style={{ fontSize: 22, fontWeight: 800, color: C.navy, margin: "0 0 4px" }}>Mater</h3>
+              <p style={{ fontSize: 12, color: C.slateLight, margin: 0 }}>Versión 1.0 · materapp.org</p>
+            </div>
+            <p style={{ fontSize: 13, color: C.inkMid, lineHeight: 1.75, marginBottom: 20, textAlign: "center" }}>
+              Mater es una plataforma de coaching espiritual católico para jóvenes adultos de 25-35 años. Integra espiritualidad ignaciana, mariana, franciscana y carmelita para acompañar el camino de fe en la vida cotidiana.
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {[
+                { label: "Chat con Mater (IA)", icon: "🕊️" },
+                { label: "Plan de formación de 30 días", icon: "📋" },
+                { label: "Evangelio del día (USCCB)", icon: "📖" },
+                { label: "Diario espiritual", icon: "📓" },
+                { label: "Racha semanal de prácticas", icon: "⭐" },
+              ].map((f, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", background: C.iceBlue, borderRadius: 10 }}>
+                  <span style={{ fontSize: 18 }}>{f.icon}</span>
+                  <span style={{ fontSize: 13, color: C.inkDark }}>{f.label}</span>
+                </div>
+              ))}
+            </div>
+            <p style={{ textAlign: "center", fontSize: 11, color: C.slateLight, marginTop: 20, lineHeight: 1.6 }}>
+              Hecho con ❤️ para la Iglesia joven
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div style={{ padding: "52px 22px 0", textAlign: "center" }}>
-        <div style={{
-          width: 90, height: 90, borderRadius: 28, margin: "0 auto 16px",
-          overflow: "hidden", boxShadow: `0 8px 28px ${C.navy}33`,
-        }}>
+        <div style={{ width: 90, height: 90, borderRadius: 28, margin: "0 auto 16px", overflow: "hidden", boxShadow: `0 8px 28px ${C.navy}33` }}>
           <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
 
         {editing ? (
           <div style={{ display: "flex", gap: 8, justifyContent: "center", alignItems: "center", marginBottom: 8 }}>
             <input value={name} onChange={e => setName(e.target.value)}
-              style={{
-                border: "none", outline: "none",
-                borderBottom: `2px solid ${C.blue}`,
-                fontSize: 20, fontWeight: 800, color: C.inkDark,
-                background: "transparent", textAlign: "center",
-                fontFamily: "inherit", width: 200,
-              }}
-              autoFocus
-              onKeyDown={e => e.key === "Enter" && saveName()}
-            />
-            <button onClick={saveName} disabled={saving} style={{
-              background: C.blue, border: "none", borderRadius: 8,
-              padding: "6px 14px", color: "#fff", fontSize: 12,
-              fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
-            }}>{saving ? "..." : "Guardar"}</button>
+              style={{ border: "none", outline: "none", borderBottom: `2px solid ${C.blue}`, fontSize: 20, fontWeight: 800, color: C.inkDark, background: "transparent", textAlign: "center", fontFamily: "inherit", width: 200 }}
+              autoFocus onKeyDown={e => e.key === "Enter" && saveName()} />
+            <button onClick={saveName} disabled={saving} style={{ background: C.blue, border: "none", borderRadius: 8, padding: "6px 14px", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
+              {saving ? "..." : "Guardar"}
+            </button>
           </div>
         ) : (
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 4 }}>
             <h1 style={{ fontSize: 24, fontWeight: 800, color: C.inkDark, margin: 0 }}>
               {profile?.name || user?.email?.split("@")[0]}
             </h1>
-            <button onClick={() => setEditing(true)} style={{
-              background: "none", border: "none", cursor: "pointer",
-              fontSize: 16, color: C.slateLight,
-            }}>✏️</button>
+            <button onClick={() => setEditing(true)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 16, color: C.slateLight }}>✏️</button>
           </div>
         )}
-
         {saved && <p style={{ color: C.blue, fontSize: 12, margin: "4px 0 0" }}>✓ Nombre actualizado</p>}
         <p style={{ fontSize: 13, color: C.slateLight, margin: "4px 0 0" }}>{user?.email}</p>
-      </div>
-
-      {/* Stats */}
-      <div style={{ padding: "24px 22px 0" }}>
-        <p style={{ fontSize: 12, color: C.slateLight, margin: "0 0 12px", letterSpacing: "0.08em", textTransform: "uppercase" }}>Mi progreso</p>
-        <div style={{ display: "flex", gap: 10 }}>
-          {stats.map((s, i) => (
-            <div key={i} style={{
-              flex: 1, background: C.white, borderRadius: 14, padding: "14px 10px",
-              textAlign: "center", boxShadow: `0 2px 12px rgba(30,58,95,0.06)`,
-              border: `1.5px solid ${C.mist}`,
-            }}>
-              <p style={{ fontSize: 22, margin: "0 0 6px" }}>{s.icon}</p>
-              <p style={{ fontSize: 18, fontWeight: 800, color: C.navy, margin: "0 0 2px" }}>{s.value}</p>
-              <p style={{ fontSize: 10, color: C.slateLight, margin: 0, lineHeight: 1.3 }}>{s.label}</p>
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* Options */}
@@ -1263,9 +1403,9 @@ function ProfileScreen({ user, profile, setProfile, onLogout }) {
         <div style={{ background: C.white, borderRadius: 16, overflow: "hidden", boxShadow: `0 2px 12px rgba(30,58,95,0.06)` }}>
           {[
             { label: "Editar nombre", icon: "✏️", action: () => setEditing(true) },
-            { label: "Notificaciones", icon: "🔔", action: () => {} },
-            { label: "Privacidad", icon: "🔒", action: () => {} },
-            { label: "Acerca de Mater", icon: "🕊️", action: () => {} },
+            { label: "Notificaciones", icon: "🔔", action: () => setActiveModal("notifications") },
+            { label: "Privacidad", icon: "🔒", action: () => setActiveModal("privacy") },
+            { label: "Acerca de Mater", icon: "🕊️", action: () => setActiveModal("about") },
           ].map((item, i, arr) => (
             <button key={i} onClick={item.action} style={{
               width: "100%", display: "flex", alignItems: "center", gap: 14,
@@ -1294,9 +1434,8 @@ function ProfileScreen({ user, profile, setProfile, onLogout }) {
         </button>
       </div>
 
-      {/* Footer */}
       <p style={{ textAlign: "center", fontSize: 11, color: C.slateLight, margin: "24px 0 0", lineHeight: 1.6 }}>
-        Mater v1.0 · Hecho con ❤️ para la Iglesia joven
+        Mater v1.0 · materapp.org
       </p>
     </div>
   );
