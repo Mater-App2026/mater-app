@@ -194,9 +194,12 @@ function HomeScreen({ user, profile, onTabChange }) {
   const days = ["L", "M", "M", "J", "V", "S", "D"];
   const todayIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
   const [openCard, setOpenCard] = useState(null);
+  const [completedPractices, setCompletedPractices] = useState({});
   const [streakDays, setStreakDays] = useState([false,false,false,false,false,false,false]);
   const [streakCount, setStreakCount] = useState(0);
   const [dailyVerse, setDailyVerse] = useState(null);
+
+  const todayKey = new Date().toISOString().split("T")[0];
 
   // Versículos rotativos según el día del año
   const verses = [
@@ -226,7 +229,6 @@ function HomeScreen({ user, profile, onTabChange }) {
       const { data } = await supabase.from("streaks").select("date").eq("user_id", user.id).order("date", { ascending: false }).limit(14);
       if (!data) return;
       const dateSet = new Set(data.map(r => r.date));
-      // Marcar racha de la semana actual
       const weekStreak = days.map((_, i) => {
         const d = new Date();
         d.setDate(d.getDate() - (todayIdx - i));
@@ -234,7 +236,6 @@ function HomeScreen({ user, profile, onTabChange }) {
         return dateSet.has(key);
       });
       setStreakDays(weekStreak);
-      // Contar días consecutivos
       let count = 0;
       const today = new Date().toISOString().split("T")[0];
       let check = new Date();
@@ -244,13 +245,37 @@ function HomeScreen({ user, profile, onTabChange }) {
         else break;
       }
       setStreakCount(count);
-      // Registrar hoy si no está
       if (!dateSet.has(today)) {
         await supabase.from("streaks").upsert({ user_id: user.id, date: today }, { onConflict: "user_id,date" });
       }
     }
+
+    // Cargar prácticas completadas hoy
+    async function loadPractices() {
+      const { data } = await supabase.from("plan_progress")
+        .select("*")
+        .eq("user_id", user.id)
+        .eq("week", -1); // semana -1 = prácticas diarias del home
+      if (data) {
+        const map = {};
+        data.forEach(r => { map[`${r.day_index}-${r.completed_at?.split("T")[0]}`] = r.completed; });
+        setCompletedPractices(map);
+      }
+    }
+
     loadStreak();
+    loadPractices();
   }, [user]);
+
+  async function markPracticeDone(index) {
+    const key = `${index}-${todayKey}`;
+    if (completedPractices[key]) return;
+    setCompletedPractices(prev => ({ ...prev, [key]: true }));
+    await supabase.from("plan_progress").upsert({
+      user_id: user.id, week: -1, day_index: index,
+      completed: true, completed_at: new Date().toISOString(),
+    }, { onConflict: "user_id,week,day_index" });
+  }
 
 
   const practiceContent = [
@@ -348,12 +373,12 @@ function HomeScreen({ user, profile, onTabChange }) {
             </div>
 
             {/* Botón cerrar */}
-            <button onClick={() => setOpenCard(null)} style={{
+            <button onClick={() => { markPracticeDone(openCard); setOpenCard(null); }} style={{
               width: "100%", marginTop: 28, padding: "14px",
               background: `linear-gradient(135deg, ${C.navy}, ${C.blue})`,
               border: "none", borderRadius: 14, color: "#fff",
               fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
-            }}>Amén 🕊️</button>
+            }}>Amén ✓ 🕊️</button>
           </div>
         </div>
       )}
@@ -417,11 +442,13 @@ function HomeScreen({ user, profile, onTabChange }) {
       <div style={{ padding: "22px 22px 0" }}>
         <p style={{ fontSize: 13, fontWeight: 700, color: C.inkDark, margin: "0 0 12px" }}>Prácticas de hoy</p>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {practiceContent.map((c, i) => (
+          {practiceContent.map((c, i) => {
+            const isDone = completedPractices[`${i}-${todayKey}`] || false;
+            return (
             <button key={i} onClick={() => setOpenCard(i)} style={{
-              background: c.done ? c.bg : C.white, borderRadius: 14, padding: "14px 16px",
+              background: isDone ? c.bg : C.white, borderRadius: 14, padding: "14px 16px",
               display: "flex", alignItems: "center", gap: 14,
-              border: c.done ? `1.5px solid ${c.color}44` : `1.5px solid ${C.mist}`,
+              border: isDone ? `1.5px solid ${c.color}44` : `1.5px solid ${C.mist}`,
               boxShadow: "0 2px 12px rgba(30,58,95,0.06)",
               cursor: "pointer", textAlign: "left", width: "100%",
             }}>
@@ -434,13 +461,14 @@ function HomeScreen({ user, profile, onTabChange }) {
               </div>
               <div style={{
                 width: 24, height: 24, borderRadius: "50%",
-                background: c.done ? c.color : "transparent",
-                border: c.done ? "none" : `2px solid ${C.mist}`,
+                background: isDone ? c.color : "transparent",
+                border: isDone ? "none" : `2px solid ${C.mist}`,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 color: "#fff", fontSize: 12, flexShrink: 0,
-              }}>{c.done ? "✓" : "›"}</div>
+              }}>{isDone ? "✓" : "›"}</div>
             </button>
-          ))}
+            );
+          })}
         </div>
       </div>
 
