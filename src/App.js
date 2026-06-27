@@ -401,7 +401,24 @@ Los jesuitas tienen una expresión que lo resume todo: "encontrar a Dios en toda
         "¿Por qué tres momentos o personas de hoy puedo dar gracias sinceramente a Dios?",
         "¿En qué momento del día sentí mayor paz y libertad interior? ¿Y en cuál más tensión o lejanía de Dios?",
         "¿Hay algo que hice o dejé de hacer hoy que mañana quiero vivir de manera diferente? ¿Qué necesito pedirle a Dios para lograrlo?",
-      ],
+      {
+icon: "heart", color: C.gold, bg: "#F5EDD8",
+label: "Alianza de amor con María", sub: "Espiritualidad Schoenstatt · 8 min", done: false,
+saint: "Padre José Kentenich",
+saintQuote: "«María no quiere esclavos sino hijos libres que la amen. La alianza de amor es una relación personal, íntima y total con ella como Madre y Reina.»",
+reflection: `El Padre José Kentenich fundó Schoenstatt en 1914 con una intuición revolucionaria: María quiere establecer una alianza de amor personal con cada alma. No una devoción externa, sino una relación viva, íntima y transformadora. Como una madre que conoce a cada hijo por su nombre.
+
+La contribución schoenstattiana es el gesto concreto de esa alianza: ofrecemos a María nuestros méritos, sufrimientos y obras — no porque los necesite, sino porque el amor quiere dar. Y Ella, como Madre y Reina, los transforma y devuelve multiplicados en gracia.
+
+El santuario — ese pequeño oratorio que Kentenich consagró en Schoenstatt, Alemania — se convirtió en el hogar espiritual del movimiento. Hoy hay santuarios en todo el mundo. Pero el más importante, enseñaba Kentenich, es el santuario interior del alma: ese espacio íntimo donde María habita cuando la invitamos.
+
+"Instrumento en manos de María" era el lema de Kentenich. No resignación pasiva, sino confianza activa: dejar que María actúe a través de nosotros en el mundo. Es la espiritualidad del fiat vivido cada día.`,
+questions: [
+"¿Qué significa para ti tener a María como Madre personal, no solo como figura religiosa abstracta?",
+"¿Qué puedes ofrecerle hoy a María como contribución — una alegría, un sufrimiento, un logro?",
+"¿Cómo sería tu día si lo vivieras conscientemente como instrumento en manos de María?",
+],
+},],
     },
   ];
 
@@ -615,7 +632,8 @@ Cómo respondes:
 - Propones prácticas concretas y alcanzables para la vida cotidiana
 - Hablas en español latinoamericano, natural y cercano
 - Tus respuestas tienen máximo 4-5 oraciones para el formato móvil
-- En momentos de crisis espiritual, recuerdas que la desolación es parte del camino y no abandono de Dios`;
+- En momentos de crisis espiritual, recuerdas que la desolación es parte del camino y no abandono de Dios.
+- Schoenstattiana: la alianza de amor con María como Madre y Reina, el santuario como hogar espiritual, el Padre José Kentenich como maestro de vida interior, la contribución como ofrenda de amor, el instrumento en manos de María, la pedagogía del amor como camino de santidad`;
 
 
   async function sendMessage() {
