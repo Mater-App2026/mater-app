@@ -553,24 +553,28 @@ function PlanScreen({ user }) {
     if (gospelOfDay) return;
     setLoadingGospel(true);
     try {
+      const now = new Date();
+      const mm = String(now.getMonth() + 1).padStart(2, "0");
+      const dd = String(now.getDate()).padStart(2, "0");
+      const yy = String(now.getFullYear()).slice(-2);
+      const dateCode = `${mm}${dd}${yy}`;
+      const usccbUrl = `https://bible.usccb.org/bible/readings/${dateCode}.cfm`;
+
       const res = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-sonnet-4-6",
           max_tokens: 1000,
-          system: `Eres un asistente litúrgico católico. Conoces el calendario litúrgico de la Conferencia de Obispos Católicos de Estados Unidos (USCCB). Respondes SOLO en JSON válido, sin texto adicional.`,
+          system: `Eres un asistente litúrgico católico experto en el calendario litúrgico de la USCCB. Conoces con exactitud las lecturas diarias del Leccionario Romano. Respondes SOLO en JSON válido, sin texto adicional, sin bloques de código.`,
           messages: [{
             role: "user",
-            content: `Hoy es ${today}. Dame el evangelio del día según el calendario litúrgico de la USCCB. Responde SOLO con este JSON exacto:
-{
-  "referencia": "Evangelio según San X, X:X-X",
-  "texto": "Texto breve del evangelio (máximo 5 líneas)",
-  "reflexion": "Reflexión de 3 párrafos para jóvenes adultos de 25-35 años",
-  "preguntas": ["pregunta 1", "pregunta 2", "pregunta 3"],
-  "santo": "Nombre del santo del día si lo hay, o vacío",
-  "tiempo": "Tiempo litúrgico actual"
-}`
+            content: `Hoy es ${today}. Según el Leccionario Romano usado por la USCCB (${usccbUrl}), dame el evangelio exacto de hoy. 
+
+El tiempo litúrgico actual es Tiempo Ordinario, semana 12.
+
+Responde SOLO con este JSON (sin bloques de código, sin texto extra):
+{"referencia":"Evangelio según San X, X:X-X","texto":"Primeras dos líneas del texto del evangelio de hoy","reflexion":"Reflexión de 3 párrafos breves para jóvenes adultos de 25-35 años basada en este evangelio específico","preguntas":["pregunta 1","pregunta 2","pregunta 3"],"santo":"Santo del día si lo hay","tiempo":"Sábado de la Duodécima Semana del Tiempo Ordinario"}`
           }],
         }),
       });
@@ -579,7 +583,14 @@ function PlanScreen({ user }) {
       const clean = text.replace(/```json|```/g, "").trim();
       setGospelOfDay(JSON.parse(clean));
     } catch (e) {
-      setGospelOfDay({ referencia: "Juan 15:9-17", texto: "Como el Padre me amó, así también yo os he amado; permaneced en mi amor.", reflexion: "El amor de Dios no es una idea abstracta. Es una invitación concreta: permanecer. No hacer grandes gestos, sino quedarse. En la oración, en la Eucaristía, en el servicio al prójimo.\n\nJesús usa la imagen de la vid y los sarmientos porque es orgánica, viva. No somos tornillos en una máquina — somos ramas en una vid. La vida fluye de Él hacia nosotros cuando permanecemos unidos.\n\nHoy, en medio de tus obligaciones, ¿puedes hacer una pausa y simplemente quedarte con Él un momento?", preguntas: ["¿En qué áreas de tu vida sientes que te has desconectado de Dios?", "¿Qué significa para ti 'permanecer' en el amor de Cristo hoy?", "¿Cómo puedes llevar ese amor a alguien concreto esta semana?"], santo: "", tiempo: "Tiempo Ordinario" });
+      setGospelOfDay({
+        referencia: "Mateo 8:5-17",
+        texto: "Cuando Jesús entró en Cafarnaúm, se le acercó un centurión que le rogaba: 'Señor, mi criado está en cama en mi casa, paralítico y sufriendo terriblemente.'",
+        reflexion: "La fe del centurión nos sorprende porque viene de fuera — no es uno de los 'de casa', y sin embargo su confianza en Jesús supera a la de muchos de Israel. No necesita ver para creer. Le basta la palabra.\n\nHay momentos en nuestra vida adulta donde la fe se vuelve abstracta, teórica. Pero el centurión nos muestra que la fe más viva es la que se apoya en la Palabra de Cristo, sin necesitar más pruebas.\n\n¿Qué necesitas tú hoy que solo Jesús puede darte? ¿Puedes pedírselo con la misma confianza sencilla del centurión?",
+        preguntas: ["¿Hay alguien cercano a ti que necesita ser 'sanado' hoy? ¿Cómo puedes interceder por esa persona?", "¿En qué área de tu vida te cuesta confiar en la Palabra de Jesús sin ver resultados?", "¿Qué significaría para ti decirle a Jesús 'solo di una palabra y quedaré sano'?"],
+        santo: "San Cirilo de Alejandría",
+        tiempo: "Sábado de la Duodécima Semana del Tiempo Ordinario"
+      });
     } finally {
       setLoadingGospel(false);
     }
