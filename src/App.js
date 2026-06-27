@@ -1167,6 +1167,142 @@ function DiaryScreen({ user }) {
 }
 
 /* ══════════════════════════════════════════
+   PROFILE SCREEN
+══════════════════════════════════════════ */
+function ProfileScreen({ user, profile, setProfile, onLogout }) {
+  const [editing, setEditing] = useState(false);
+  const [name, setName] = useState(profile?.name || "");
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  async function saveName() {
+    if (!name.trim()) return;
+    setSaving(true);
+    await supabase.from("profiles").upsert({ id: user.id, name: name.trim() });
+    setProfile(prev => ({ ...prev, name: name.trim() }));
+    setSaving(false);
+    setSaved(true);
+    setEditing(false);
+    setTimeout(() => setSaved(false), 2000);
+  }
+
+  const stats = [
+    { label: "Días en Mater", value: "1", icon: "📅" },
+    { label: "Entradas en diario", value: "—", icon: "📓" },
+    { label: "Prácticas completadas", value: "3", icon: "✝️" },
+  ];
+
+  return (
+    <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90 }}>
+
+      {/* Header */}
+      <div style={{ padding: "52px 22px 0", textAlign: "center" }}>
+        <div style={{
+          width: 90, height: 90, borderRadius: 28, margin: "0 auto 16px",
+          overflow: "hidden", boxShadow: `0 8px 28px ${C.navy}33`,
+        }}>
+          <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        </div>
+
+        {editing ? (
+          <div style={{ display: "flex", gap: 8, justifyContent: "center", alignItems: "center", marginBottom: 8 }}>
+            <input value={name} onChange={e => setName(e.target.value)}
+              style={{
+                border: "none", outline: "none",
+                borderBottom: `2px solid ${C.blue}`,
+                fontSize: 20, fontWeight: 800, color: C.inkDark,
+                background: "transparent", textAlign: "center",
+                fontFamily: "inherit", width: 200,
+              }}
+              autoFocus
+              onKeyDown={e => e.key === "Enter" && saveName()}
+            />
+            <button onClick={saveName} disabled={saving} style={{
+              background: C.blue, border: "none", borderRadius: 8,
+              padding: "6px 14px", color: "#fff", fontSize: 12,
+              fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
+            }}>{saving ? "..." : "Guardar"}</button>
+          </div>
+        ) : (
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 4 }}>
+            <h1 style={{ fontSize: 24, fontWeight: 800, color: C.inkDark, margin: 0 }}>
+              {profile?.name || user?.email?.split("@")[0]}
+            </h1>
+            <button onClick={() => setEditing(true)} style={{
+              background: "none", border: "none", cursor: "pointer",
+              fontSize: 16, color: C.slateLight,
+            }}>✏️</button>
+          </div>
+        )}
+
+        {saved && <p style={{ color: C.blue, fontSize: 12, margin: "4px 0 0" }}>✓ Nombre actualizado</p>}
+        <p style={{ fontSize: 13, color: C.slateLight, margin: "4px 0 0" }}>{user?.email}</p>
+      </div>
+
+      {/* Stats */}
+      <div style={{ padding: "24px 22px 0" }}>
+        <p style={{ fontSize: 12, color: C.slateLight, margin: "0 0 12px", letterSpacing: "0.08em", textTransform: "uppercase" }}>Mi progreso</p>
+        <div style={{ display: "flex", gap: 10 }}>
+          {stats.map((s, i) => (
+            <div key={i} style={{
+              flex: 1, background: C.white, borderRadius: 14, padding: "14px 10px",
+              textAlign: "center", boxShadow: `0 2px 12px rgba(30,58,95,0.06)`,
+              border: `1.5px solid ${C.mist}`,
+            }}>
+              <p style={{ fontSize: 22, margin: "0 0 6px" }}>{s.icon}</p>
+              <p style={{ fontSize: 18, fontWeight: 800, color: C.navy, margin: "0 0 2px" }}>{s.value}</p>
+              <p style={{ fontSize: 10, color: C.slateLight, margin: 0, lineHeight: 1.3 }}>{s.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Options */}
+      <div style={{ padding: "24px 22px 0" }}>
+        <p style={{ fontSize: 12, color: C.slateLight, margin: "0 0 12px", letterSpacing: "0.08em", textTransform: "uppercase" }}>Configuración</p>
+        <div style={{ background: C.white, borderRadius: 16, overflow: "hidden", boxShadow: `0 2px 12px rgba(30,58,95,0.06)` }}>
+          {[
+            { label: "Editar nombre", icon: "✏️", action: () => setEditing(true) },
+            { label: "Notificaciones", icon: "🔔", action: () => {} },
+            { label: "Privacidad", icon: "🔒", action: () => {} },
+            { label: "Acerca de Mater", icon: "🕊️", action: () => {} },
+          ].map((item, i, arr) => (
+            <button key={i} onClick={item.action} style={{
+              width: "100%", display: "flex", alignItems: "center", gap: 14,
+              padding: "16px 18px", border: "none", background: "transparent",
+              borderBottom: i < arr.length - 1 ? `1px solid ${C.mist}` : "none",
+              cursor: "pointer", textAlign: "left",
+            }}>
+              <span style={{ fontSize: 18 }}>{item.icon}</span>
+              <span style={{ fontSize: 14, color: C.inkDark, fontWeight: 500, flex: 1 }}>{item.label}</span>
+              <Icon name="chevron" size={16} color={C.slateLight} />
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Logout */}
+      <div style={{ padding: "24px 22px 0" }}>
+        <button onClick={onLogout} style={{
+          width: "100%", padding: "15px", border: `1.5px solid #E8A0A0`,
+          borderRadius: 14, background: "#FFF0F0", color: "#C0392B",
+          fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
+          display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+        }}>
+          <Icon name="logout" size={18} color="#C0392B" />
+          Cerrar sesión
+        </button>
+      </div>
+
+      {/* Footer */}
+      <p style={{ textAlign: "center", fontSize: 11, color: C.slateLight, margin: "24px 0 0", lineHeight: 1.6 }}>
+        Mater v1.0 · Hecho con ❤️ para la Iglesia joven
+      </p>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════
    ROOT APP
 ══════════════════════════════════════════ */
 export default function App() {
@@ -1208,12 +1344,13 @@ export default function App() {
   }
 
   const tabs = [
-    { id: "home",  label: "Inicio", icon: "home"  },
-    { id: "chat",  label: "Mater",  icon: "chat"  },
-    { id: "plan",  label: "Plan",   icon: "plan"  },
-    { id: "diary", label: "Diario", icon: "diary" },
+    { id: "home",    label: "Inicio",  icon: "home"  },
+    { id: "chat",    label: "Mater",   icon: "chat"  },
+    { id: "plan",    label: "Plan",    icon: "plan"  },
+    { id: "diary",   label: "Diario",  icon: "diary" },
+    { id: "profile", label: "Perfil",  icon: "heart" },
   ];
-  const tabColor = { home: C.navy, chat: C.blue, plan: C.periwinkle, diary: C.sky };
+  const tabColor = { home: C.navy, chat: C.blue, plan: C.periwinkle, diary: C.sky, profile: C.gold };
 
   if (loading) return (
     <div style={{ ...phone, alignItems: "center", justifyContent: "center", background: gradients.home }}>
@@ -1229,14 +1366,15 @@ export default function App() {
   );
 
   const screens = {
-    home:  <HomeScreen user={session.user} profile={profile} onTabChange={setTab} />,
-    chat:  <ChatScreen user={session.user} />,
-    plan:  <PlanScreen user={session.user} />,
-    diary: <DiaryScreen user={session.user} />,
+    home:    <HomeScreen user={session.user} profile={profile} onTabChange={setTab} />,
+    chat:    <ChatScreen user={session.user} />,
+    plan:    <PlanScreen user={session.user} />,
+    diary:   <DiaryScreen user={session.user} />,
+    profile: <ProfileScreen user={session.user} profile={profile} setProfile={setProfile} onLogout={handleLogout} />,
   };
 
   return (
-    <div style={{ ...phone, background: gradients[tab] }}>
+    <div style={{ ...phone, background: gradients[tab] || gradients.home }}>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
         {screens[tab]}
       </div>
@@ -1264,16 +1402,6 @@ export default function App() {
             </button>
           );
         })}
-        <button onClick={handleLogout} style={{
-          display: "flex", flexDirection: "column", alignItems: "center",
-          padding: "10px 4px 4px", border: "none", background: "transparent",
-          cursor: "pointer", gap: 4, width: 56,
-        }}>
-          <div style={{ width: 40, height: 40, borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <Icon name="logout" size={20} color={C.slateLight} />
-          </div>
-          <span style={{ fontSize: 10, color: C.slateLight }}>Salir</span>
-        </button>
       </div>
     </div>
   );
