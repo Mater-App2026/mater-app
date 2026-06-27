@@ -541,6 +541,87 @@ function PlanScreen({ user }) {
   const [activeWeek, setActiveWeek] = useState(0);
   const [progress, setProgress] = useState({});
   const [saving, setSaving] = useState(null);
+  const [openDay, setOpenDay] = useState(null);
+  const [dayContent, setDayContent] = useState(null);
+  const [loadingContent, setLoadingContent] = useState(false);
+  const [gospelOfDay, setGospelOfDay] = useState(null);
+  const [loadingGospel, setLoadingGospel] = useState(false);
+
+  const today = new Date().toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+
+  async function fetchGospelOfDay() {
+    if (gospelOfDay) return;
+    setLoadingGospel(true);
+    try {
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-6",
+          max_tokens: 1000,
+          system: `Eres un asistente litúrgico católico. Conoces el calendario litúrgico de la Conferencia de Obispos Católicos de Estados Unidos (USCCB). Respondes SOLO en JSON válido, sin texto adicional.`,
+          messages: [{
+            role: "user",
+            content: `Hoy es ${today}. Dame el evangelio del día según el calendario litúrgico de la USCCB. Responde SOLO con este JSON exacto:
+{
+  "referencia": "Evangelio según San X, X:X-X",
+  "texto": "Texto breve del evangelio (máximo 5 líneas)",
+  "reflexion": "Reflexión de 3 párrafos para jóvenes adultos de 25-35 años",
+  "preguntas": ["pregunta 1", "pregunta 2", "pregunta 3"],
+  "santo": "Nombre del santo del día si lo hay, o vacío",
+  "tiempo": "Tiempo litúrgico actual"
+}`
+          }],
+        }),
+      });
+      const data = await res.json();
+      const text = data.content?.map(b => b.text || "").join("") || "{}";
+      const clean = text.replace(/```json|```/g, "").trim();
+      setGospelOfDay(JSON.parse(clean));
+    } catch (e) {
+      setGospelOfDay({ referencia: "Juan 15:9-17", texto: "Como el Padre me amó, así también yo os he amado; permaneced en mi amor.", reflexion: "El amor de Dios no es una idea abstracta. Es una invitación concreta: permanecer. No hacer grandes gestos, sino quedarse. En la oración, en la Eucaristía, en el servicio al prójimo.\n\nJesús usa la imagen de la vid y los sarmientos porque es orgánica, viva. No somos tornillos en una máquina — somos ramas en una vid. La vida fluye de Él hacia nosotros cuando permanecemos unidos.\n\nHoy, en medio de tus obligaciones, ¿puedes hacer una pausa y simplemente quedarte con Él un momento?", preguntas: ["¿En qué áreas de tu vida sientes que te has desconectado de Dios?", "¿Qué significa para ti 'permanecer' en el amor de Cristo hoy?", "¿Cómo puedes llevar ese amor a alguien concreto esta semana?"], santo: "", tiempo: "Tiempo Ordinario" });
+    } finally {
+      setLoadingGospel(false);
+    }
+  }
+
+  async function fetchDayContent(day, weekTitle) {
+    setLoadingContent(true);
+    try {
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-6",
+          max_tokens: 1000,
+          system: `Eres Mater, guía espiritual católica para jóvenes adultos de 25-35 años. Integras espiritualidad ignaciana, mariana, franciscana y carmelita. Respondes SOLO en JSON válido.`,
+          messages: [{
+            role: "user",
+            content: `Crea contenido espiritual para esta práctica del plan de formación:
+Semana: ${weekTitle}
+Práctica del día: ${day.title}
+Tipo: ${day.type}
+
+Responde SOLO con este JSON:
+{
+  "santo": "Nombre de un santo relevante",
+  "cita": "Cita breve del santo",
+  "reflexion": "Reflexión profunda de 3 párrafos para jóvenes adultos",
+  "preguntas": ["pregunta 1", "pregunta 2", "pregunta 3"]
+}`
+          }],
+        }),
+      });
+      const data = await res.json();
+      const text = data.content?.map(b => b.text || "").join("") || "{}";
+      const clean = text.replace(/```json|```/g, "").trim();
+      setDayContent(JSON.parse(clean));
+    } catch {
+      setDayContent({ santo: "San Ignacio de Loyola", cita: "«Busca y hallarás a Dios en todas las cosas.»", reflexion: "La vida espiritual no es un añadido a nuestra vida — es su centro. Cada práctica que realizamos es una forma de sintonizar con la frecuencia de Dios, que está siempre presente pero que necesitamos aprender a escuchar.\n\nEste ejercicio te invita a detenerte. En medio de la agenda, los mensajes, las responsabilidades, hay un espacio interior donde Dios habita. Acceder a él requiere intención y práctica diaria.\n\nNo se trata de perfección sino de fidelidad. Cada pequeño paso cuenta.", preguntas: ["¿Qué resistencias siento ante esta práctica?", "¿Qué quiere decirme Dios a través de este ejercicio hoy?", "¿Cómo puedo llevar lo que aprendo aquí a mi vida cotidiana?"] });
+    } finally {
+      setLoadingContent(false);
+    }
+  }
 
   const weeks = [
     { title: "Semana 1 · Encuentro", theme: "Redescubrir a Dios", color: C.navy, bg: "#DDE8F4",
@@ -620,9 +701,85 @@ function PlanScreen({ user }) {
 
   return (
     <div style={{ flex: 1, overflowY: "auto", background: gradients.plan, paddingBottom: 90 }}>
+
+      {/* Modal de día */}
+      {openDay !== null && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: "flex-end" }}
+          onClick={() => { setOpenDay(null); setDayContent(null); }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: C.white, borderRadius: "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: 390, margin: "0 auto", maxHeight: "85vh", overflowY: "auto" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+              <div>
+                <p style={{ fontSize: 15, fontWeight: 800, color: C.inkDark, margin: 0 }}>{weeks[activeWeek].days[openDay]?.title}</p>
+                <span style={pill(`${(typeColor[weeks[activeWeek].days[openDay]?.type]||C.blue)}20`, typeColor[weeks[activeWeek].days[openDay]?.type]||C.blue)}>{weeks[activeWeek].days[openDay]?.type}</span>
+              </div>
+              <button onClick={() => { setOpenDay(null); setDayContent(null); }} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+            </div>
+
+            {loadingContent ? (
+              <div style={{ textAlign: "center", padding: "40px 0" }}>
+                <p style={{ color: C.slateLight, fontSize: 14 }}>🕊️ Mater está preparando tu reflexión...</p>
+              </div>
+            ) : dayContent ? (
+              <>
+                <div style={{ background: C.iceBlue, borderRadius: 14, padding: "14px 16px", marginBottom: 20, borderLeft: `3px solid ${C.blue}` }}>
+                  <p style={{ fontSize: 13, fontStyle: "italic", color: C.inkMid, margin: "0 0 6px", lineHeight: 1.6 }}>{dayContent.cita}</p>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: C.blue, margin: 0 }}>{dayContent.santo}</p>
+                </div>
+                <p style={{ fontSize: 13, color: C.inkMid, lineHeight: 1.8, margin: "0 0 24px", whiteSpace: "pre-line" }}>{dayContent.reflexion}</p>
+                <p style={{ fontSize: 12, fontWeight: 700, color: C.blue, letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 12px" }}>Preguntas para orar</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 24 }}>
+                  {dayContent.preguntas?.map((q, i) => (
+                    <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                      <div style={{ width: 24, height: 24, borderRadius: "50%", background: `${C.blue}20`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: C.blue, fontSize: 11, fontWeight: 700 }}>{i + 1}</div>
+                      <p style={{ fontSize: 13, color: C.inkDark, lineHeight: 1.6, margin: 0 }}>{q}</p>
+                    </div>
+                  ))}
+                </div>
+                <button onClick={() => { setOpenDay(null); setDayContent(null); }} style={{ width: "100%", padding: "14px", background: `linear-gradient(135deg, ${C.navy}, ${C.blue})`, border: "none", borderRadius: 14, color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Amén 🕊️</button>
+              </>
+            ) : null}
+          </div>
+        </div>
+      )}
+
       <div style={{ padding: "52px 22px 20px" }}>
         <p style={{ fontSize: 12, color: C.slateLight, margin: "0 0 4px", letterSpacing: "0.08em", textTransform: "uppercase" }}>Plan de formación</p>
         <h2 style={{ fontSize: 22, fontWeight: 800, color: C.inkDark, margin: 0 }}>30 días hacia Dios</h2>
+      </div>
+
+      {/* Evangelio del día */}
+      <div style={{ padding: "0 22px 20px" }}>
+        <button onClick={fetchGospelOfDay} style={{
+          width: "100%", borderRadius: 16, border: `1.5px solid ${C.mist}`,
+          background: gospelOfDay ? C.white : C.iceBlue,
+          padding: "16px 18px", cursor: "pointer", textAlign: "left",
+        }}>
+          {loadingGospel ? (
+            <p style={{ color: C.slateLight, fontSize: 13, margin: 0 }}>🕊️ Buscando el evangelio de hoy...</p>
+          ) : gospelOfDay ? (
+            <>
+              <p style={{ fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: C.gold, margin: "0 0 6px", fontWeight: 700 }}>📖 Evangelio del día · {gospelOfDay.tiempo}</p>
+              <p style={{ fontSize: 14, fontWeight: 700, color: C.navy, margin: "0 0 6px" }}>{gospelOfDay.referencia}</p>
+              <p style={{ fontSize: 12, fontStyle: "italic", color: C.inkMid, margin: "0 0 10px", lineHeight: 1.6 }}>«{gospelOfDay.texto}»</p>
+              <p style={{ fontSize: 12, color: C.inkMid, lineHeight: 1.65, margin: "0 0 12px", whiteSpace: "pre-line" }}>{gospelOfDay.reflexion}</p>
+              <p style={{ fontSize: 11, fontWeight: 700, color: C.blue, margin: "0 0 8px", letterSpacing: "0.08em", textTransform: "uppercase" }}>Preguntas para orar</p>
+              {gospelOfDay.preguntas?.map((q, i) => (
+                <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 8 }}>
+                  <div style={{ width: 20, height: 20, borderRadius: "50%", background: `${C.blue}20`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: C.blue, fontSize: 10, fontWeight: 700 }}>{i+1}</div>
+                  <p style={{ fontSize: 12, color: C.inkDark, lineHeight: 1.6, margin: 0 }}>{q}</p>
+                </div>
+              ))}
+            </>
+          ) : (
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <span style={{ fontSize: 24 }}>📖</span>
+              <div>
+                <p style={{ fontSize: 13, fontWeight: 700, color: C.navy, margin: 0 }}>Evangelio del día</p>
+                <p style={{ fontSize: 11, color: C.slateLight, margin: 0 }}>Toca para ver el evangelio de hoy según la USCCB</p>
+              </div>
+            </div>
+          )}
+        </button>
       </div>
 
       <div style={{ padding: "0 22px 20px", display: "flex", gap: 10 }}>
@@ -655,7 +812,11 @@ function PlanScreen({ user }) {
           const done = progress[key] || false;
           const isSaving = saving === key;
           return (
-            <button key={i} onClick={() => toggleDay(activeWeek, i)} style={{
+            <button key={i} onClick={() => {
+              setOpenDay(i);
+              setDayContent(null);
+              fetchDayContent(d, w.title);
+            }} style={{
               background: done ? w.bg : C.white, borderRadius: 14, padding: "12px 14px",
               display: "flex", alignItems: "center", gap: 12,
               border: done ? `1.5px solid ${w.color}44` : `1.5px solid ${C.mist}`,
@@ -670,7 +831,7 @@ function PlanScreen({ user }) {
                 <p style={{ fontSize: 13, fontWeight: 700, color: C.inkDark, margin: 0 }}>{d.title}</p>
                 <span style={pill(`${typeColor[d.type]}20`, typeColor[d.type])}>{d.type}</span>
               </div>
-              {!done && <Icon name="chevron" size={16} color={w.color} />}
+              <Icon name="chevron" size={16} color={w.color} />
             </button>
           );
         })}
