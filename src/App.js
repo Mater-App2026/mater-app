@@ -270,11 +270,28 @@ function HomeScreen({ user, profile, onTabChange }) {
   async function markPracticeDone(index) {
     const key = `${index}-${todayKey}`;
     if (completedPractices[key]) return;
-    setCompletedPractices(prev => ({ ...prev, [key]: true }));
+    const updated = { ...completedPractices, [key]: true };
+    setCompletedPractices(updated);
     await supabase.from("plan_progress").upsert({
       user_id: user.id, week: -1, day_index: index,
       completed: true, completed_at: new Date().toISOString(),
     }, { onConflict: "user_id,week,day_index" });
+
+    // Si completó las 3 prácticas de hoy, marcar día en la racha
+    const allDone = [0, 1, 2].every(i => updated[`${i}-${todayKey}`]);
+    if (allDone) {
+      await supabase.from("streaks").upsert(
+        { user_id: user.id, date: todayKey },
+        { onConflict: "user_id,date" }
+      );
+      // Actualizar racha visual
+      setStreakDays(prev => {
+        const next = [...prev];
+        next[todayIdx] = true;
+        return next;
+      });
+      setStreakCount(prev => prev + (streakDays[todayIdx] ? 0 : 1));
+    }
   }
 
 
