@@ -245,9 +245,6 @@ function HomeScreen({ user, profile, onTabChange }) {
         else break;
       }
       setStreakCount(count);
-      if (!dateSet.has(today)) {
-        await supabase.from("streaks").upsert({ user_id: user.id, date: today }, { onConflict: "user_id,date" });
-      }
     }
 
     // Cargar prácticas completadas hoy
