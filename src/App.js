@@ -1,4 +1,15 @@
-function LandingScreen({onEnter}){return(<div style={{flex:1,background:"#EEF2F7",display:"flex",flexDirection:"column",padding:"0 0 40px"}}><div style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"40px 32px",textAlign:"center"}}><div style={{width:80,height:80,borderRadius:4,overflow:"hidden",border:"1px solid #C8D5E8",marginBottom:24}}><img src="/logo.jpeg" alt="Mater" style={{width:"100%",height:"100%",objectFit:"cover"}}/></div><h1 style={{fontFamily:"serif",fontSize:38,fontWeight:600,color:"#2C3E6B",margin:"0 0 6px"}}>Mater</h1><p style={{fontSize:11,color:"#7A8FA3",letterSpacing:"0.12em",textTransform:"uppercase",margin:"0 0 32px"}}>Guia de coaching espiritual</p><div style={{background:"#2C3E6B",borderRadius:4,padding:"18px 20px",marginBottom:32,borderLeft:"3px solid #A8864A",textAlign:"left",width:"100%"}}><p style={{fontFamily:"serif",fontSize:15,color:"#F7F4EE",fontStyle:"italic",lineHeight:1.7,margin:"0 0 8px"}}>«Venid a mi todos los que estais fatigados y cargados, y yo os hare descansar.»</p><p style={{fontSize:10,color:"#A8864A",margin:0}}>Mateo 11:28</p></div></div><div style={{padding:"0 32px"}}><button onClick={onEnter} style={{width:"100%",padding:"15px",border:"none",borderRadius:4,background:"#2C3E6B",color:"#F7F4EE",fontSize:14,fontWeight:600,cursor:"pointer",marginBottom:10}}>Entrar a Mater</button></div></div>);}import { useState, useRef, useEffect } from "react";
+{ title: "Semana 4 · Misión", theme: "Fe en el mundo", color: C.sky, bg: "#DFF0F8",
+      days: [
+        { day: "Lun", title: "Vocación: ¿a qué me llama Dios?", type: "Reflexión" },
+        { day: "Mar", title: "San Francisco: la fraternidad universal", type: "Lectura" },
+        { day: "Mié", title: "Fe y trabajo: orar con las manos", type: "Práctica" },
+        { day: "Jue", title: "Doctrina social: dignidad de la persona", type: "Lectura" },
+        { day: "Vie", title: "Servicio: un gesto concreto de amor hoy", type: "Práctica" },
+        { day: "Sáb", title: "Examen ignaciano del mes", type: "Examen" },
+        { day: "Dom", title: "Misa de cierre — acción de gracias", type: "Misa" },
+      ],
+    },
+  ];function LandingScreen({onEnter}){return(<div style={{flex:1,background:"#EEF2F7",display:"flex",flexDirection:"column",padding:"0 0 40px"}}><div style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"40px 32px",textAlign:"center"}}><div style={{width:80,height:80,borderRadius:4,overflow:"hidden",border:"1px solid #C8D5E8",marginBottom:24}}><img src="/logo.jpeg" alt="Mater" style={{width:"100%",height:"100%",objectFit:"cover"}}/></div><h1 style={{fontFamily:"serif",fontSize:38,fontWeight:600,color:"#2C3E6B",margin:"0 0 6px"}}>Mater</h1><p style={{fontSize:11,color:"#7A8FA3",letterSpacing:"0.12em",textTransform:"uppercase",margin:"0 0 32px"}}>Guia de coaching espiritual</p><div style={{background:"#2C3E6B",borderRadius:4,padding:"18px 20px",marginBottom:32,borderLeft:"3px solid #A8864A",textAlign:"left",width:"100%"}}><p style={{fontFamily:"serif",fontSize:15,color:"#F7F4EE",fontStyle:"italic",lineHeight:1.7,margin:"0 0 8px"}}>«Venid a mi todos los que estais fatigados y cargados, y yo os hare descansar.»</p><p style={{fontSize:10,color:"#A8864A",margin:0}}>Mateo 11:28</p></div></div><div style={{padding:"0 32px"}}><button onClick={onEnter} style={{width:"100%",padding:"15px",border:"none",borderRadius:4,background:"#2C3E6B",color:"#F7F4EE",fontSize:14,fontWeight:600,cursor:"pointer",marginBottom:10}}>Entrar a Mater</button></div></div>);}import { useState, useRef, useEffect } from "react";
 import { supabase } from "./supabaseClient";
 
 /* ── PALETA VINTAGE MINIMALISTA ── */
@@ -902,18 +913,7 @@ Acércate a esta práctica con libertad interior. Si sientes resistencia, no la 
         { day: "Dom", title: "Misa dominical con atención plena", type: "Misa" },
       ],
     },
-    { title: "Semana 5 · Schoenstatt", theme: "Alianza de amor", color: "#A8864A", bg: "#F5EDD8", days: [{day:"Lun",title:"El Padre Kentenich y el origen de Schoenstatt",type:"Lectura"},{day:"Mar",title:"La alianza de amor con Maria",type:"Reflexion"},{day:"Mie",title:"El santuario como hogar espiritual",type:"Practica"},{day:"Jue",title:"La contribucion: ofrenda de amor",type:"Practica"},{day:"Vie",title:"Instrumento en manos de Maria",type:"Reflexion"},{day:"Sab",title:"Examen ignaciano semanal",type:"Examen"},{day:"Dom",title:"Misa y consagracion a Maria",type:"Misa"}]},{ title: "Semana 4 · Misión", theme: "Fe en el mundo", color: C.sky, bg: "#DFF0F8",
-      days: [
-        { day: "Lun", title: "Vocación: ¿a qué me llama Dios?", type: "Reflexión" },
-        { day: "Mar", title: "San Francisco: la fraternidad universal", type: "Lectura" },
-        { day: "Mié", title: "Fe y trabajo: orar con las manos", type: "Práctica" },
-        { day: "Jue", title: "Doctrina social: dignidad de la persona", type: "Lectura" },
-        { day: "Vie", title: "Servicio: un gesto concreto de amor hoy", type: "Práctica" },
-        { day: "Sáb", title: "Examen ignaciano del mes", type: "Examen" },
-        { day: "Dom", title: "Misa de cierre — acción de gracias", type: "Misa" },
-      ],
-    },
-  ];
+    { title: "Semana 5 · Schoenstatt", theme: "Alianza de amor", color: "#A8864A", bg: "#F5EDD8", days: [{day:"Lun",title:"El Padre Kentenich y el origen de Schoenstatt",type:"Lectura"},{day:"Mar",title:"La alianza de amor con Maria",type:"Reflexion"},{day:"Mie",title:"El santuario como hogar espiritual",type:"Practica"},{day:"Jue",title:"La contribucion: ofrenda de amor",type:"Practica"},{day:"Vie",title:"Instrumento en manos de Maria",type:"Reflexion"},{day:"Sab",title:"Examen ignaciano semanal",type:"Examen"},{day:"Dom",title:"Misa y consagracion a Maria",type:"Misa"}]},
 
   useEffect(() => {
     async function loadProgress() {
