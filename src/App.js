@@ -13,6 +13,7 @@ const C = {
   slateLight:"#7A95B0",
   gold:      "#C4A35A",
   goldLight: "#E8D5A0",
+  teal:      "#3A7A8C",
   white:     "#FAFCFF",
   inkDark:   "#1A2B3C",
   inkMid:    "#3D5166",
@@ -195,9 +196,9 @@ function HomeScreen({ user, profile, onTabChange }) {
   const today = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
 
   const cards = [
-    { icon: "moon",  color: C.blue,       bg: C.iceBlue, label: "Oración de la mañana", sub: "6 min · Salmo 23",    done: true  },
-    { icon: "book",  color: C.navy,       bg: "#DDE8F2", label: "Lectio Divina del día", sub: "Juan 15:1-17",        done: false },
-    { icon: "heart", color: C.periwinkle, bg: "#E4EDF7", label: "Examen de conciencia",  sub: "Reflexión nocturna",  done: false },
+    { icon: "moon",  color: C.blue,       bg: C.iceBlue, label: "Oración de la mañana",   sub: "Laudes · 8 min",              done: true  },
+    { icon: "book",  color: C.navy,       bg: "#DDE8F2", label: "Lectio Divina",           sub: "Lucas 10:38-42 · María y Marta", done: false },
+    { icon: "heart", color: C.periwinkle, bg: "#E4EDF7", label: "Examen de conciencia",    sub: "Método ignaciano · 5 pasos",  done: false },
   ];
 
   const firstName = profile?.name?.split(" ")[0] || user?.email?.split("@")[0] || "Amig@";
@@ -229,9 +230,9 @@ function HomeScreen({ user, profile, onTabChange }) {
           <div style={{ position: "absolute", top: -18, right: -18, opacity: 0.08, fontSize: 90 }}>✝</div>
           <p style={{ fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", opacity: 0.7, margin: "0 0 8px" }}>VERSÍCULO DEL DÍA</p>
           <p style={{ fontSize: 14, lineHeight: 1.6, fontStyle: "italic", margin: "0 0 8px" }}>
-            «Confía en el Señor con todo tu corazón y no te apoyes en tu propio entendimiento.»
+            «Venid a mí todos los que estáis fatigados y cargados, y yo os haré descansar.»
           </p>
-          <p style={{ fontSize: 11, opacity: 0.7, margin: 0 }}>Proverbios 3:5</p>
+          <p style={{ fontSize: 11, opacity: 0.7, margin: 0 }}>Mateo 11:28</p>
         </div>
       </div>
 
@@ -327,13 +328,24 @@ function ChatScreen({ user }) {
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, loading]);
 
-  const systemPrompt = `Eres Mater, un coach espiritual católico compasivo y sabio, inspirado en el amor materno de la Virgen María.
-Tu misión es acompañar a jóvenes católicos en su crecimiento espiritual con ternura, sabiduría y profundidad.
-Respondes desde la tradición católica (Biblia, Santos, Magisterio, Espiritualidad ignaciana, devoción mariana).
-Citas versículos bíblicos o frases de santos cuando es apropiado.
-Eres cercano, nunca frío ni excesivamente formal. Transmites paz y serenidad.
-Hablas en español, de manera natural, amorosa y serena.
-Tus respuestas son concisas (máximo 4-5 oraciones) para el formato de chat móvil.`;
+  const systemPrompt = `Eres Mater, una guía de coaching espiritual católico para jóvenes adultos de 25 a 35 años. Tu nombre evoca el amor materno de la Virgen María, y tu misión es acompañar a personas que buscan crecer en su fe en medio de una vida adulta exigente: trabajo, relaciones, dudas existenciales, vocación y búsqueda de sentido.
+
+Tu espiritualidad integra varias tradiciones:
+- Ignaciana: el discernimiento, el examen de conciencia, "buscar y hallar a Dios en todas las cosas"
+- Mariana: la confianza filial, el fiat, la intercesión de María
+- Franciscana: la sencillez, el amor a la creación, la fraternidad
+- Carmelita: la oración contemplativa, la interioridad, la noche oscura del alma
+
+Cómo respondes:
+- Con calidez, profundidad y cercanía — como una amiga sabia, no como un profesor
+- Citas versículos bíblicos (especificando libro, capítulo y versículo) y frases de santos (Ignacio, Teresa de Ávila, Francisco de Asís, Juan Pablo II, Thomas Merton, etc.)
+- Nunca juzgas ni condenas — acompañas con misericordia
+- Haces preguntas que invitan a la reflexión interior
+- Propones prácticas concretas y alcanzables para la vida cotidiana
+- Hablas en español latinoamericano, natural y cercano
+- Tus respuestas tienen máximo 4-5 oraciones para el formato móvil
+- En momentos de crisis espiritual, recuerdas que la desolación es parte del camino y no abandono de Dios`;
+
 
   async function sendMessage() {
     const text = input.trim();
@@ -406,7 +418,7 @@ Tus respuestas son concisas (máximo 4-5 oraciones) para el formato de chat móv
 
       {messages.length < 3 && (
         <div style={{ padding: "0 16px 8px", display: "flex", gap: 8, flexWrap: "wrap" }}>
-          {["Quiero orar mejor", "Tengo una duda de fe", "Me siento alejado de Dios"].map((s, i) => (
+          {["No sé cuál es mi vocación", "Me cuesta orar en el día a día", "Siento que Dios está lejos"].map((s, i) => (
             <button key={i} onClick={() => setInput(s)} style={{ background: C.white, border: `1.5px solid ${C.mist}`, borderRadius: 100, padding: "6px 12px", fontSize: 11, color: C.blue, fontWeight: 600, cursor: "pointer" }}>{s}</button>
           ))}
         </div>
@@ -434,37 +446,48 @@ function PlanScreen({ user }) {
   const [saving, setSaving] = useState(null);
 
   const weeks = [
-    { title: "Semana 1 · Fundamentos", theme: "Conocer a Dios", color: C.navy, bg: "#DDE8F4",
+    { title: "Semana 1 · Encuentro", theme: "Redescubrir a Dios", color: C.navy, bg: "#DDE8F4",
       days: [
-        { day: "Lun", title: "¿Quién es Dios?", type: "Lectura" },
-        { day: "Mar", title: "La oración como diálogo", type: "Práctica" },
-        { day: "Mié", title: "Salmo 139 — Dios me conoce", type: "Reflexión" },
-        { day: "Jue", title: "San Agustín: el corazón inquieto", type: "Lectura" },
-        { day: "Vie", title: "Adoración en silencio", type: "Práctica" },
-        { day: "Sáb", title: "Examen ignaciano semanal", type: "Examen" },
-        { day: "Dom", title: "Misa y lecturas del domingo", type: "Misa" },
+        { day: "Lun", title: "¿Quién es Dios para mí hoy?", type: "Reflexión" },
+        { day: "Mar", title: "Salmo 139 — Dios me conoce por dentro", type: "Lectio" },
+        { day: "Mié", title: "La oración como conversación, no monólogo", type: "Práctica" },
+        { day: "Jue", title: "San Agustín: 'Nos hiciste para Ti'", type: "Lectura" },
+        { day: "Vie", title: "10 minutos de silencio contemplativo", type: "Silencio" },
+        { day: "Sáb", title: "Examen ignaciano: ¿dónde vi a Dios esta semana?", type: "Examen" },
+        { day: "Dom", title: "Misa dominical con atención plena", type: "Misa" },
       ],
     },
-    { title: "Semana 2 · Oración", theme: "Aprender a rezar", color: C.blue, bg: "#E0EBF5",
+    { title: "Semana 2 · Interioridad", theme: "La vida interior", color: C.blue, bg: "#E0EBF5",
       days: [
-        { day: "Lun", title: "Lectio Divina paso a paso", type: "Lectura" },
-        { day: "Mar", title: "El Padre Nuestro profundamente", type: "Reflexión" },
-        { day: "Mié", title: "Rosario meditado", type: "Práctica" },
-        { day: "Jue", title: "Jesús en Getsemaní", type: "Lectura" },
-        { day: "Vie", title: "15 minutos de silencio interior", type: "Práctica" },
+        { day: "Lun", title: "Lectio Divina: Juan 4 — La samaritana", type: "Lectio" },
+        { day: "Mar", title: "Santa Teresa de Ávila: el castillo interior", type: "Lectura" },
+        { day: "Mié", title: "El Padre Nuestro palabra por palabra", type: "Reflexión" },
+        { day: "Jue", title: "Discernimiento: mociones espirituales", type: "Práctica" },
+        { day: "Vie", title: "Oración con el cuerpo: posturas y respiración", type: "Práctica" },
         { day: "Sáb", title: "Examen ignaciano semanal", type: "Examen" },
-        { day: "Dom", title: "Misa y lecturas del domingo", type: "Misa" },
+        { day: "Dom", title: "Misa dominical con atención plena", type: "Misa" },
       ],
     },
-    { title: "Semana 3 · Sacramentos", theme: "Encuentro con Dios", color: C.periwinkle, bg: "#E8EFF7",
+    { title: "Semana 3 · Sacramentos", theme: "Encuentros con Cristo", color: C.periwinkle, bg: "#E8EFF7",
       days: [
-        { day: "Lun", title: "La Eucaristía: pan de vida", type: "Lectura" },
-        { day: "Mar", title: "La Confesión: reconciliación", type: "Reflexión" },
-        { day: "Mié", title: "Preparación para la confesión", type: "Práctica" },
-        { day: "Jue", title: "Historia de la Misa", type: "Lectura" },
-        { day: "Vie", title: "Adoración eucarística guiada", type: "Práctica" },
+        { day: "Lun", title: "La Eucaristía: presencia real de Jesús", type: "Lectura" },
+        { day: "Mar", title: "Preparación para la Confesión — examen de vida", type: "Reflexión" },
+        { day: "Mié", title: "La misericordia de Dios — Lucas 15", type: "Lectio" },
+        { day: "Jue", title: "Adoración eucarística — guía de 20 minutos", type: "Práctica" },
+        { day: "Vie", title: "Los sacramentos como encuentros, no ritos", type: "Lectura" },
         { day: "Sáb", title: "Examen ignaciano semanal", type: "Examen" },
-        { day: "Dom", title: "Misa y lecturas del domingo", type: "Misa" },
+        { day: "Dom", title: "Misa dominical con atención plena", type: "Misa" },
+      ],
+    },
+    { title: "Semana 4 · Misión", theme: "Fe en el mundo", color: C.sky, bg: "#DFF0F8",
+      days: [
+        { day: "Lun", title: "Vocación: ¿a qué me llama Dios?", type: "Reflexión" },
+        { day: "Mar", title: "San Francisco: la fraternidad universal", type: "Lectura" },
+        { day: "Mié", title: "Fe y trabajo: orar con las manos", type: "Práctica" },
+        { day: "Jue", title: "Doctrina social: dignidad de la persona", type: "Lectura" },
+        { day: "Vie", title: "Servicio: un gesto concreto de amor hoy", type: "Práctica" },
+        { day: "Sáb", title: "Examen ignaciano del mes", type: "Examen" },
+        { day: "Dom", title: "Misa de cierre — acción de gracias", type: "Misa" },
       ],
     },
   ];
@@ -493,7 +516,7 @@ function PlanScreen({ user }) {
     setSaving(null);
   }
 
-  const typeColor = { Lectura: C.blue, Práctica: C.sky, Reflexión: C.periwinkle, Examen: C.gold, Misa: C.navy };
+  const typeColor = { Lectura: C.blue, Práctica: C.sky, Reflexión: C.periwinkle, Examen: C.gold, Misa: C.navy, Lectio: C.teal, Silencio: C.slate };
   const w = weeks[activeWeek];
   const doneCount = w.days.filter((_, i) => progress[`${activeWeek}-${i}`]).length;
   const pct = Math.round((doneCount / w.days.length) * 100);
