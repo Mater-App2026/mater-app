@@ -221,7 +221,8 @@ function HomeScreen({ user, profile, onTabChange }) {
   const [streakCount, setStreakCount] = useState(0);
   const [dailyVerse, setDailyVerse] = useState(null);
 
-  const todayKey = new Date().toISOString().split("T")[0];
+  const now = new Date();
+  const todayKey = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0");
 
   // Versículos rotativos según el día del año
   const verses = [
@@ -248,23 +249,33 @@ function HomeScreen({ user, profile, onTabChange }) {
 
     // Cargar racha real desde Supabase
     async function loadStreak() {
-      const { data } = await supabase.from("streaks").select("date").eq("user_id", user.id).order("date", { ascending: false }).limit(14);
-      if (!data) return;
+      const { data } = await supabase.from("streaks").select("date").eq("user_id", user.id).order("date", { ascending: false }).limit(60);
+      if (!data || data.length === 0) return;
       const dateSet = new Set(data.map(r => r.date));
-      const weekStreak = days.map((_, i) => {
+
+      // Usar fecha local correcta
+      function localDate(offset = 0) {
         const d = new Date();
-        d.setDate(d.getDate() - (todayIdx - i));
-        const key = d.toISOString().split("T")[0];
-        return dateSet.has(key);
+        d.setDate(d.getDate() + offset);
+        return d.getFullYear() + "-" +
+          String(d.getMonth() + 1).padStart(2, "0") + "-" +
+          String(d.getDate()).padStart(2, "0");
+      }
+
+      // Marcar semana actual
+      const weekStreak = days.map((_, i) => {
+        return dateSet.has(localDate(i - todayIdx));
       });
       setStreakDays(weekStreak);
+
+      // Contar días consecutivos hacia atrás desde hoy
       let count = 0;
-      const today = new Date().toISOString().split("T")[0];
-      let check = new Date();
+      let offset = 0;
       while (true) {
-        const key = check.toISOString().split("T")[0];
-        if (dateSet.has(key)) { count++; check.setDate(check.getDate() - 1); }
+        const key = localDate(-offset);
+        if (dateSet.has(key)) { count++; offset++; }
         else break;
+        if (offset > 365) break;
       }
       setStreakCount(count);
     }
