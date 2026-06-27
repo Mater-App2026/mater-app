@@ -463,17 +463,17 @@ Los jesuitas tienen una expresión que lo resume todo: "encontrar a Dios en toda
       <div style={{ padding: "52px 22px 0" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
           <div>
-            <p style={{ fontSize: 13, color: C.slateLight, margin: 0 }}>Buenos días ✦</p>
+            <p style={{ fontSize: 11, color: C.inkLight, margin: 0, letterSpacing: "0.08em", textTransform: "uppercase" }}>{(() => { const h = new Date().getHours(); return h < 12 ? "Buenos días" : h < 18 ? "Buenas tardes" : "Buenas noches"; })()}</p>
             <h1 style={{ fontSize: 26, fontWeight: 600, color: C.ink, margin: "2px 0 0", lineHeight: 1.15, fontFamily: "'Cormorant Garamond', serif", letterSpacing: "0.01em" }}>
               {firstName}
             </h1>
           </div>
-          <div style={{
-            width: 44, height: 44, borderRadius: "50%",
-            background: `linear-gradient(135deg, ${C.navy}, ${C.sky})`,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            color: "#fff", fontWeight: 800, fontSize: 18,
-          }}>{firstName[0]?.toUpperCase()}</div>
+          <div style={{ width: 44, height: 44, borderRadius: 4, overflow: "hidden", border: `1px solid ${C.mist}`, flexShrink: 0 }}>
+            {profile?.avatar_url
+              ? <img src={profile.avatar_url} alt={firstName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              : <div style={{ width: "100%", height: "100%", background: C.navy, display: "flex", alignItems: "center", justifyContent: "center", color: C.cream, fontWeight: 600, fontSize: 18 }}>{firstName[0]?.toUpperCase()}</div>
+            }
+          </div>
         </div>
 
         {/* Versículo */}
@@ -1259,20 +1259,42 @@ function ProfileScreen({ user, profile, setProfile, onLogout }) {
   const [name, setName] = useState(profile?.name || "");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [activeModal, setActiveModal] = useState(null); // "notifications" | "privacy" | "about"
+  const [activeModal, setActiveModal] = useState(null);
   const [notifEnabled, setNotifEnabled] = useState(false);
   const [notifTime, setNotifTime] = useState("08:00");
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url || null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
-    // Verificar si notificaciones están habilitadas
     if ("Notification" in window) {
       setNotifEnabled(Notification.permission === "granted");
     }
     const savedTime = localStorage.getItem("mater_notif_time");
     if (savedTime) setNotifTime(savedTime);
   }, []);
+
+  async function uploadAvatar(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadingAvatar(true);
+    try {
+      const ext = file.name.split(".").pop();
+      const path = `${user.id}/avatar.${ext}`;
+      const { error: uploadError } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
+      if (uploadError) throw uploadError;
+      const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+      const url = data.publicUrl + "?t=" + Date.now();
+      await supabase.from("profiles").upsert({ id: user.id, avatar_url: url });
+      setAvatarUrl(url);
+      setProfile(prev => ({ ...prev, avatar_url: url }));
+    } catch (err) {
+      alert("Error al subir la imagen. Intenta de nuevo.");
+    }
+    setUploadingAvatar(false);
+  }
 
   async function saveName() {
     if (!name.trim()) return;
@@ -1457,9 +1479,29 @@ function ProfileScreen({ user, profile, setProfile, onLogout }) {
 
       {/* Header */}
       <div style={{ padding: "52px 22px 0", textAlign: "center" }}>
-        <div style={{ width: 90, height: 90, borderRadius: 28, margin: "0 auto 16px", overflow: "hidden", boxShadow: `0 8px 28px ${C.navy}33` }}>
-          <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        <div style={{ position: "relative", width: 90, margin: "0 auto 16px" }}>
+          <div style={{ width: 90, height: 90, borderRadius: 4, overflow: "hidden", border: `1px solid ${C.mist}` }}>
+            {avatarUrl ? (
+              <img src={avatarUrl} alt="Avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            ) : (
+              <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            )}
+          </div>
+          <button onClick={() => fileInputRef.current?.click()} disabled={uploadingAvatar} style={{
+            position: "absolute", bottom: -6, right: -6,
+            width: 28, height: 28, borderRadius: 4,
+            background: C.navy, border: `2px solid ${C.cream}`,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            cursor: "pointer",
+          }}>
+            {uploadingAvatar
+              ? <div style={{ width: 10, height: 10, border: `2px solid ${C.cream}`, borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+              : <Icon name="edit" size={12} color={C.cream} />
+            }
+          </button>
+          <input ref={fileInputRef} type="file" accept="image/*" onChange={uploadAvatar} style={{ display: "none" }} />
         </div>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
 
         {editing ? (
           <div style={{ display: "flex", gap: 8, justifyContent: "center", alignItems: "center", marginBottom: 8 }}>
