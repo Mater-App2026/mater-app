@@ -194,17 +194,113 @@ function HomeScreen({ user, profile, onTabChange }) {
   const days = ["L", "M", "M", "J", "V", "S", "D"];
   const streakDays = [true, true, true, false, true, true, false];
   const today = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
+  const [openCard, setOpenCard] = useState(null);
 
-  const cards = [
-    { icon: "moon",  color: C.blue,       bg: C.iceBlue, label: "Oración de la mañana",   sub: "Laudes · 8 min",              done: true  },
-    { icon: "book",  color: C.navy,       bg: "#DDE8F2", label: "Lectio Divina",           sub: "Lucas 10:38-42 · María y Marta", done: false },
-    { icon: "heart", color: C.periwinkle, bg: "#E4EDF7", label: "Examen de conciencia",    sub: "Método ignaciano · 5 pasos",  done: false },
+  const practiceContent = [
+    {
+      icon: "moon", color: C.blue, bg: C.iceBlue,
+      label: "Oración de la mañana", sub: "Laudes · 8 min", done: true,
+      saint: "San Juan de la Cruz",
+      saintQuote: "«En la tarde de la vida, te examinarán en el amor.»",
+      reflection: `Cada mañana es una invitación de Dios a comenzar de nuevo. Los Laudes — la oración de la mañana de la Iglesia — nos ayudan a consagrar las primeras horas del día al Señor antes de que el ruido del mundo nos ocupe.\n\nSan Ignacio de Loyola recomendaba comenzar el día con un momento de gratitud: reconocer que todo lo que somos y tenemos viene de Dios. No como obligación, sino como el hijo que al despertar busca primero el rostro de su padre.\n\nHoy, antes de mirar el teléfono, antes de revisar el trabajo, dedica estos minutos a estar con Él.`,
+      questions: [
+        "¿Cómo llego a este nuevo día? ¿Con qué disposición interior?",
+        "¿Hay algo que me pesa y quiero entregar a Dios esta mañana?",
+        "¿Qué gracia necesito hoy para vivir bien este día?",
+      ],
+    },
+    {
+      icon: "book", color: C.navy, bg: "#DDE8F2",
+      label: "Lectio Divina", sub: "Lucas 10:38-42 · María y Marta", done: false,
+      saint: "San Bernardo de Claraval",
+      saintQuote: "«Quien actúa sin orar, actúa sin Dios.»",
+      reflection: `Marta y María no son dos tipos de personas opuestas — son las dos dimensiones de cada uno de nosotros. La Marta que se afana, que produce, que gestiona. Y la María que se sienta, que escucha, que contempla.\n\nJesús no condena a Marta. La ama. Pero le dice algo crucial para nuestra vida adulta y ocupada: hay una sola cosa necesaria. No diez. No cien. Una.\n\nEn un mundo que nos premia por la productividad, la escena de Betania es casi escandalosa. ¿Cuándo fue la última vez que te sentaste, sin hacer nada útil, solo para estar con Jesús?`,
+      questions: [
+        "¿Me identifico más con Marta o con María en este momento de mi vida?",
+        "¿Qué me impide sentarme a los pies de Jesús a escuchar?",
+        "¿Qué te dice Jesús a ti hoy con estas palabras?",
+      ],
+    },
+    {
+      icon: "heart", color: C.periwinkle, bg: "#E4EDF7",
+      label: "Examen de conciencia", sub: "Método ignaciano · 5 pasos", done: false,
+      saint: "San Ignacio de Loyola",
+      saintQuote: "«El amor se debe poner más en las obras que en las palabras.»",
+      reflection: `El Examen ignaciano no es un inventario de pecados. Es mucho más hermoso: es aprender a leer la vida como Dios la lee. San Ignacio lo consideraba la práctica más importante del día, incluso más que la Misa si hubiera que elegir.\n\nSus cinco pasos son: 1) Dar gracias por el día. 2) Pedir luz para ver con claridad. 3) Repasar el día con Dios a tu lado. 4) Reconocer los momentos de amor y los de alejamiento. 5) Mirar el mañana con esperanza.\n\nNo se trata de flagelarse. Se trata de aprender a ver dónde está Dios en tu vida cotidiana.`,
+      questions: [
+        "¿Por qué tres cosas puedo dar gracias hoy?",
+        "¿En qué momento del día sentí más paz? ¿Y más inquietud?",
+        "¿Hubo algo que hice o dejé de hacer y que mañana quiero vivir diferente?",
+      ],
+    },
   ];
 
   const firstName = profile?.name?.split(" ")[0] || user?.email?.split("@")[0] || "Amig@";
 
   return (
     <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90 }}>
+
+      {/* Modal de práctica */}
+      {openCard !== null && (
+        <div style={{
+          position: "fixed", inset: 0, zIndex: 200,
+          background: "rgba(15,30,50,0.7)",
+          display: "flex", alignItems: "flex-end",
+        }} onClick={() => setOpenCard(null)}>
+          <div onClick={e => e.stopPropagation()} style={{
+            background: C.white, borderRadius: "24px 24px 0 0",
+            padding: "24px 22px 48px", width: "100%", maxWidth: 390, margin: "0 auto",
+            maxHeight: "85vh", overflowY: "auto",
+          }}>
+            {/* Header */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div style={{ width: 40, height: 40, borderRadius: 12, background: practiceContent[openCard].bg, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Icon name={practiceContent[openCard].icon} size={20} color={practiceContent[openCard].color} />
+                </div>
+                <div>
+                  <p style={{ fontSize: 15, fontWeight: 800, color: C.inkDark, margin: 0 }}>{practiceContent[openCard].label}</p>
+                  <p style={{ fontSize: 11, color: C.slateLight, margin: 0 }}>{practiceContent[openCard].sub}</p>
+                </div>
+              </div>
+              <button onClick={() => setOpenCard(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+            </div>
+
+            {/* Cita del santo */}
+            <div style={{ background: practiceContent[openCard].bg, borderRadius: 14, padding: "14px 16px", marginBottom: 20, borderLeft: `3px solid ${practiceContent[openCard].color}` }}>
+              <p style={{ fontSize: 13, fontStyle: "italic", color: C.inkMid, margin: "0 0 6px", lineHeight: 1.6 }}>{practiceContent[openCard].saintQuote}</p>
+              <p style={{ fontSize: 11, fontWeight: 700, color: practiceContent[openCard].color, margin: 0 }}>{practiceContent[openCard].saint}</p>
+            </div>
+
+            {/* Reflexión */}
+            <p style={{ fontSize: 13, color: C.inkMid, lineHeight: 1.8, margin: "0 0 24px", whiteSpace: "pre-line" }}>
+              {practiceContent[openCard].reflection}
+            </p>
+
+            {/* Preguntas */}
+            <p style={{ fontSize: 12, fontWeight: 700, color: practiceContent[openCard].color, letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 12px" }}>
+              Preguntas para orar
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {practiceContent[openCard].questions.map((q, i) => (
+                <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                  <div style={{ width: 24, height: 24, borderRadius: "50%", background: `${practiceContent[openCard].color}20`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: practiceContent[openCard].color, fontSize: 11, fontWeight: 700 }}>{i + 1}</div>
+                  <p style={{ fontSize: 13, color: C.inkDark, lineHeight: 1.6, margin: 0 }}>{q}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Botón cerrar */}
+            <button onClick={() => setOpenCard(null)} style={{
+              width: "100%", marginTop: 28, padding: "14px",
+              background: `linear-gradient(135deg, ${C.navy}, ${C.blue})`,
+              border: "none", borderRadius: 14, color: "#fff",
+              fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
+            }}>Amén 🕊️</button>
+          </div>
+        </div>
+      )}
+
       <div style={{ padding: "52px 22px 0" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
           <div>
@@ -264,12 +360,13 @@ function HomeScreen({ user, profile, onTabChange }) {
       <div style={{ padding: "22px 22px 0" }}>
         <p style={{ fontSize: 13, fontWeight: 700, color: C.inkDark, margin: "0 0 12px" }}>Prácticas de hoy</p>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {cards.map((c, i) => (
-            <div key={i} style={{
+          {practiceContent.map((c, i) => (
+            <button key={i} onClick={() => setOpenCard(i)} style={{
               background: c.done ? c.bg : C.white, borderRadius: 14, padding: "14px 16px",
               display: "flex", alignItems: "center", gap: 14,
               border: c.done ? `1.5px solid ${c.color}44` : `1.5px solid ${C.mist}`,
               boxShadow: "0 2px 12px rgba(30,58,95,0.06)",
+              cursor: "pointer", textAlign: "left", width: "100%",
             }}>
               <div style={{ width: 42, height: 42, borderRadius: 12, background: c.bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                 <Icon name={c.icon} size={20} color={c.color} />
@@ -284,8 +381,8 @@ function HomeScreen({ user, profile, onTabChange }) {
                 border: c.done ? "none" : `2px solid ${C.mist}`,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 color: "#fff", fontSize: 12, flexShrink: 0,
-              }}>{c.done && "✓"}</div>
-            </div>
+              }}>{c.done ? "✓" : "›"}</div>
+            </button>
           ))}
         </div>
       </div>
