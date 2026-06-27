@@ -258,6 +258,20 @@ function HomeScreen({ user, profile, onTabChange }) {
         const map = {};
         data.forEach(r => { map[`${r.practice_index}-${todayKey}`] = true; });
         setCompletedPractices(map);
+
+        // Si las 3 ya están completadas, marcar racha
+        const allDone = [0, 1, 2].every(i => map[`${i}-${todayKey}`]);
+        if (allDone) {
+          await supabase.from("streaks").upsert(
+            { user_id: user.id, date: todayKey },
+            { onConflict: "user_id,date" }
+          );
+          setStreakDays(prev => {
+            const next = [...prev];
+            next[todayIdx] = true;
+            return next;
+          });
+        }
       }
     }
 
