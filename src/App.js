@@ -1834,7 +1834,7 @@ export default function App() {
 
   if (!session) return (
     <div style={phone}>
-      <AuthScreen onAuth={() => {}} />
+      {showLanding ? <LandingScreen onEnter={() => setShowLanding(false)} /> : <AuthScreen onAuth={() => {}} />}
     </div>
   );
 
