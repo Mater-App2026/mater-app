@@ -1769,6 +1769,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState("home");
   const [showOnboarding, setShowOnboarding] = useState(false);
+ const [showLanding, setShowLanding] = useState(true);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
