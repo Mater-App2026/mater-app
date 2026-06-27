@@ -556,7 +556,7 @@ Cómo respondes:
     setInput("");
     setLoading(true);
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -664,7 +664,7 @@ function PlanScreen({ user }) {
       const dateCode = `${mm}${dd}${yy}`;
       const usccbUrl = `https://bible.usccb.org/bible/readings/${dateCode}.cfm`;
 
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -703,7 +703,7 @@ Responde SOLO con este JSON (sin bloques de código, sin texto extra):
   async function fetchDayContent(day, weekTitle) {
     setLoadingContent(true);
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
