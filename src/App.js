@@ -894,7 +894,18 @@ Acércate a esta práctica con libertad interior. Si sientes resistencia, no la 
                     </div>
                   ))}
                 </div>
-                <button onClick={() => { setOpenDay(null); setDayContent(null); }} style={{ width: "100%", padding: "14px", background: `linear-gradient(135deg, ${C.navy}, ${C.blue})`, border: "none", borderRadius: 14, color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Amén 🕊️</button>
+                <div style={{ display: "flex", gap: 10, marginBottom: 24 }}>
+                  <button onClick={() => { toggleDay(activeWeek, openDay); setOpenDay(null); setDayContent(null); }} style={{
+                    flex: 1, padding: "14px",
+                    background: progress[`${activeWeek}-${openDay}`]
+                      ? `${C.mist}`
+                      : `linear-gradient(135deg, ${C.navy}, ${C.blue})`,
+                    border: "none", borderRadius: 14, color: "#fff",
+                    fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
+                  }}>
+                    {progress[`${activeWeek}-${openDay}`] ? "✓ Completado" : "Amén ✓ — Marcar como hecho 🕊️"}
+                  </button>
+                </div>
               </>
             ) : null}
           </div>
