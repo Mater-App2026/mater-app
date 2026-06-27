@@ -302,36 +302,54 @@ function HomeScreen({ user, profile, onTabChange }) {
       icon: "moon", color: C.blue, bg: C.iceBlue,
       label: "Oración de la mañana", sub: "Laudes · 8 min", done: true,
       saint: "San Juan de la Cruz",
-      saintQuote: "«En la tarde de la vida, te examinarán en el amor.»",
-      reflection: `Cada mañana es una invitación de Dios a comenzar de nuevo. Los Laudes — la oración de la mañana de la Iglesia — nos ayudan a consagrar las primeras horas del día al Señor antes de que el ruido del mundo nos ocupe.\n\nSan Ignacio de Loyola recomendaba comenzar el día con un momento de gratitud: reconocer que todo lo que somos y tenemos viene de Dios. No como obligación, sino como el hijo que al despertar busca primero el rostro de su padre.\n\nHoy, antes de mirar el teléfono, antes de revisar el trabajo, dedica estos minutos a estar con Él.`,
+      saintQuote: "«En el principio de la mañana, antes de que el alma se ocupe en ninguna cosa, consagre a Dios el primer movimiento del corazón, el primer pensamiento, el primer deseo.»",
+      reflection: `Los Laudes — la oración de la mañana de la Iglesia — son mucho más que un hábito devoto. Son una declaración teológica: antes de que el mundo me reclame, yo me pertenezco a Dios. La Liturgia de las Horas, que millones de consagrados y laicos rezan en todo el mundo en este mismo momento, nos une a la oración perpetua de la Iglesia que nunca cesa.
+
+San Benito, padre del monasticismo occidental, enseñaba que la primera obra del monje cada mañana debía ser la oración, no porque Dios la necesite, sino porque el alma la necesita. Sin ese anclaje inicial, el día se convierte en una sucesión de urgencias que nos arrastran lejos de nosotros mismos y lejos de Dios.
+
+¿Qué diferencia hace comenzar el día con Dios? Los maestros espirituales coinciden: la persona que ora en la mañana lleva consigo durante el día una quietud interior que no depende de las circunstancias. No es que los problemas desaparezcan — es que se ven desde otra altura. Santa Teresa de Ávila llamaba a esto "el punto de Arquímedes del alma": ese lugar interior desde donde todo lo demás toma su justa proporción.
+
+Hoy, antes de revisar el teléfono, antes de pensar en el trabajo o en los planes del día, dedica estos minutos a consagrar el día a Dios. No hace falta que salgan palabras perfectas. Una mirada amorosa al cielo ya es oración. San Juan Vianney decía que bastaba con "mirar a Dios y dejar que Dios te mire."`,
       questions: [
-        "¿Cómo llego a este nuevo día? ¿Con qué disposición interior?",
-        "¿Hay algo que me pesa y quiero entregar a Dios esta mañana?",
-        "¿Qué gracia necesito hoy para vivir bien este día?",
+        "¿Cómo llego a este nuevo día — con gratitud, con ansiedad, con prisa? ¿Qué me dice eso sobre mi estado interior?",
+        "¿Hay algo que quiero entregar específicamente a Dios esta mañana antes de comenzar el día?",
+        "¿Qué gracia concreta necesito hoy para vivir bien lo que este día trae?",
       ],
     },
     {
       icon: "book", color: C.navy, bg: "#DDE8F2",
       label: "Lectio Divina", sub: "Lucas 10:38-42 · María y Marta", done: false,
       saint: "San Bernardo de Claraval",
-      saintQuote: "«Quien actúa sin orar, actúa sin Dios.»",
-      reflection: `Marta y María no son dos tipos de personas opuestas — son las dos dimensiones de cada uno de nosotros. La Marta que se afana, que produce, que gestiona. Y la María que se sienta, que escucha, que contempla.\n\nJesús no condena a Marta. La ama. Pero le dice algo crucial para nuestra vida adulta y ocupada: hay una sola cosa necesaria. No diez. No cien. Una.\n\nEn un mundo que nos premia por la productividad, la escena de Betania es casi escandalosa. ¿Cuándo fue la última vez que te sentaste, sin hacer nada útil, solo para estar con Jesús?`,
+      saintQuote: "«Hay quienes buscan a Dios para saber; son sabios. Hay quienes buscan a Dios para amar; son bienaventurados. Hay quienes buscan a Dios para servir; son fieles. Pero los más sabios son los que buscan a Dios para encontrarle.»",
+      reflection: `La escena de Betania es una de las más cargadas de tensión y de gracia en todo el Evangelio. Marta entra apresurada, con las manos llenas y el corazón ocupado. María está sentada a los pies de Jesús, en la postura del discípulo que escucha. Y Jesús, lejos de resolver el conflicto a favor de la actividad, dice algo que ha desconcertado a los cristianos activos durante dos milenios: "María ha elegido la parte mejor."
+
+No se trata de una condena al trabajo ni a la generosidad de Marta. El Evangelio no es una invitación a la pereza espiritual disfrazada de contemplación. Lo que Jesús señala es una prioridad: hay un orden en las cosas. Primero escuchar, luego actuar. Primero ser, luego hacer. La acción que no nace de la contemplación se convierte en activismo vacío, en ruido sin sentido.
+
+San Bernardo de Claraval, doctor de la Iglesia y maestro espiritual del siglo XII, vivía esta tensión a diario como abad de Claraval: hombre de contemplación profunda y al mismo tiempo uno de los hombres más influyentes de su tiempo. Él enseñaba que quien abandona la contemplación para dedicarse enteramente a la acción pierde su fuente. "El río que no regresa a su manantial se seca."
+
+Para nosotros, jóvenes adultos del siglo XXI inmersos en la cultura de la productividad y el logro, esta escena es casi escandalosa. ¿Sentarme sin hacer nada útil? ¿Solo escuchar? Sí. Exactamente eso. La Lectio Divina — leer la Escritura no para extraer información sino para encontrar a una Persona — es el arte de sentarse con María mientras el mundo grita con Marta.`,
       questions: [
-        "¿Me identifico más con Marta o con María en este momento de mi vida?",
-        "¿Qué me impide sentarme a los pies de Jesús a escuchar?",
-        "¿Qué te dice Jesús a ti hoy con estas palabras?",
+        "¿Me identifico más con Marta o con María en este momento de mi vida? ¿Qué me dice esa identificación?",
+        "¿Hay alguna 'Palabra' que Dios ha estado queriendo decirme y que el ruido de mi vida no me ha dejado escuchar?",
+        "¿Qué pasaría en mi vida si dedicara 15 minutos diarios a sentarme simplemente a escuchar a Dios sin agenda propia?",
       ],
     },
     {
       icon: "heart", color: C.periwinkle, bg: "#E4EDF7",
       label: "Examen de conciencia", sub: "Método ignaciano · 5 pasos", done: false,
       saint: "San Ignacio de Loyola",
-      saintQuote: "«El amor se debe poner más en las obras que en las palabras.»",
-      reflection: `El Examen ignaciano no es un inventario de pecados. Es mucho más hermoso: es aprender a leer la vida como Dios la lee. San Ignacio lo consideraba la práctica más importante del día, incluso más que la Misa si hubiera que elegir.\n\nSus cinco pasos son: 1) Dar gracias por el día. 2) Pedir luz para ver con claridad. 3) Repasar el día con Dios a tu lado. 4) Reconocer los momentos de amor y los de alejamiento. 5) Mirar el mañana con esperanza.\n\nNo se trata de flagelarse. Se trata de aprender a ver dónde está Dios en tu vida cotidiana.`,
+      saintQuote: "«El examen de conciencia no es contabilidad espiritual de pecados. Es aprender a leer la vida como Dios la lee: con misericordia, con atención y con amor.»",
+      reflection: `San Ignacio de Loyola consideraba el Examen de Conciencia — al que llamaba "el Examen" — la práctica más importante de la vida espiritual. Más importante que la Misa, decía, si hubiera que elegir entre una y otra. Esta afirmación asombrosa revela cuánto valoraba esta práctica aparentemente sencilla de revisar el día.
+
+Pero el Examen ignaciano no es lo que muchos imaginan: no es una lista de pecados, no es una sesión de autoflagelación espiritual, no es cargar con culpas acumuladas. Es algo mucho más hermoso y más humano: es aprender a ver la propia vida con los ojos de Dios. Sus cinco pasos clásicos son: gratitud (dar gracias por el día), petición de luz (pedir ver con claridad), revisión del día (repasarlo como una película con Dios a tu lado), reconocimiento (identificar momentos de amor y de alejamiento) y propósito (mirar el mañana con esperanza renovada).
+
+Lo que hace único al Examen ignaciano es que no separa lo "espiritual" de lo "cotidiano". Dios está en la reunión de trabajo difícil, en la conversación tensa con un familiar, en el momento de generosidad espontánea, en el cansancio del final del día. El Examen nos entrena para reconocer esa presencia donde menos la esperamos.
+
+Los jesuitas tienen una expresión que lo resume todo: "encontrar a Dios en todas las cosas." El Examen es la escuela donde aprendemos eso. No de golpe, sino día a día, con paciencia y con la misericordia de Dios que siempre va delante de nosotros.`,
       questions: [
-        "¿Por qué tres cosas puedo dar gracias hoy?",
-        "¿En qué momento del día sentí más paz? ¿Y más inquietud?",
-        "¿Hubo algo que hice o dejé de hacer y que mañana quiero vivir diferente?",
+        "¿Por qué tres momentos o personas de hoy puedo dar gracias sinceramente a Dios?",
+        "¿En qué momento del día sentí mayor paz y libertad interior? ¿Y en cuál más tensión o lejanía de Dios?",
+        "¿Hay algo que hice o dejé de hacer hoy que mañana quiero vivir de manera diferente? ¿Qué necesito pedirle a Dios para lograrlo?",
       ],
     },
   ];
@@ -708,21 +726,32 @@ Responde SOLO con este JSON (sin bloques de código, sin texto extra):
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-sonnet-4-6",
-          max_tokens: 1000,
-          system: `Eres Mater, guía espiritual católica para jóvenes adultos de 25-35 años. Integras espiritualidad ignaciana, mariana, franciscana y carmelita. Respondes SOLO en JSON válido.`,
+          max_tokens: 1500,
+          system: `Eres Mater, guía espiritual católica para jóvenes adultos de 25-35 años. 
+Integras con profundidad la espiritualidad ignaciana (discernimiento, examen, consolación/desolación), 
+mariana (fiat, intercesión, ternura), franciscana (pobreza, hermandad, creación) y carmelita (contemplación, noche oscura, Teresa de Ávila, Juan de la Cruz).
+Tus reflexiones son ÚNICAS para cada práctica — nunca repites las mismas frases ni estructuras.
+Escribes con profundidad teológica pero lenguaje cercano, como un director espiritual sabio y cálido.
+Citas santos, papas, místicos y la Escritura con precisión.
+Respondes SOLO en JSON válido, sin bloques de código, sin texto extra.`,
           messages: [{
             role: "user",
-            content: `Crea contenido espiritual para esta práctica del plan de formación:
-Semana: ${weekTitle}
-Práctica del día: ${day.title}
-Tipo: ${day.type}
+            content: `Crea contenido espiritual ÚNICO Y EXCLUSIVO para esta práctica específica:
+
+Semana del plan: ${weekTitle}
+Título de la práctica: "${day.title}"
+Tipo de práctica: ${day.type}
+
+IMPORTANTE: El contenido debe ser específico para este tema. No uses frases genéricas.
+La reflexión debe tener mínimo 4 párrafos ricos en espiritualidad católica.
+El santo debe ser relevante directamente a este tema específico.
 
 Responde SOLO con este JSON:
 {
-  "santo": "Nombre de un santo relevante",
-  "cita": "Cita breve del santo",
-  "reflexion": "Reflexión profunda de 3 párrafos para jóvenes adultos",
-  "preguntas": ["pregunta 1", "pregunta 2", "pregunta 3"]
+  "santo": "Nombre de un santo directamente relacionado con este tema",
+  "cita": "Cita auténtica y específica de ese santo sobre este tema exacto",
+  "reflexion": "4 párrafos profundos, únicos y específicos para '${day.title}'. Usa referencias bíblicas, tradición de la Iglesia, experiencia espiritual concreta. Mínimo 200 palabras.",
+  "preguntas": ["Pregunta profunda y específica para este tema 1", "Pregunta profunda y específica para este tema 2", "Pregunta profunda y específica para este tema 3"]
 }`
           }],
         }),
@@ -732,7 +761,22 @@ Responde SOLO con este JSON:
       const clean = text.replace(/```json|```/g, "").trim();
       setDayContent(JSON.parse(clean));
     } catch {
-      setDayContent({ santo: "San Ignacio de Loyola", cita: "«Busca y hallarás a Dios en todas las cosas.»", reflexion: "La vida espiritual no es un añadido a nuestra vida — es su centro. Cada práctica que realizamos es una forma de sintonizar con la frecuencia de Dios, que está siempre presente pero que necesitamos aprender a escuchar.\n\nEste ejercicio te invita a detenerte. En medio de la agenda, los mensajes, las responsabilidades, hay un espacio interior donde Dios habita. Acceder a él requiere intención y práctica diaria.\n\nNo se trata de perfección sino de fidelidad. Cada pequeño paso cuenta.", preguntas: ["¿Qué resistencias siento ante esta práctica?", "¿Qué quiere decirme Dios a través de este ejercicio hoy?", "¿Cómo puedo llevar lo que aprendo aquí a mi vida cotidiana?"] });
+      setDayContent({
+        santo: "San Ignacio de Loyola",
+        cita: "«Busca y hallarás a Dios en todas las cosas, en cada momento de tu vida ordinaria.»",
+        reflexion: `La práctica espiritual no es un ejercicio más en nuestra agenda. Es el espacio donde Dios nos habla en el silencio de nuestra vida interior, donde el alma aprende a reconocer Su voz entre el ruido del mundo.
+
+San Ignacio de Loyola descubrió esta verdad en su lecho de convalecencia en Loyola. Herido en batalla, tuvo tiempo para leer vidas de santos y, poco a poco, notó algo: ciertos pensamientos le dejaban paz duradera, otros alegría superficial que pronto se convertía en vacío. Así nació el discernimiento de espíritus: aprender a leer los movimientos del alma.
+
+Esta práctica que tienes ante ti hoy es una invitación a ese mismo discernimiento. No se trata de hacer algo perfecto sino de hacerlo con amor. Santa Teresa de Lisieux, la pequeña Teresa, nos enseñó que la santidad no está en las grandes hazañas sino en los pequeños actos realizados con gran amor. Un momento de oración sincera vale más que horas de piedad superficial.
+
+Acércate a esta práctica con libertad interior. Si sientes resistencia, no la huyas — ofécela a Dios. Si sientes consolación, dale gracias. Todo es material para el camino espiritual.`,
+        preguntas: [
+          "¿Qué resistencias internas encuentras ante esta práctica y qué te dicen sobre tu estado espiritual?",
+          "¿En qué momento concreto de tu vida cotidiana puedes integrar lo que aprendes aquí?",
+          "¿Qué gracia específica quieres pedirle a Dios al terminar esta práctica hoy?"
+        ]
+      });
     } finally {
       setLoadingContent(false);
     }
