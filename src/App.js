@@ -118,10 +118,11 @@ function AuthScreen({ onAuth }) {
       <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
         <div style={{
           width: 72, height: 72, borderRadius: 22, margin: "0 auto 1rem",
-          background: `linear-gradient(135deg, ${C.navy}, ${C.periwinkle})`,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 34, boxShadow: `0 8px 28px ${C.navy}44`,
-        }}>🕊️</div>
+          overflow: "hidden",
+          boxShadow: `0 8px 28px ${C.navy}44`,
+        }}>
+          <img src="/Disen_o_sin_ti_tulo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        </div>
         <h1 style={{ fontSize: 30, fontWeight: 800, color: C.navy, margin: "0 0 4px" }}>Mater</h1>
         <p style={{ fontSize: 13, color: C.slateLight, margin: 0 }}>Tu guía de coaching espiritual</p>
       </div>
@@ -515,11 +516,11 @@ Los jesuitas tienen una expresión que lo resume todo: "encontrar a Dios en toda
           display: "flex", alignItems: "center", gap: 14, textAlign: "left",
         }}>
           <div style={{
-            width: 46, height: 46, borderRadius: 14,
-            background: `linear-gradient(135deg, ${C.navy}, ${C.periwinkle})`,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 22, flexShrink: 0,
-          }}>🕊️</div>
+            width: 46, height: 46, borderRadius: 14, overflow: "hidden",
+            flexShrink: 0,
+          }}>
+            <img src="/Disen_o_sin_ti_tulo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          </div>
           <div style={{ flex: 1 }}>
             <p style={{ fontSize: 13, fontWeight: 700, color: C.inkDark, margin: 0 }}>Hablar con Mater</p>
             <p style={{ fontSize: 11, color: C.inkLight, margin: "2px 0 0" }}>¿Tienes algo en el corazón hoy?</p>
@@ -595,7 +596,9 @@ Cómo respondes:
     <div style={{ flex: 1, display: "flex", flexDirection: "column", background: gradients.chat }}>
       <div style={{ padding: "52px 22px 16px", background: "rgba(234,244,252,0.85)", backdropFilter: "blur(12px)", borderBottom: `1px solid ${C.mist}` }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <div style={{ width: 44, height: 44, borderRadius: 14, background: `linear-gradient(135deg, ${C.navy}, ${C.periwinkle})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 }}>🕊️</div>
+          <div style={{ width: 44, height: 44, borderRadius: 14, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <img src="/Disen_o_sin_ti_tulo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          </div>
           <div>
             <p style={{ fontSize: 16, fontWeight: 800, color: C.inkDark, margin: 0 }}>Mater</p>
             <p style={{ fontSize: 11, color: C.sky, margin: 0, fontWeight: 600 }}>● Guía espiritual</p>
@@ -607,7 +610,9 @@ Cómo respondes:
         {messages.map((m, i) => (
           <div key={i} style={{ display: "flex", justifyContent: m.role === "user" ? "flex-end" : "flex-start", marginBottom: 12 }}>
             {m.role === "assistant" && (
-              <div style={{ width: 30, height: 30, borderRadius: 10, flexShrink: 0, background: `linear-gradient(135deg, ${C.navy}, ${C.periwinkle})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, marginRight: 8, alignSelf: "flex-end" }}>🕊️</div>
+              <div style={{ width: 30, height: 30, borderRadius: 10, flexShrink: 0, overflow: "hidden", marginRight: 8, alignSelf: "flex-end" }}>
+              <img src="/Disen_o_sin_ti_tulo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            </div>
             )}
             <div style={{
               maxWidth: "75%",
@@ -621,7 +626,9 @@ Cómo respondes:
         ))}
         {loading && (
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-            <div style={{ width: 30, height: 30, borderRadius: 10, background: `linear-gradient(135deg, ${C.navy}, ${C.periwinkle})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>🕊️</div>
+            <div style={{ width: 30, height: 30, borderRadius: 10, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <img src="/Disen_o_sin_ti_tulo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            </div>
             <div style={{ background: C.white, borderRadius: "18px 18px 18px 4px", padding: "12px 16px", boxShadow: "0 2px 12px rgba(30,58,95,0.08)" }}>
               <div style={{ display: "flex", gap: 5 }}>
                 {[0, 1, 2].map(j => <div key={j} style={{ width: 7, height: 7, borderRadius: "50%", background: C.blue, opacity: 0.4, animation: `pulse 1.2s ease-in-out ${j * 0.2}s infinite` }} />)}
