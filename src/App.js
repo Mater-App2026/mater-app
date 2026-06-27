@@ -1782,7 +1782,12 @@ export default function App() {
     setLoading(false);
   }
 
-  async function completeOnboarding(name) {
+  async function handleLogout() {
+ await supabase.auth.signOut();
+ setTab("home");
+ }
+
+ async function completeOnboarding(name) {
     if (session) {
       await supabase.from("profiles").upsert({ id: session.user.id, name, onboarded: true });
       setProfile(prev => ({ ...prev, name, onboarded: true }));
