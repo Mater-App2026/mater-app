@@ -625,7 +625,7 @@ Cómo respondes:
         </div>
       )}
 
-      <div style={{ padding: "12px 16px 28px", background: "rgba(234,244,252,0.85)", backdropFilter: "blur(12px)", borderTop: `1px solid ${C.mist}`, display: "flex", gap: 10, alignItems: "flex-end" }}>
+      <div style={{ padding: "12px 16px 80px", background: "rgba(234,244,252,0.85)", backdropFilter: "blur(12px)", borderTop: `1px solid ${C.mist}`, display: "flex", gap: 10, alignItems: "flex-end" }}>
         <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && sendMessage()}
           placeholder="Escribe lo que llevas en el corazón..."
           style={{ flex: 1, border: "none", outline: "none", background: C.white, borderRadius: 20, padding: "12px 16px", fontSize: 13.5, color: C.inkDark, boxShadow: "0 2px 12px rgba(30,58,95,0.07)", fontFamily: "inherit" }} />
