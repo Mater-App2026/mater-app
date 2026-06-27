@@ -1,44 +1,56 @@
 import { useState, useRef, useEffect } from "react";
 import { supabase } from "./supabaseClient";
 
-/* ── PALETA AZUL SERENA ── */
+/* ── PALETA VINTAGE MINIMALISTA ── */
 const C = {
-  navy:      "#1E3A5F",
-  blue:      "#2D6A9F",
-  sky:       "#4A90C4",
-  periwinkle:"#7BA7CC",
-  mist:      "#B8D4E8",
-  iceBlue:   "#E8F2F9",
-  slate:     "#4A6080",
-  slateLight:"#7A95B0",
-  gold:      "#C4A35A",
-  goldLight: "#E8D5A0",
-  teal:      "#3A7A8C",
-  white:     "#FAFCFF",
-  inkDark:   "#1A2B3C",
-  inkMid:    "#3D5166",
-  inkLight:  "#7A95B0",
+  // Azules apagados vintage
+  navy:       "#2C3E6B",   // azul marino oscuro
+  blue:       "#3D5A8A",   // azul medio
+  sky:        "#5E7FB3",   // azul cielo apagado
+  periwinkle: "#8BA3C7",   // azul lavanda suave
+  mist:       "#C8D5E8",   // azul niebla
+  iceBlue:    "#EEF2F7",   // fondo principal
+  fog:        "#F5F7FA",   // fondo secundario
+
+  // Acento dorado vintage
+  gold:       "#A8864A",   // dorado apagado
+  goldLight:  "#D4B87A",   // dorado claro
+
+  // Neutros cálidos
+  ink:        "#1C2B3A",   // texto principal
+  inkMid:     "#3D4F61",   // texto secundario
+  inkLight:   "#7A8FA3",   // texto muted
+  slate:      "#4A6080",
+  slateLight: "#7A95B0",
+
+  // Extras
+  teal:       "#3A7A8C",
+  white:      "#FAFCFF",
+  cream:      "#F7F4EE",   // blanco cálido vintage
 };
 
 const gradients = {
-  home:  "linear-gradient(160deg, #EBF4FB 0%, #D6EAF5 50%, #C2DCEE 100%)",
-  chat:  "linear-gradient(160deg, #E8F0F8 0%, #D4E4F2 50%, #C0D8EC 100%)",
-  plan:  "linear-gradient(160deg, #ECF3FA 0%, #D8E8F4 50%, #C4DCEE 100%)",
-  diary: "linear-gradient(160deg, #E4EEF7 0%, #D0E2F0 50%, #BCD6E9 100%)",
-  auth:  "linear-gradient(160deg, #EBF4FB 0%, #D6EAF5 100%)",
+  home:    "#EEF2F7",
+  chat:    "#EBF0F7",
+  plan:    "#EDF1F7",
+  diary:   "#EAEff6",
+  auth:    "#EEF2F7",
+  profile: "#EEF2F7",
 };
 
 const phone = {
   width: "100%", maxWidth: 390, minHeight: "100vh",
-  margin: "0 auto", fontFamily: "'Segoe UI', system-ui, sans-serif",
+  margin: "0 auto", fontFamily: "'DM Sans', system-ui, sans-serif",
   position: "relative", overflow: "hidden",
   display: "flex", flexDirection: "column",
+  background: C.iceBlue,
 };
 
 const pill = (bg, color) => ({
   display: "inline-flex", alignItems: "center", gap: 4,
-  background: bg, color, borderRadius: 100, padding: "3px 10px",
-  fontSize: 11, fontWeight: 600, letterSpacing: "0.04em",
+  background: bg, color, borderRadius: 4, padding: "2px 8px",
+  fontSize: 10, fontWeight: 600, letterSpacing: "0.06em",
+  textTransform: "uppercase",
 });
 
 const Icon = ({ name, size = 22, color = "currentColor" }) => {
@@ -53,6 +65,11 @@ const Icon = ({ name, size = 22, color = "currentColor" }) => {
     moon:    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>,
     book:    <><path d="M4 19.5A2.5 2.5 0 016.5 17H20" stroke={color} strokeWidth="1.8" strokeLinecap="round" fill="none"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" stroke={color} strokeWidth="1.8" strokeLinecap="round" fill="none"/></>,
     heart:   <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>,
+    edit:    <><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/></>,
+    trash:   <><polyline points="3,6 5,6 21,6" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/><path d="M10 11v6M14 11v6M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" stroke={color} strokeWidth="1.8" strokeLinecap="round" fill="none"/></>,
+    bell:    <><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/></>,
+    lock:    <><rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke={color} strokeWidth="1.8" fill="none"/><path d="M7 11V7a5 5 0 0110 0v4" stroke={color} strokeWidth="1.8" strokeLinecap="round" fill="none"/></>,
+    user:    <><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/><circle cx="12" cy="7" r="4" stroke={color} strokeWidth="1.8" fill="none"/></>,
     logout:  <><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/><polyline points="16,17 21,12 16,7" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/><line x1="21" y1="12" x2="9" y2="12" stroke={color} strokeWidth="1.8" strokeLinecap="round"/></>,
     eye:     <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke={color} strokeWidth="1.8" fill="none"/><circle cx="12" cy="12" r="3" stroke={color} strokeWidth="1.8" fill="none"/></>,
   };
@@ -105,9 +122,10 @@ function AuthScreen({ onAuth }) {
 
   const inputStyle = {
     width: "100%", border: "none", outline: "none",
-    background: C.iceBlue, borderRadius: 12,
-    padding: "14px 16px", fontSize: 14,
-    color: C.inkDark, fontFamily: "inherit",
+    background: "transparent", borderRadius: 0,
+    borderBottom: `1px solid ${C.mist}`,
+    padding: "12px 4px", fontSize: 14,
+    color: C.ink, fontFamily: "'DM Sans', system-ui, sans-serif",
     boxSizing: "border-box",
   };
 
@@ -123,23 +141,26 @@ function AuthScreen({ onAuth }) {
         }}>
           <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
-        <h1 style={{ fontSize: 30, fontWeight: 800, color: C.navy, margin: "0 0 4px" }}>Mater</h1>
-        <p style={{ fontSize: 13, color: C.slateLight, margin: 0 }}>Tu guía de coaching espiritual</p>
+        <h1 style={{ fontSize: 30, fontWeight: 700, color: C.navy, margin: "0 0 4px", fontFamily: "'Cormorant Garamond', serif", letterSpacing: "0.02em" }}>Mater</h1>
+        <p style={{ fontSize: 12, color: C.inkLight, margin: 0, letterSpacing: "0.08em", textTransform: "uppercase" }}>Guía de coaching espiritual</p>
       </div>
 
       {/* Tabs */}
       <div style={{
-        display: "flex", background: C.iceBlue, borderRadius: 14,
-        padding: 4, marginBottom: "1.5rem",
+        display: "flex", borderBottom: `1px solid ${C.mist}`,
+        marginBottom: "2rem",
       }}>
         {[["login", "Entrar"], ["register", "Crear cuenta"]].map(([m, l]) => (
           <button key={m} onClick={() => { setMode(m); setError(""); setSuccess(""); }} style={{
-            flex: 1, padding: "10px", border: "none", borderRadius: 10,
-            background: mode === m ? C.white : "transparent",
-            color: mode === m ? C.navy : C.slateLight,
-            fontWeight: mode === m ? 700 : 400, fontSize: 13,
-            cursor: "pointer", transition: "all 0.2s",
-            boxShadow: mode === m ? `0 2px 8px rgba(30,58,95,0.1)` : "none",
+            flex: 1, padding: "10px 4px", border: "none", borderRadius: 0,
+            background: "transparent",
+            color: mode === m ? C.navy : C.inkLight,
+            fontWeight: mode === m ? 600 : 400, fontSize: 13,
+            cursor: "pointer",
+            borderBottom: mode === m ? `2px solid ${C.navy}` : "2px solid transparent",
+            marginBottom: -1,
+            fontFamily: "'DM Sans', system-ui, sans-serif",
+            letterSpacing: "0.02em",
           }}>{l}</button>
         ))}
       </div>
@@ -169,13 +190,13 @@ function AuthScreen({ onAuth }) {
         {success && <p style={{ color: C.blue, fontSize: 12, margin: 0, textAlign: "center" }}>{success}</p>}
 
         <button onClick={handleSubmit} disabled={loading} style={{
-          background: `linear-gradient(135deg, ${C.navy}, ${C.blue})`,
-          border: "none", borderRadius: 12, padding: "15px",
-          color: "#fff", fontWeight: 700, fontSize: 15,
+          background: C.navy,
+          border: "none", borderRadius: 4, padding: "14px",
+          color: C.cream, fontWeight: 600, fontSize: 14,
           cursor: loading ? "default" : "pointer",
           opacity: loading ? 0.7 : 1,
-          fontFamily: "inherit", marginTop: 4,
-          boxShadow: `0 4px 16px ${C.navy}44`,
+          fontFamily: "'DM Sans', system-ui, sans-serif", marginTop: 8,
+          letterSpacing: "0.04em",
         }}>
           {loading ? "..." : mode === "login" ? "Entrar" : "Crear cuenta"}
         </button>
@@ -397,7 +418,7 @@ Los jesuitas tienen una expresión que lo resume todo: "encontrar a Dios en toda
                   <Icon name={practiceContent[openCard].icon} size={20} color={practiceContent[openCard].color} />
                 </div>
                 <div>
-                  <p style={{ fontSize: 15, fontWeight: 800, color: C.inkDark, margin: 0 }}>{practiceContent[openCard].label}</p>
+                  <p style={{ fontSize: 15, fontWeight: 800, color: C.ink, margin: 0 }}>{practiceContent[openCard].label}</p>
                   <p style={{ fontSize: 11, color: C.slateLight, margin: 0 }}>{practiceContent[openCard].sub}</p>
                 </div>
               </div>
@@ -423,7 +444,7 @@ Los jesuitas tienen una expresión que lo resume todo: "encontrar a Dios en toda
               {practiceContent[openCard].questions.map((q, i) => (
                 <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
                   <div style={{ width: 24, height: 24, borderRadius: "50%", background: `${practiceContent[openCard].color}20`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: practiceContent[openCard].color, fontSize: 11, fontWeight: 700 }}>{i + 1}</div>
-                  <p style={{ fontSize: 13, color: C.inkDark, lineHeight: 1.6, margin: 0 }}>{q}</p>
+                  <p style={{ fontSize: 13, color: C.ink, lineHeight: 1.6, margin: 0 }}>{q}</p>
                 </div>
               ))}
             </div>
@@ -433,7 +454,7 @@ Los jesuitas tienen una expresión que lo resume todo: "encontrar a Dios en toda
               width: "100%", marginTop: 28, padding: "14px",
               background: `linear-gradient(135deg, ${C.navy}, ${C.blue})`,
               border: "none", borderRadius: 14, color: "#fff",
-              fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
+              fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif",
             }}>Amén ✓ 🕊️</button>
           </div>
         </div>
@@ -443,7 +464,7 @@ Los jesuitas tienen una expresión que lo resume todo: "encontrar a Dios en toda
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
           <div>
             <p style={{ fontSize: 13, color: C.slateLight, margin: 0 }}>Buenos días ✦</p>
-            <h1 style={{ fontSize: 26, fontWeight: 800, color: C.inkDark, margin: "2px 0 0", lineHeight: 1.15 }}>
+            <h1 style={{ fontSize: 26, fontWeight: 600, color: C.ink, margin: "2px 0 0", lineHeight: 1.15, fontFamily: "'Cormorant Garamond', serif", letterSpacing: "0.01em" }}>
               {firstName}
             </h1>
           </div>
@@ -457,38 +478,37 @@ Los jesuitas tienen una expresión que lo resume todo: "encontrar a Dios en toda
 
         {/* Versículo */}
         <div style={{
-          marginTop: 20, borderRadius: 18,
-          background: `linear-gradient(135deg, ${C.navy} 0%, ${C.blue} 100%)`,
-          padding: "18px 20px", color: "#fff", position: "relative", overflow: "hidden",
+          marginTop: 20, borderRadius: 4,
+          background: C.navy,
+          padding: "20px 22px", color: C.cream, position: "relative", overflow: "hidden",
+          borderLeft: `3px solid ${C.gold}`,
         }}>
-          <div style={{ position: "absolute", top: -18, right: -18, opacity: 0.08, fontSize: 90 }}>✝</div>
-          <p style={{ fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", opacity: 0.7, margin: "0 0 8px" }}>VERSÍCULO DEL DÍA</p>
-          <p style={{ fontSize: 14, lineHeight: 1.6, fontStyle: "italic", margin: "0 0 8px" }}>
+          <p style={{ fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", opacity: 0.6, margin: "0 0 10px", fontFamily: "'DM Sans', sans-serif" }}>Versículo del día</p>
+          <p style={{ fontSize: 15, lineHeight: 1.7, fontStyle: "italic", margin: "0 0 10px", fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}>
             {dailyVerse?.text || "«Venid a mí todos los que estáis fatigados y cargados, y yo os haré descansar.»"}
           </p>
-          <p style={{ fontSize: 11, opacity: 0.7, margin: 0 }}>{dailyVerse?.ref || "Mateo 11:28"}</p>
+          <p style={{ fontSize: 10, opacity: 0.6, margin: 0, letterSpacing: "0.06em" }}>{dailyVerse?.ref || "Mateo 11:28"}</p>
         </div>
       </div>
 
       {/* Racha */}
       <div style={{ padding: "22px 22px 0" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-          <p style={{ fontSize: 13, fontWeight: 700, color: C.inkDark, margin: 0 }}>⭐ Racha semanal</p>
-          <span style={pill(`${C.sky}22`, C.blue)}>{streakCount} {streakCount === 1 ? "día" : "días"} seguidos</span>
+          <p style={{ fontSize: 11, fontWeight: 600, color: C.inkLight, margin: 0, letterSpacing: "0.1em", textTransform: "uppercase" }}>Racha semanal</p>
+          <span style={{ fontSize: 11, color: C.gold, fontWeight: 600, letterSpacing: "0.04em" }}>{streakCount} {streakCount === 1 ? "día" : "días"}</span>
         </div>
-        <div style={{ display: "flex", gap: 8 }}>
+        <div style={{ display: "flex", gap: 6 }}>
           {days.map((d, i) => (
-            <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 5 }}>
+            <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
               <div style={{
-                width: "100%", aspectRatio: "1", borderRadius: 10,
-                background: streakDays[i]
-                  ? i === todayIdx ? `linear-gradient(135deg, ${C.blue}, ${C.sky})` : `${C.blue}30`
-                  : `${C.slateLight}18`,
+                width: "100%", aspectRatio: "1", borderRadius: 4,
+                background: streakDays[i] ? (i === todayIdx ? C.navy : `${C.navy}22`) : C.fog,
+                border: `1px solid ${streakDays[i] ? (i === todayIdx ? C.navy : C.mist) : C.mist}`,
                 display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 13, color: streakDays[i] ? (i === todayIdx ? "#fff" : C.blue) : C.slateLight,
-                fontWeight: 700,
-              }}>{streakDays[i] ? "✓" : ""}</div>
-              <p style={{ fontSize: 10, color: i === todayIdx ? C.blue : C.slateLight, fontWeight: i === todayIdx ? 700 : 400, margin: 0 }}>{d}</p>
+              }}>
+                {streakDays[i] && <svg width={10} height={10} viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12" stroke={i === todayIdx ? C.cream : C.navy} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>}
+              </div>
+              <p style={{ fontSize: 9, color: i === todayIdx ? C.navy : C.inkLight, fontWeight: i === todayIdx ? 600 : 400, margin: 0, letterSpacing: "0.04em" }}>{d}</p>
             </div>
           ))}
         </div>
@@ -496,32 +516,34 @@ Los jesuitas tienen una expresión que lo resume todo: "encontrar a Dios en toda
 
       {/* Prácticas */}
       <div style={{ padding: "22px 22px 0" }}>
-        <p style={{ fontSize: 13, fontWeight: 700, color: C.inkDark, margin: "0 0 12px" }}>Prácticas de hoy</p>
+        <p style={{ fontSize: 13, fontWeight: 700, color: C.ink, margin: "0 0 12px" }}>Prácticas de hoy</p>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {practiceContent.map((c, i) => {
             const isDone = completedPractices[`${i}-${todayKey}`] || false;
             return (
             <button key={i} onClick={() => setOpenCard(i)} style={{
-              background: isDone ? c.bg : C.white, borderRadius: 14, padding: "14px 16px",
+              background: isDone ? C.fog : C.cream, borderRadius: 4, padding: "14px 16px",
               display: "flex", alignItems: "center", gap: 14,
-              border: isDone ? `1.5px solid ${c.color}44` : `1.5px solid ${C.mist}`,
-              boxShadow: "0 2px 12px rgba(30,58,95,0.06)",
+              border: isDone ? `1px solid ${C.mist}` : `1px solid ${C.mist}`,
               cursor: "pointer", textAlign: "left", width: "100%",
+              borderLeft: isDone ? `3px solid ${C.gold}` : `3px solid transparent`,
             }}>
-              <div style={{ width: 42, height: 42, borderRadius: 12, background: c.bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <Icon name={c.icon} size={20} color={c.color} />
+              <div style={{ width: 36, height: 36, borderRadius: 4, background: C.iceBlue, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, border: `1px solid ${C.mist}` }}>
+                <Icon name={c.icon} size={18} color={isDone ? C.gold : C.blue} />
               </div>
               <div style={{ flex: 1 }}>
-                <p style={{ fontSize: 13, fontWeight: 700, color: C.inkDark, margin: 0 }}>{c.label}</p>
-                <p style={{ fontSize: 11, color: C.inkLight, margin: "2px 0 0" }}>{c.sub}</p>
+                <p style={{ fontSize: 13, fontWeight: 500, color: C.ink, margin: 0, fontFamily: "'DM Sans', sans-serif" }}>{c.label}</p>
+                <p style={{ fontSize: 11, color: C.inkLight, margin: "2px 0 0", letterSpacing: "0.02em" }}>{c.sub}</p>
               </div>
               <div style={{
-                width: 24, height: 24, borderRadius: "50%",
-                background: isDone ? c.color : "transparent",
-                border: isDone ? "none" : `2px solid ${C.mist}`,
+                width: 20, height: 20, borderRadius: 2,
+                background: isDone ? C.gold : "transparent",
+                border: isDone ? "none" : `1px solid ${C.mist}`,
                 display: "flex", alignItems: "center", justifyContent: "center",
-                color: "#fff", fontSize: 12, flexShrink: 0,
-              }}>{isDone ? "✓" : "›"}</div>
+                flexShrink: 0,
+              }}>
+                {isDone && <svg width={12} height={12} viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12" stroke={C.cream} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>}
+              </div>
             </button>
             );
           })}
@@ -543,7 +565,7 @@ Los jesuitas tienen una expresión que lo resume todo: "encontrar a Dios en toda
             <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
           <div style={{ flex: 1 }}>
-            <p style={{ fontSize: 13, fontWeight: 700, color: C.inkDark, margin: 0 }}>Hablar con Mater</p>
+            <p style={{ fontSize: 13, fontWeight: 700, color: C.ink, margin: 0 }}>Hablar con Mater</p>
             <p style={{ fontSize: 11, color: C.inkLight, margin: "2px 0 0" }}>¿Tienes algo en el corazón hoy?</p>
           </div>
           <Icon name="chevron" size={18} color={C.blue} />
@@ -615,13 +637,13 @@ Cómo respondes:
 
   return (
     <div style={{ flex: 1, display: "flex", flexDirection: "column", background: gradients.chat }}>
-      <div style={{ padding: "52px 22px 16px", background: "rgba(234,244,252,0.85)", backdropFilter: "blur(12px)", borderBottom: `1px solid ${C.mist}` }}>
+      <div style={{ padding: "52px 22px 16px", background: C.cream, borderBottom: `1px solid ${C.mist}` }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <div style={{ width: 44, height: 44, borderRadius: 14, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
           <div>
-            <p style={{ fontSize: 16, fontWeight: 800, color: C.inkDark, margin: 0 }}>Mater</p>
+            <p style={{ fontSize: 16, fontWeight: 800, color: C.ink, margin: 0 }}>Mater</p>
             <p style={{ fontSize: 11, color: C.sky, margin: 0, fontWeight: 600 }}>● Guía espiritual</p>
           </div>
         </div>
@@ -636,12 +658,12 @@ Cómo respondes:
             </div>
             )}
             <div style={{
-              maxWidth: "75%",
-              background: m.role === "user" ? `linear-gradient(135deg, ${C.navy}, ${C.blue})` : C.white,
-              color: m.role === "user" ? "#fff" : C.inkDark,
-              borderRadius: m.role === "user" ? "18px 18px 4px 18px" : "18px 18px 18px 4px",
-              padding: "12px 14px", fontSize: 13.5, lineHeight: 1.6,
-              boxShadow: "0 2px 12px rgba(30,58,95,0.08)",
+              maxWidth: "78%",
+              background: m.role === "user" ? C.navy : C.cream,
+              color: m.role === "user" ? C.cream : C.ink,
+              borderRadius: m.role === "user" ? "12px 12px 2px 12px" : "12px 12px 12px 2px",
+              padding: "11px 14px", fontSize: 13.5, lineHeight: 1.65,
+              border: m.role === "user" ? "none" : `1px solid ${C.mist}`,
             }}>{m.text}</div>
           </div>
         ))}
@@ -668,12 +690,12 @@ Cómo respondes:
         </div>
       )}
 
-      <div style={{ padding: "12px 16px 80px", background: "rgba(234,244,252,0.85)", backdropFilter: "blur(12px)", borderTop: `1px solid ${C.mist}`, display: "flex", gap: 10, alignItems: "flex-end" }}>
+      <div style={{ padding: "12px 16px 80px", background: C.cream, backdropFilter: "blur(12px)", borderTop: `1px solid ${C.mist}`, display: "flex", gap: 10, alignItems: "flex-end" }}>
         <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && sendMessage()}
           placeholder="Escribe lo que llevas en el corazón..."
-          style={{ flex: 1, border: "none", outline: "none", background: C.white, borderRadius: 20, padding: "12px 16px", fontSize: 13.5, color: C.inkDark, boxShadow: "0 2px 12px rgba(30,58,95,0.07)", fontFamily: "inherit" }} />
-        <button onClick={sendMessage} disabled={loading || !input.trim()} style={{ width: 44, height: 44, borderRadius: "50%", border: "none", background: input.trim() ? `linear-gradient(135deg, ${C.navy}, ${C.blue})` : C.mist, display: "flex", alignItems: "center", justifyContent: "center", cursor: input.trim() ? "pointer" : "default", transition: "all 0.2s", flexShrink: 0 }}>
-          <Icon name="send" size={18} color="#fff" />
+          style={{ flex: 1, border: `1px solid ${C.mist}`, outline: "none", background: C.fog, borderRadius: 4, padding: "11px 14px", fontSize: 13.5, color: C.ink, fontFamily: "'DM Sans', system-ui, sans-serif" }} />
+        <button onClick={sendMessage} disabled={loading || !input.trim()} style={{ width: 40, height: 40, borderRadius: 4, border: "none", background: input.trim() ? C.navy : C.mist, display: "flex", alignItems: "center", justifyContent: "center", cursor: input.trim() ? "pointer" : "default", flexShrink: 0 }}>
+          <Icon name="send" size={16} color={C.cream} />
         </button>
       </div>
       <style>{`@keyframes pulse { 0%,100%{opacity:0.3;transform:scale(0.8)} 50%{opacity:1;transform:scale(1.1)} }`}</style>
@@ -903,7 +925,7 @@ Acércate a esta práctica con libertad interior. Si sientes resistencia, no la 
           <div onClick={e => e.stopPropagation()} style={{ background: C.white, borderRadius: "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: 390, margin: "0 auto", maxHeight: "85vh", overflowY: "auto" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <div>
-                <p style={{ fontSize: 15, fontWeight: 800, color: C.inkDark, margin: 0 }}>{weeks[activeWeek].days[openDay]?.title}</p>
+                <p style={{ fontSize: 15, fontWeight: 800, color: C.ink, margin: 0 }}>{weeks[activeWeek].days[openDay]?.title}</p>
                 <span style={pill(`${(typeColor[weeks[activeWeek].days[openDay]?.type]||C.blue)}20`, typeColor[weeks[activeWeek].days[openDay]?.type]||C.blue)}>{weeks[activeWeek].days[openDay]?.type}</span>
               </div>
               <button onClick={() => { setOpenDay(null); setDayContent(null); }} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
@@ -925,7 +947,7 @@ Acércate a esta práctica con libertad interior. Si sientes resistencia, no la 
                   {dayContent.preguntas?.map((q, i) => (
                     <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
                       <div style={{ width: 24, height: 24, borderRadius: "50%", background: `${C.blue}20`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: C.blue, fontSize: 11, fontWeight: 700 }}>{i + 1}</div>
-                      <p style={{ fontSize: 13, color: C.inkDark, lineHeight: 1.6, margin: 0 }}>{q}</p>
+                      <p style={{ fontSize: 13, color: C.ink, lineHeight: 1.6, margin: 0 }}>{q}</p>
                     </div>
                   ))}
                 </div>
@@ -936,7 +958,7 @@ Acércate a esta práctica con libertad interior. Si sientes resistencia, no la 
                       ? `${C.mist}`
                       : `linear-gradient(135deg, ${C.navy}, ${C.blue})`,
                     border: "none", borderRadius: 14, color: "#fff",
-                    fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
+                    fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif",
                   }}>
                     {progress[`${activeWeek}-${openDay}`] ? "✓ Completado" : "Amén ✓ — Marcar como hecho 🕊️"}
                   </button>
@@ -949,7 +971,7 @@ Acércate a esta práctica con libertad interior. Si sientes resistencia, no la 
 
       <div style={{ padding: "52px 22px 20px" }}>
         <p style={{ fontSize: 12, color: C.slateLight, margin: "0 0 4px", letterSpacing: "0.08em", textTransform: "uppercase" }}>Plan de formación</p>
-        <h2 style={{ fontSize: 22, fontWeight: 800, color: C.inkDark, margin: 0 }}>30 días hacia Dios</h2>
+        <h2 style={{ fontSize: 22, fontWeight: 600, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>30 días hacia Dios</h2>
       </div>
 
       {/* Evangelio del día */}
@@ -971,7 +993,7 @@ Acércate a esta práctica con libertad interior. Si sientes resistencia, no la 
               {gospelOfDay.preguntas?.map((q, i) => (
                 <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 8 }}>
                   <div style={{ width: 20, height: 20, borderRadius: "50%", background: `${C.blue}20`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: C.blue, fontSize: 10, fontWeight: 700 }}>{i+1}</div>
-                  <p style={{ fontSize: 12, color: C.inkDark, lineHeight: 1.6, margin: 0 }}>{q}</p>
+                  <p style={{ fontSize: 12, color: C.ink, lineHeight: 1.6, margin: 0 }}>{q}</p>
                 </div>
               ))}
             </>
@@ -1033,7 +1055,7 @@ Acércate a esta práctica con libertad interior. Si sientes resistencia, no la 
                 {isSaving ? "..." : done ? "✓" : d.day}
               </div>
               <div style={{ flex: 1 }}>
-                <p style={{ fontSize: 13, fontWeight: 700, color: C.inkDark, margin: 0 }}>{d.title}</p>
+                <p style={{ fontSize: 13, fontWeight: 700, color: C.ink, margin: 0 }}>{d.title}</p>
                 <span style={pill(`${typeColor[d.type]}20`, typeColor[d.type])}>{d.type}</span>
               </div>
               <Icon name="chevron" size={16} color={w.color} />
@@ -1135,12 +1157,12 @@ function DiaryScreen({ user }) {
               ))}
             </div>
             <input value={editDraft.title} onChange={e => setEditDraft(d => ({ ...d, title: e.target.value }))}
-              style={{ width: "100%", border: "none", outline: "none", borderBottom: `1.5px solid ${C.mist}`, padding: "8px 0", fontSize: 15, fontWeight: 700, color: C.inkDark, background: "transparent", fontFamily: "inherit", marginBottom: 10, boxSizing: "border-box" }} />
+              style={{ width: "100%", border: "none", outline: "none", borderBottom: `1.5px solid ${C.mist}`, padding: "8px 0", fontSize: 15, fontWeight: 700, color: C.ink, background: "transparent", fontFamily: "'DM Sans', system-ui, sans-serif", marginBottom: 10, boxSizing: "border-box" }} />
             <textarea value={editDraft.text} onChange={e => setEditDraft(d => ({ ...d, text: e.target.value }))} rows={5}
-              style={{ width: "100%", border: "none", outline: "none", padding: "0", fontSize: 13.5, color: C.inkMid, background: "transparent", fontFamily: "inherit", lineHeight: 1.65, resize: "none", boxSizing: "border-box" }} />
+              style={{ width: "100%", border: "none", outline: "none", padding: "0", fontSize: 13.5, color: C.inkMid, background: "transparent", fontFamily: "'DM Sans', system-ui, sans-serif", lineHeight: 1.65, resize: "none", boxSizing: "border-box" }} />
             <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 14, gap: 10 }}>
-              <button onClick={() => setEditingEntry(null)} style={{ background: "transparent", border: `1px solid ${C.mist}`, borderRadius: 10, padding: "8px 16px", fontSize: 12, color: C.slateLight, cursor: "pointer", fontFamily: "inherit" }}>Cancelar</button>
-              <button onClick={saveEdit} disabled={savingEdit} style={{ background: `linear-gradient(135deg, ${C.navy}, ${C.blue})`, border: "none", borderRadius: 10, padding: "8px 18px", fontSize: 12, fontWeight: 700, color: "#fff", cursor: "pointer", fontFamily: "inherit" }}>
+              <button onClick={() => setEditingEntry(null)} style={{ background: "transparent", border: `1px solid ${C.mist}`, borderRadius: 10, padding: "8px 16px", fontSize: 12, color: C.slateLight, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>Cancelar</button>
+              <button onClick={saveEdit} disabled={savingEdit} style={{ background: `linear-gradient(135deg, ${C.navy}, ${C.blue})`, border: "none", borderRadius: 10, padding: "8px 18px", fontSize: 12, fontWeight: 700, color: "#fff", cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
                 {savingEdit ? "Guardando..." : "Guardar cambios"}
               </button>
             </div>
@@ -1151,7 +1173,7 @@ function DiaryScreen({ user }) {
       <div style={{ padding: "52px 22px 16px", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
         <div>
           <p style={{ fontSize: 12, color: C.slateLight, margin: "0 0 4px", letterSpacing: "0.08em", textTransform: "uppercase" }}>Mi diario</p>
-          <h2 style={{ fontSize: 22, fontWeight: 800, color: C.inkDark, margin: 0 }}>Espiritual</h2>
+          <h2 style={{ fontSize: 22, fontWeight: 600, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>Diario espiritual</h2>
         </div>
         <button onClick={() => setWriting(!writing)} style={{
           width: 42, height: 42, borderRadius: 14, border: "none",
@@ -1178,13 +1200,13 @@ function DiaryScreen({ user }) {
               ))}
             </div>
             <input value={draft.title} onChange={e => setDraft(d => ({ ...d, title: e.target.value }))} placeholder="Título..."
-              style={{ width: "100%", border: "none", outline: "none", borderBottom: `1.5px solid ${C.mist}`, padding: "8px 0", fontSize: 15, fontWeight: 700, color: C.inkDark, background: "transparent", fontFamily: "inherit", marginBottom: 10, boxSizing: "border-box" }} />
+              style={{ width: "100%", border: "none", outline: "none", borderBottom: `1.5px solid ${C.mist}`, padding: "8px 0", fontSize: 15, fontWeight: 700, color: C.ink, background: "transparent", fontFamily: "'DM Sans', system-ui, sans-serif", marginBottom: 10, boxSizing: "border-box" }} />
             <textarea value={draft.text} onChange={e => setDraft(d => ({ ...d, text: e.target.value }))}
               placeholder="¿Qué movimientos espirituales notaste hoy?" rows={4}
-              style={{ width: "100%", border: "none", outline: "none", padding: "0", fontSize: 13.5, color: C.inkMid, background: "transparent", fontFamily: "inherit", lineHeight: 1.65, resize: "none", boxSizing: "border-box" }} />
+              style={{ width: "100%", border: "none", outline: "none", padding: "0", fontSize: 13.5, color: C.inkMid, background: "transparent", fontFamily: "'DM Sans', system-ui, sans-serif", lineHeight: 1.65, resize: "none", boxSizing: "border-box" }} />
             <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 14, gap: 10 }}>
-              <button onClick={() => setWriting(false)} style={{ background: "transparent", border: `1px solid ${C.mist}`, borderRadius: 10, padding: "8px 16px", fontSize: 12, color: C.slateLight, cursor: "pointer", fontFamily: "inherit" }}>Cancelar</button>
-              <button onClick={saveEntry} disabled={saving} style={{ background: `linear-gradient(135deg, ${C.navy}, ${C.blue})`, border: "none", borderRadius: 10, padding: "8px 18px", fontSize: 12, fontWeight: 700, color: "#fff", cursor: "pointer", fontFamily: "inherit", opacity: saving ? 0.7 : 1 }}>
+              <button onClick={() => setWriting(false)} style={{ background: "transparent", border: `1px solid ${C.mist}`, borderRadius: 10, padding: "8px 16px", fontSize: 12, color: C.slateLight, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>Cancelar</button>
+              <button onClick={saveEntry} disabled={saving} style={{ background: `linear-gradient(135deg, ${C.navy}, ${C.blue})`, border: "none", borderRadius: 10, padding: "8px 18px", fontSize: 12, fontWeight: 700, color: "#fff", cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif", opacity: saving ? 0.7 : 1 }}>
                 {saving ? "Guardando..." : "Guardar"}
               </button>
             </div>
@@ -1201,19 +1223,23 @@ function DiaryScreen({ user }) {
           </div>
         ) : (
           entries.map((e, i) => (
-            <div key={i} style={{ background: C.white, borderRadius: 18, padding: "16px 18px", marginBottom: 12, boxShadow: "0 2px 12px rgba(30,58,95,0.07)", opacity: deletingId === e.id ? 0.5 : 1, transition: "opacity 0.2s" }}>
+            <div key={i} style={{ background: C.cream, borderRadius: 4, padding: "16px 18px", marginBottom: 10, border: `1px solid ${C.mist}`, borderLeft: `3px solid ${tagColor[e.tag] || C.sky}`, opacity: deletingId === e.id ? 0.5 : 1, transition: "opacity 0.2s" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <span style={{ fontSize: 20 }}>{e.mood}</span>
                   <div>
-                    <p style={{ fontSize: 13, fontWeight: 800, color: C.inkDark, margin: 0 }}>{e.title}</p>
+                    <p style={{ fontSize: 13, fontWeight: 800, color: C.ink, margin: 0 }}>{e.title}</p>
                     <p style={{ fontSize: 10, color: C.slateLight, margin: 0 }}>{formatDate(e.created_at)}</p>
                   </div>
                 </div>
                 <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                   <span style={pill(`${(tagColor[e.tag] || C.sky)}22`, tagColor[e.tag] || C.sky)}>{e.tag}</span>
-                  <button onClick={() => { setEditingEntry(e); setEditDraft({ mood: e.mood, title: e.title, text: e.text, tag: e.tag }); }} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 14, padding: "2px" }}>✏️</button>
-                  <button onClick={() => deleteEntry(e.id)} disabled={deletingId === e.id} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 14, padding: "2px" }}>🗑️</button>
+                  <button onClick={() => { setEditingEntry(e); setEditDraft({ mood: e.mood, title: e.title, text: e.text, tag: e.tag }); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "4px", color: C.inkLight, display: "flex", alignItems: "center" }}>
+                    <Icon name="edit" size={14} color={C.inkLight} />
+                  </button>
+                  <button onClick={() => deleteEntry(e.id)} disabled={deletingId === e.id} style={{ background: "none", border: "none", cursor: "pointer", padding: "4px", color: C.inkLight, display: "flex", alignItems: "center" }}>
+                    <Icon name="trash" size={14} color={C.inkLight} />
+                  </button>
                 </div>
               </div>
               <p style={{ fontSize: 12.5, color: C.inkMid, lineHeight: 1.65, margin: 0 }}>{e.text}</p>
@@ -1317,7 +1343,7 @@ function ProfileScreen({ user, profile, setProfile, onLogout }) {
         <div style={modalStyle} onClick={() => setActiveModal(null)}>
           <div style={sheetStyle} onClick={e => e.stopPropagation()}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-              <h2 style={{ fontSize: 18, fontWeight: 800, color: C.inkDark, margin: 0 }}>🔔 Notificaciones</h2>
+              <h2 style={{ fontSize: 18, fontWeight: 800, color: C.ink, margin: 0 }}>🔔 Notificaciones</h2>
               <button onClick={() => setActiveModal(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
             </div>
             <p style={{ fontSize: 13, color: C.inkMid, lineHeight: 1.7, marginBottom: 20 }}>
@@ -1326,7 +1352,7 @@ function ProfileScreen({ user, profile, setProfile, onLogout }) {
             <div style={{ background: C.iceBlue, borderRadius: 14, padding: "16px", marginBottom: 16 }}>
               <p style={{ fontSize: 12, fontWeight: 700, color: C.blue, margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.08em" }}>Hora del recordatorio</p>
               <input type="time" value={notifTime} onChange={e => setNotifTime(e.target.value)}
-                style={{ border: "none", outline: "none", background: "transparent", fontSize: 28, fontWeight: 800, color: C.navy, fontFamily: "inherit", width: "100%" }} />
+                style={{ border: "none", outline: "none", background: "transparent", fontSize: 28, fontWeight: 800, color: C.navy, fontFamily: "'DM Sans', system-ui, sans-serif", width: "100%" }} />
             </div>
             <div style={{ background: notifEnabled ? `${C.blue}15` : C.iceBlue, borderRadius: 14, padding: "14px 16px", marginBottom: 20, display: "flex", alignItems: "center", gap: 10 }}>
               <span style={{ fontSize: 20 }}>{notifEnabled ? "✅" : "🔕"}</span>
@@ -1337,7 +1363,7 @@ function ProfileScreen({ user, profile, setProfile, onLogout }) {
             <button onClick={notifEnabled ? saveNotifTime : requestNotifications} style={{
               width: "100%", padding: "14px", border: "none", borderRadius: 14,
               background: `linear-gradient(135deg, ${C.navy}, ${C.blue})`,
-              color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
+              color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif",
             }}>
               {notifEnabled ? "Guardar horario" : "Activar notificaciones"}
             </button>
@@ -1350,7 +1376,7 @@ function ProfileScreen({ user, profile, setProfile, onLogout }) {
         <div style={modalStyle} onClick={() => { setActiveModal(null); setDeleteConfirm(false); }}>
           <div style={sheetStyle} onClick={e => e.stopPropagation()}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-              <h2 style={{ fontSize: 18, fontWeight: 800, color: C.inkDark, margin: 0 }}>🔒 Privacidad</h2>
+              <h2 style={{ fontSize: 18, fontWeight: 800, color: C.ink, margin: 0 }}>🔒 Privacidad</h2>
               <button onClick={() => { setActiveModal(null); setDeleteConfirm(false); }} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 24 }}>
@@ -1362,7 +1388,7 @@ function ProfileScreen({ user, profile, setProfile, onLogout }) {
                 <div key={i} style={{ background: C.iceBlue, borderRadius: 14, padding: "14px 16px", display: "flex", gap: 12 }}>
                   <span style={{ fontSize: 22, flexShrink: 0 }}>{item.icon}</span>
                   <div>
-                    <p style={{ fontSize: 13, fontWeight: 700, color: C.inkDark, margin: "0 0 4px" }}>{item.title}</p>
+                    <p style={{ fontSize: 13, fontWeight: 700, color: C.ink, margin: "0 0 4px" }}>{item.title}</p>
                     <p style={{ fontSize: 12, color: C.inkMid, margin: 0, lineHeight: 1.5 }}>{item.desc}</p>
                   </div>
                 </div>
@@ -1372,15 +1398,15 @@ function ProfileScreen({ user, profile, setProfile, onLogout }) {
               <button onClick={() => setDeleteConfirm(true)} style={{
                 width: "100%", padding: "14px", border: `1.5px solid #E8A0A0`,
                 borderRadius: 14, background: "#FFF0F0", color: "#C0392B",
-                fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
+                fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif",
               }}>Borrar mi cuenta y todos mis datos</button>
             ) : (
               <div style={{ background: "#FFF0F0", borderRadius: 14, padding: 16 }}>
                 <p style={{ fontSize: 13, fontWeight: 700, color: "#C0392B", margin: "0 0 8px" }}>⚠️ ¿Estás seguro?</p>
                 <p style={{ fontSize: 12, color: C.inkMid, margin: "0 0 14px", lineHeight: 1.5 }}>Esta acción borrará permanentemente tu cuenta, diario, progreso y todos tus datos. No se puede deshacer.</p>
                 <div style={{ display: "flex", gap: 10 }}>
-                  <button onClick={() => setDeleteConfirm(false)} style={{ flex: 1, padding: "12px", border: `1px solid ${C.mist}`, borderRadius: 10, background: C.white, color: C.inkMid, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>Cancelar</button>
-                  <button onClick={deleteAccount} disabled={deleting} style={{ flex: 1, padding: "12px", border: "none", borderRadius: 10, background: "#C0392B", color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
+                  <button onClick={() => setDeleteConfirm(false)} style={{ flex: 1, padding: "12px", border: `1px solid ${C.mist}`, borderRadius: 10, background: C.white, color: C.inkMid, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>Cancelar</button>
+                  <button onClick={deleteAccount} disabled={deleting} style={{ flex: 1, padding: "12px", border: "none", borderRadius: 10, background: "#C0392B", color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
                     {deleting ? "Borrando..." : "Sí, borrar todo"}
                   </button>
                 </div>
@@ -1395,7 +1421,7 @@ function ProfileScreen({ user, profile, setProfile, onLogout }) {
         <div style={modalStyle} onClick={() => setActiveModal(null)}>
           <div style={sheetStyle} onClick={e => e.stopPropagation()}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-              <h2 style={{ fontSize: 18, fontWeight: 800, color: C.inkDark, margin: 0 }}>🕊️ Acerca de Mater</h2>
+              <h2 style={{ fontSize: 18, fontWeight: 800, color: C.ink, margin: 0 }}>🕊️ Acerca de Mater</h2>
               <button onClick={() => setActiveModal(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
             </div>
             <div style={{ textAlign: "center", marginBottom: 24 }}>
@@ -1418,7 +1444,7 @@ function ProfileScreen({ user, profile, setProfile, onLogout }) {
               ].map((f, i) => (
                 <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", background: C.iceBlue, borderRadius: 10 }}>
                   <span style={{ fontSize: 18 }}>{f.icon}</span>
-                  <span style={{ fontSize: 13, color: C.inkDark }}>{f.label}</span>
+                  <span style={{ fontSize: 13, color: C.ink }}>{f.label}</span>
                 </div>
               ))}
             </div>
@@ -1438,18 +1464,20 @@ function ProfileScreen({ user, profile, setProfile, onLogout }) {
         {editing ? (
           <div style={{ display: "flex", gap: 8, justifyContent: "center", alignItems: "center", marginBottom: 8 }}>
             <input value={name} onChange={e => setName(e.target.value)}
-              style={{ border: "none", outline: "none", borderBottom: `2px solid ${C.blue}`, fontSize: 20, fontWeight: 800, color: C.inkDark, background: "transparent", textAlign: "center", fontFamily: "inherit", width: 200 }}
+              style={{ border: "none", outline: "none", borderBottom: `2px solid ${C.blue}`, fontSize: 20, fontWeight: 800, color: C.ink, background: "transparent", textAlign: "center", fontFamily: "'DM Sans', system-ui, sans-serif", width: 200 }}
               autoFocus onKeyDown={e => e.key === "Enter" && saveName()} />
-            <button onClick={saveName} disabled={saving} style={{ background: C.blue, border: "none", borderRadius: 8, padding: "6px 14px", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
+            <button onClick={saveName} disabled={saving} style={{ background: C.blue, border: "none", borderRadius: 8, padding: "6px 14px", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
               {saving ? "..." : "Guardar"}
             </button>
           </div>
         ) : (
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 4 }}>
-            <h1 style={{ fontSize: 24, fontWeight: 800, color: C.inkDark, margin: 0 }}>
+            <h1 style={{ fontSize: 24, fontWeight: 800, color: C.ink, margin: 0 }}>
               {profile?.name || user?.email?.split("@")[0]}
             </h1>
-            <button onClick={() => setEditing(true)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 16, color: C.slateLight }}>✏️</button>
+            <button onClick={() => setEditing(true)} style={{ background: "none", border: "none", cursor: "pointer", color: C.inkLight, display: "flex", alignItems: "center" }}>
+              <Icon name="edit" size={16} color={C.inkLight} />
+            </button>
           </div>
         )}
         {saved && <p style={{ color: C.blue, fontSize: 12, margin: "4px 0 0" }}>✓ Nombre actualizado</p>}
@@ -1459,22 +1487,22 @@ function ProfileScreen({ user, profile, setProfile, onLogout }) {
       {/* Options */}
       <div style={{ padding: "24px 22px 0" }}>
         <p style={{ fontSize: 12, color: C.slateLight, margin: "0 0 12px", letterSpacing: "0.08em", textTransform: "uppercase" }}>Configuración</p>
-        <div style={{ background: C.white, borderRadius: 16, overflow: "hidden", boxShadow: `0 2px 12px rgba(30,58,95,0.06)` }}>
+        <div style={{ background: C.cream, borderRadius: 4, overflow: "hidden", border: `1px solid ${C.mist}` }}>
           {[
-            { label: "Editar nombre", icon: "✏️", action: () => setEditing(true) },
-            { label: "Notificaciones", icon: "🔔", action: () => setActiveModal("notifications") },
-            { label: "Privacidad", icon: "🔒", action: () => setActiveModal("privacy") },
-            { label: "Acerca de Mater", icon: "🕊️", action: () => setActiveModal("about") },
+            { label: "Editar nombre", icon: "edit", action: () => setEditing(true) },
+            { label: "Notificaciones", icon: "bell", action: () => setActiveModal("notifications") },
+            { label: "Privacidad", icon: "lock", action: () => setActiveModal("privacy") },
+            { label: "Acerca de Mater", icon: "heart", action: () => setActiveModal("about") },
           ].map((item, i, arr) => (
             <button key={i} onClick={item.action} style={{
               width: "100%", display: "flex", alignItems: "center", gap: 14,
-              padding: "16px 18px", border: "none", background: "transparent",
+              padding: "14px 16px", border: "none", background: "transparent",
               borderBottom: i < arr.length - 1 ? `1px solid ${C.mist}` : "none",
               cursor: "pointer", textAlign: "left",
             }}>
-              <span style={{ fontSize: 18 }}>{item.icon}</span>
-              <span style={{ fontSize: 14, color: C.inkDark, fontWeight: 500, flex: 1 }}>{item.label}</span>
-              <Icon name="chevron" size={16} color={C.slateLight} />
+              <Icon name={item.icon} size={15} color={C.inkLight} />
+              <span style={{ fontSize: 13, color: C.ink, fontWeight: 400, flex: 1 }}>{item.label}</span>
+              <Icon name="chevron" size={14} color={C.mist} />
             </button>
           ))}
         </div>
@@ -1485,7 +1513,7 @@ function ProfileScreen({ user, profile, setProfile, onLogout }) {
         <button onClick={onLogout} style={{
           width: "100%", padding: "15px", border: `1.5px solid #E8A0A0`,
           borderRadius: 14, background: "#FFF0F0", color: "#C0392B",
-          fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
+          fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif",
           display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
         }}>
           <Icon name="logout" size={18} color="#C0392B" />
@@ -1548,7 +1576,7 @@ export default function App() {
     { id: "diary",   label: "Diario",  icon: "diary" },
     { id: "profile", label: "Perfil",  icon: "heart" },
   ];
-  const tabColor = { home: C.navy, chat: C.blue, plan: C.periwinkle, diary: C.sky, profile: C.gold };
+  const tabColor = { home: C.navy, chat: C.blue, plan: C.blue, diary: C.blue, profile: C.gold };
 
   if (loading) return (
     <div style={{ ...phone, alignItems: "center", justifyContent: "center", background: gradients.home }}>
@@ -1581,8 +1609,9 @@ export default function App() {
       <div style={{
         position: "fixed", bottom: 0, left: "50%", transform: "translateX(-50%)",
         width: "100%", maxWidth: 390,
-        background: "rgba(234,244,252,0.92)", backdropFilter: "blur(18px)",
-        borderTop: `1px solid ${C.mist}`, display: "flex", paddingBottom: 8, zIndex: 50,
+        background: C.cream,
+        borderTop: `1px solid ${C.mist}`,
+        display: "flex", paddingBottom: 8, zIndex: 50,
       }}>
         {tabs.map(t => {
           const active = tab === t.id;
