@@ -255,10 +255,14 @@ function HomeScreen({ user, profile, onTabChange }) {
       const { data } = await supabase.from("plan_progress")
         .select("*")
         .eq("user_id", user.id)
-        .eq("week", -1); // semana -1 = prácticas diarias del home
+        .eq("week", -1)
+        .gte("completed_at", todayKey + "T00:00:00")
+        .lte("completed_at", todayKey + "T23:59:59");
       if (data) {
         const map = {};
-        data.forEach(r => { map[`${r.day_index}-${r.completed_at?.split("T")[0]}`] = r.completed; });
+        data.forEach(r => {
+          if (r.completed) map[`${r.day_index}-${todayKey}`] = true;
+        });
         setCompletedPractices(map);
       }
     }
@@ -272,25 +276,25 @@ function HomeScreen({ user, profile, onTabChange }) {
     if (completedPractices[key]) return;
     const updated = { ...completedPractices, [key]: true };
     setCompletedPractices(updated);
+
     await supabase.from("plan_progress").upsert({
       user_id: user.id, week: -1, day_index: index,
       completed: true, completed_at: new Date().toISOString(),
     }, { onConflict: "user_id,week,day_index" });
 
-    // Si completó las 3 prácticas de hoy, marcar día en la racha
+    // Marcar día en racha solo cuando las 3 prácticas estén completadas
     const allDone = [0, 1, 2].every(i => updated[`${i}-${todayKey}`]);
-    if (allDone) {
+    if (allDone && !streakDays[todayIdx]) {
       await supabase.from("streaks").upsert(
         { user_id: user.id, date: todayKey },
         { onConflict: "user_id,date" }
       );
-      // Actualizar racha visual
       setStreakDays(prev => {
         const next = [...prev];
         next[todayIdx] = true;
         return next;
       });
-      setStreakCount(prev => prev + (streakDays[todayIdx] ? 0 : 1));
+      setStreakCount(prev => prev + 1);
     }
   }
 
