@@ -121,7 +121,7 @@ function AuthScreen({ onAuth }) {
           overflow: "hidden",
           boxShadow: `0 8px 28px ${C.navy}44`,
         }}>
-          <img src="/Disen_o_sin_ti_tulo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
         <h1 style={{ fontSize: 30, fontWeight: 800, color: C.navy, margin: "0 0 4px" }}>Mater</h1>
         <p style={{ fontSize: 13, color: C.slateLight, margin: 0 }}>Tu guía de coaching espiritual</p>
@@ -526,7 +526,7 @@ Los jesuitas tienen una expresión que lo resume todo: "encontrar a Dios en toda
             width: 46, height: 46, borderRadius: 14, overflow: "hidden",
             flexShrink: 0,
           }}>
-            <img src="/Disen_o_sin_ti_tulo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
           <div style={{ flex: 1 }}>
             <p style={{ fontSize: 13, fontWeight: 700, color: C.inkDark, margin: 0 }}>Hablar con Mater</p>
@@ -604,7 +604,7 @@ Cómo respondes:
       <div style={{ padding: "52px 22px 16px", background: "rgba(234,244,252,0.85)", backdropFilter: "blur(12px)", borderBottom: `1px solid ${C.mist}` }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <div style={{ width: 44, height: 44, borderRadius: 14, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <img src="/Disen_o_sin_ti_tulo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
           <div>
             <p style={{ fontSize: 16, fontWeight: 800, color: C.inkDark, margin: 0 }}>Mater</p>
@@ -618,7 +618,7 @@ Cómo respondes:
           <div key={i} style={{ display: "flex", justifyContent: m.role === "user" ? "flex-end" : "flex-start", marginBottom: 12 }}>
             {m.role === "assistant" && (
               <div style={{ width: 30, height: 30, borderRadius: 10, flexShrink: 0, overflow: "hidden", marginRight: 8, alignSelf: "flex-end" }}>
-              <img src="/Disen_o_sin_ti_tulo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             </div>
             )}
             <div style={{
@@ -634,7 +634,7 @@ Cómo respondes:
         {loading && (
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
             <div style={{ width: 30, height: 30, borderRadius: 10, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <img src="/Disen_o_sin_ti_tulo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             </div>
             <div style={{ background: C.white, borderRadius: "18px 18px 18px 4px", padding: "12px 16px", boxShadow: "0 2px 12px rgba(30,58,95,0.08)" }}>
               <div style={{ display: "flex", gap: 5 }}>
