@@ -668,6 +668,7 @@ function PlanScreen({ user }) {
   const [loadingContent, setLoadingContent] = useState(false);
   const [gospelOfDay, setGospelOfDay] = useState(null);
   const [loadingGospel, setLoadingGospel] = useState(false);
+  const contentCache = useRef({});
 
   const today = new Date().toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
 
@@ -718,7 +719,12 @@ Responde SOLO con este JSON (sin bloques de código, sin texto extra):
     }
   }
 
-  async function fetchDayContent(day, weekTitle) {
+  async function fetchDayContent(day, weekTitle, weekIdx, dayIdx) {
+    const cacheKey = `${weekIdx}-${dayIdx}`;
+    if (contentCache.current[cacheKey]) {
+      setDayContent(contentCache.current[cacheKey]);
+      return;
+    }
     setLoadingContent(true);
     try {
       const res = await fetch("/api/chat", {
@@ -759,9 +765,11 @@ Responde SOLO con este JSON:
       const data = await res.json();
       const text = data.content?.map(b => b.text || "").join("") || "{}";
       const clean = text.replace(/```json|```/g, "").trim();
-      setDayContent(JSON.parse(clean));
+      const parsed = JSON.parse(clean);
+      contentCache.current[cacheKey] = parsed;
+      setDayContent(parsed);
     } catch {
-      setDayContent({
+      const fallback = {
         santo: "San Ignacio de Loyola",
         cita: "«Busca y hallarás a Dios en todas las cosas, en cada momento de tu vida ordinaria.»",
         reflexion: `La práctica espiritual no es un ejercicio más en nuestra agenda. Es el espacio donde Dios nos habla en el silencio de nuestra vida interior, donde el alma aprende a reconocer Su voz entre el ruido del mundo.
@@ -776,7 +784,9 @@ Acércate a esta práctica con libertad interior. Si sientes resistencia, no la 
           "¿En qué momento concreto de tu vida cotidiana puedes integrar lo que aprendes aquí?",
           "¿Qué gracia específica quieres pedirle a Dios al terminar esta práctica hoy?"
         ]
-      });
+      };
+      contentCache.current[cacheKey] = fallback;
+      setDayContent(fallback);
     } finally {
       setLoadingContent(false);
     }
@@ -985,7 +995,7 @@ Acércate a esta práctica con libertad interior. Si sientes resistencia, no la 
             <button key={i} onClick={() => {
               setOpenDay(i);
               setDayContent(null);
-              fetchDayContent(d, w.title);
+              fetchDayContent(d, w.title, activeWeek, i);
             }} style={{
               background: done ? w.bg : C.white, borderRadius: 14, padding: "12px 14px",
               display: "flex", alignItems: "center", gap: 12,
