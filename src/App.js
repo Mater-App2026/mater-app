@@ -268,9 +268,12 @@ function HomeScreen({ user, profile, onTabChange }) {
   async function markPracticeDone(index) {
     const key = `${index}-${todayKey}`;
     if (completedPractices[key]) return;
+
+    // Actualizar estado local primero
     const updated = { ...completedPractices, [key]: true };
     setCompletedPractices(updated);
 
+    // Guardar en Supabase
     await supabase.from("daily_practices").upsert({
       user_id: user.id,
       practice_index: index,
@@ -278,8 +281,12 @@ function HomeScreen({ user, profile, onTabChange }) {
       completed: true,
     }, { onConflict: "user_id,practice_index,date" });
 
-    // Marcar día en racha cuando las 3 prácticas estén completadas
-    const allDone = [0, 1, 2].every(i => updated[`${i}-${todayKey}`]);
+    // Verificar si las 3 prácticas (índices 0, 1, 2) están completas
+    const p0 = index === 0 || !!completedPractices[`0-${todayKey}`];
+    const p1 = index === 1 || !!completedPractices[`1-${todayKey}`];
+    const p2 = index === 2 || !!completedPractices[`2-${todayKey}`];
+    const allDone = p0 && p1 && p2;
+
     if (allDone && !streakDays[todayIdx]) {
       await supabase.from("streaks").upsert(
         { user_id: user.id, date: todayKey },
