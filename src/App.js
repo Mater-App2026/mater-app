@@ -1561,15 +1561,47 @@ function ProfileScreen({ user, profile, setProfile, onLogout }) {
         </div>
       </div>
 
-      {/* Logout */}
+      {/* Compartir */}
       <div style={{ padding: "24px 22px 0" }}>
-        <button onClick={onLogout} style={{
-          width: "100%", padding: "15px", border: `1.5px solid #E8A0A0`,
-          borderRadius: 14, background: "#FFF0F0", color: "#C0392B",
-          fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif",
+        <button onClick={() => {
+          if (navigator.share) {
+            navigator.share({
+              title: "Mater — Coaching espiritual",
+              text: "Te invito a Mater, una app de coaching espiritual católico para jóvenes. Tiene chat con IA, plan de 30 días, evangelio del día y diario espiritual.",
+              url: "https://materapp.org",
+            });
+          } else {
+            navigator.clipboard.writeText("https://materapp.org");
+            alert("¡Enlace copiado! Comparte materapp.org con quien quieras.");
+          }
+        }} style={{
+          width: "100%", padding: "14px", border: `1px solid ${C.mist}`,
+          borderRadius: 4, background: C.cream, color: C.navy,
+          fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif",
           display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+          letterSpacing: "0.02em",
         }}>
-          <Icon name="logout" size={18} color="#C0392B" />
+          <svg width={16} height={16} viewBox="0 0 24 24" fill="none">
+            <circle cx="18" cy="5" r="3" stroke={C.navy} strokeWidth="1.8"/>
+            <circle cx="6" cy="12" r="3" stroke={C.navy} strokeWidth="1.8"/>
+            <circle cx="18" cy="19" r="3" stroke={C.navy} strokeWidth="1.8"/>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" stroke={C.navy} strokeWidth="1.8" strokeLinecap="round"/>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" stroke={C.navy} strokeWidth="1.8" strokeLinecap="round"/>
+          </svg>
+          Compartir Mater
+        </button>
+      </div>
+
+      {/* Logout */}
+      <div style={{ padding: "16px 22px 0" }}>
+        <button onClick={onLogout} style={{
+          width: "100%", padding: "14px", border: `1px solid #E8A0A0`,
+          borderRadius: 4, background: "transparent", color: "#C0392B",
+          fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif",
+          display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+          letterSpacing: "0.02em",
+        }}>
+          <Icon name="logout" size={15} color="#C0392B" />
           Cerrar sesión
         </button>
       </div>
@@ -1582,6 +1614,135 @@ function ProfileScreen({ user, profile, setProfile, onLogout }) {
 }
 
 /* ══════════════════════════════════════════
+   ONBOARDING SCREEN
+══════════════════════════════════════════ */
+function OnboardingScreen({ onComplete }) {
+  const [step, setStep] = useState(0);
+  const [name, setName] = useState("");
+
+  const steps = [
+    {
+      icon: null,
+      title: "Bienvenido a Mater",
+      subtitle: "Tu guía de coaching espiritual católico",
+      body: "Mater te acompaña en tu camino de fe con reflexiones diarias, el evangelio de cada día, un diario espiritual y Mater, tu guía con IA.",
+      cta: "Comenzar",
+    },
+    {
+      icon: null,
+      title: "¿Cómo te llamas?",
+      subtitle: "Para personalizar tu experiencia",
+      body: null,
+      cta: "Continuar",
+      input: true,
+    },
+    {
+      icon: null,
+      title: "Las 3 prácticas del día",
+      subtitle: "Tu rutina espiritual diaria",
+      body: "Cada día encontrarás 3 prácticas — Oración de la mañana, Lectio Divina y Examen de conciencia. Al completarlas construyes tu racha semanal.",
+      cta: "Siguiente",
+    },
+    {
+      icon: null,
+      title: "Habla con Mater",
+      subtitle: "Tu guía espiritual personal",
+      body: "Mater está disponible para acompañarte en momentos de duda, discernimiento o simplemente para rezar juntos. Es confidencial y siempre disponible.",
+      cta: "Entrar a Mater",
+      last: true,
+    },
+  ];
+
+  const s = steps[step];
+
+  function handleNext() {
+    if (s.last) {
+      onComplete(name || "Amigo");
+    } else if (step === 1 && !name.trim()) {
+      return;
+    } else {
+      setStep(prev => prev + 1);
+    }
+  }
+
+  return (
+    <div style={{ flex: 1, background: C.iceBlue, display: "flex", flexDirection: "column", padding: "0 0 40px" }}>
+
+      {/* Progress dots */}
+      <div style={{ display: "flex", justifyContent: "center", gap: 6, padding: "60px 0 0" }}>
+        {steps.map((_, i) => (
+          <div key={i} style={{
+            width: i === step ? 20 : 6, height: 6, borderRadius: 3,
+            background: i === step ? C.navy : C.mist,
+            transition: "all 0.3s",
+          }} />
+        ))}
+      </div>
+
+      {/* Content */}
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0 32px", textAlign: "center" }}>
+
+        {/* Logo */}
+        <div style={{ width: 80, height: 80, borderRadius: 4, overflow: "hidden", border: `1px solid ${C.mist}`, marginBottom: 32 }}>
+          <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        </div>
+
+        <p style={{ fontSize: 11, color: C.inkLight, letterSpacing: "0.12em", textTransform: "uppercase", margin: "0 0 8px" }}>{s.subtitle}</p>
+        <h2 style={{ fontSize: 28, fontWeight: 600, color: C.ink, margin: "0 0 20px", fontFamily: "'Cormorant Garamond', serif", lineHeight: 1.2 }}>{s.title}</h2>
+
+        {s.body && (
+          <p style={{ fontSize: 14, color: C.inkMid, lineHeight: 1.75, margin: "0 0 32px" }}>{s.body}</p>
+        )}
+
+        {s.input && (
+          <div style={{ width: "100%", marginBottom: 32 }}>
+            <input
+              value={name}
+              onChange={e => setName(e.target.value)}
+              placeholder="Tu nombre"
+              onKeyDown={e => e.key === "Enter" && handleNext()}
+              autoFocus
+              style={{
+                width: "100%", border: "none", outline: "none",
+                borderBottom: `1px solid ${C.mist}`,
+                padding: "12px 4px", fontSize: 20, fontWeight: 600,
+                color: C.ink, background: "transparent", textAlign: "center",
+                fontFamily: "'Cormorant Garamond', serif",
+                boxSizing: "border-box",
+              }}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* CTA */}
+      <div style={{ padding: "0 32px" }}>
+        <button onClick={handleNext} style={{
+          width: "100%", padding: "15px", border: "none", borderRadius: 4,
+          background: C.navy, color: C.cream,
+          fontSize: 14, fontWeight: 600, cursor: "pointer",
+          fontFamily: "'DM Sans', system-ui, sans-serif",
+          letterSpacing: "0.04em",
+          opacity: s.input && !name.trim() ? 0.5 : 1,
+        }}>
+          {s.cta}
+        </button>
+
+        {step > 0 && (
+          <button onClick={() => setStep(prev => prev - 1)} style={{
+            width: "100%", padding: "12px", border: "none", background: "transparent",
+            color: C.inkLight, fontSize: 13, cursor: "pointer",
+            fontFamily: "'DM Sans', system-ui, sans-serif", marginTop: 8,
+          }}>
+            Atrás
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════
    ROOT APP
 ══════════════════════════════════════════ */
 export default function App() {
@@ -1589,6 +1750,7 @@ export default function App() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState("home");
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -1598,28 +1760,34 @@ export default function App() {
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      if (session) loadProfile(session.user.id);
+      if (session) loadProfile(session.user.id, _event === "SIGNED_IN");
       else { setProfile(null); setLoading(false); }
     });
     return () => subscription.unsubscribe();
   }, []);
 
-  async function loadProfile(userId) {
+  async function loadProfile(userId, isNewLogin = false) {
     const { data } = await supabase.from("profiles").select("*").eq("id", userId).single();
-    if (data) setProfile(data);
-    else {
-      // Crear perfil vacío si no existe
+    if (data) {
+      setProfile(data);
+      // Mostrar onboarding si es primera vez (no tiene nombre real)
+      if (isNewLogin && !data.onboarded) setShowOnboarding(true);
+    } else {
       const email = (await supabase.auth.getUser()).data?.user?.email || "";
       const name = email.split("@")[0];
       await supabase.from("profiles").upsert({ id: userId, name });
       setProfile({ id: userId, name });
+      setShowOnboarding(true);
     }
     setLoading(false);
   }
 
-  async function handleLogout() {
-    await supabase.auth.signOut();
-    setTab("home");
+  async function completeOnboarding(name) {
+    if (session) {
+      await supabase.from("profiles").upsert({ id: session.user.id, name, onboarded: true });
+      setProfile(prev => ({ ...prev, name, onboarded: true }));
+    }
+    setShowOnboarding(false);
   }
 
   const tabs = [
@@ -1641,6 +1809,12 @@ export default function App() {
   if (!session) return (
     <div style={phone}>
       <AuthScreen onAuth={() => {}} />
+    </div>
+  );
+
+  if (showOnboarding) return (
+    <div style={phone}>
+      <OnboardingScreen onComplete={completeOnboarding} />
     </div>
   );
 
