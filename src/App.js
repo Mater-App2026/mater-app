@@ -192,9 +192,66 @@ function AuthScreen({ onAuth }) {
 ══════════════════════════════════════════ */
 function HomeScreen({ user, profile, onTabChange }) {
   const days = ["L", "M", "M", "J", "V", "S", "D"];
-  const streakDays = [true, true, true, false, true, true, false];
-  const today = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
+  const todayIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
   const [openCard, setOpenCard] = useState(null);
+  const [streakDays, setStreakDays] = useState([false,false,false,false,false,false,false]);
+  const [streakCount, setStreakCount] = useState(0);
+  const [dailyVerse, setDailyVerse] = useState(null);
+
+  // Versículos rotativos según el día del año
+  const verses = [
+    { text: "«Venid a mí todos los que estáis fatigados y cargados, y yo os haré descansar.»", ref: "Mateo 11:28" },
+    { text: "«El Señor es mi pastor; nada me falta.»", ref: "Salmo 23:1" },
+    { text: "«Todo lo puedo en Cristo que me fortalece.»", ref: "Filipenses 4:13" },
+    { text: "«El amor es paciente, es servicial; el amor no es envidioso.»", ref: "1 Corintios 13:4" },
+    { text: "«Busca primero el Reino de Dios y su justicia, y todo lo demás se te dará por añadidura.»", ref: "Mateo 6:33" },
+    { text: "«Confía en el Señor con todo tu corazón y no te apoyes en tu propio entendimiento.»", ref: "Proverbios 3:5" },
+    { text: "«No temas, porque yo estoy contigo; no te angusties, porque yo soy tu Dios.»", ref: "Isaías 41:10" },
+    { text: "«Yo soy el camino, la verdad y la vida.»", ref: "Juan 14:6" },
+    { text: "«Ámense los unos a los otros como yo los he amado.»", ref: "Juan 15:12" },
+    { text: "«La paz os dejo, mi paz os doy.»", ref: "Juan 14:27" },
+    { text: "«Pidan y se les dará; busquen y encontrarán; llamen y se les abrirá.»", ref: "Mateo 7:7" },
+    { text: "«El que permanece en mí y yo en él, ese da mucho fruto.»", ref: "Juan 15:5" },
+    { text: "«Sean fuertes y valientes. No teman ni se asusten, porque el Señor su Dios va con ustedes.»", ref: "Deuteronomio 31:6" },
+    { text: "«¿Quién nos separará del amor de Cristo?»", ref: "Romanos 8:35" },
+  ];
+
+  useEffect(() => {
+    // Versículo del día basado en el día del año
+    const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+    setDailyVerse(verses[dayOfYear % verses.length]);
+
+    // Cargar racha real desde Supabase
+    async function loadStreak() {
+      const { data } = await supabase.from("streaks").select("date").eq("user_id", user.id).order("date", { ascending: false }).limit(14);
+      if (!data) return;
+      const dateSet = new Set(data.map(r => r.date));
+      // Marcar racha de la semana actual
+      const weekStreak = days.map((_, i) => {
+        const d = new Date();
+        d.setDate(d.getDate() - (todayIdx - i));
+        const key = d.toISOString().split("T")[0];
+        return dateSet.has(key);
+      });
+      setStreakDays(weekStreak);
+      // Contar días consecutivos
+      let count = 0;
+      const today = new Date().toISOString().split("T")[0];
+      let check = new Date();
+      while (true) {
+        const key = check.toISOString().split("T")[0];
+        if (dateSet.has(key)) { count++; check.setDate(check.getDate() - 1); }
+        else break;
+      }
+      setStreakCount(count);
+      // Registrar hoy si no está
+      if (!dateSet.has(today)) {
+        await supabase.from("streaks").upsert({ user_id: user.id, date: today }, { onConflict: "user_id,date" });
+      }
+    }
+    loadStreak();
+  }, [user]);
+
 
   const practiceContent = [
     {
@@ -235,7 +292,7 @@ function HomeScreen({ user, profile, onTabChange }) {
     },
   ];
 
-  const firstName = profile?.name?.split(" ")[0] || user?.email?.split("@")[0] || "Amig@";
+  const firstName = profile?.name?.split(" ")[0] || user?.email?.split("@")[0] || "Amigo";
 
   return (
     <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90 }}>
@@ -326,9 +383,9 @@ function HomeScreen({ user, profile, onTabChange }) {
           <div style={{ position: "absolute", top: -18, right: -18, opacity: 0.08, fontSize: 90 }}>✝</div>
           <p style={{ fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", opacity: 0.7, margin: "0 0 8px" }}>VERSÍCULO DEL DÍA</p>
           <p style={{ fontSize: 14, lineHeight: 1.6, fontStyle: "italic", margin: "0 0 8px" }}>
-            «Venid a mí todos los que estáis fatigados y cargados, y yo os haré descansar.»
+            {dailyVerse?.text || "«Venid a mí todos los que estáis fatigados y cargados, y yo os haré descansar.»"}
           </p>
-          <p style={{ fontSize: 11, opacity: 0.7, margin: 0 }}>Mateo 11:28</p>
+          <p style={{ fontSize: 11, opacity: 0.7, margin: 0 }}>{dailyVerse?.ref || "Mateo 11:28"}</p>
         </div>
       </div>
 
@@ -336,7 +393,7 @@ function HomeScreen({ user, profile, onTabChange }) {
       <div style={{ padding: "22px 22px 0" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
           <p style={{ fontSize: 13, fontWeight: 700, color: C.inkDark, margin: 0 }}>⭐ Racha semanal</p>
-          <span style={pill(`${C.sky}22`, C.blue)}>5 días seguidos</span>
+          <span style={pill(`${C.sky}22`, C.blue)}>{streakCount} {streakCount === 1 ? "día" : "días"} seguidos</span>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
           {days.map((d, i) => (
@@ -344,13 +401,13 @@ function HomeScreen({ user, profile, onTabChange }) {
               <div style={{
                 width: "100%", aspectRatio: "1", borderRadius: 10,
                 background: streakDays[i]
-                  ? i === today ? `linear-gradient(135deg, ${C.blue}, ${C.sky})` : `${C.blue}30`
+                  ? i === todayIdx ? `linear-gradient(135deg, ${C.blue}, ${C.sky})` : `${C.blue}30`
                   : `${C.slateLight}18`,
                 display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 13, color: streakDays[i] ? (i === today ? "#fff" : C.blue) : C.slateLight,
+                fontSize: 13, color: streakDays[i] ? (i === todayIdx ? "#fff" : C.blue) : C.slateLight,
                 fontWeight: 700,
               }}>{streakDays[i] ? "✓" : ""}</div>
-              <p style={{ fontSize: 10, color: i === today ? C.blue : C.slateLight, fontWeight: i === today ? 700 : 400, margin: 0 }}>{d}</p>
+              <p style={{ fontSize: 10, color: i === todayIdx ? C.blue : C.slateLight, fontWeight: i === todayIdx ? 700 : 400, margin: 0 }}>{d}</p>
             </div>
           ))}
         </div>
@@ -997,7 +1054,14 @@ export default function App() {
 
   async function loadProfile(userId) {
     const { data } = await supabase.from("profiles").select("*").eq("id", userId).single();
-    setProfile(data);
+    if (data) setProfile(data);
+    else {
+      // Crear perfil vacío si no existe
+      const email = (await supabase.auth.getUser()).data?.user?.email || "";
+      const name = email.split("@")[0];
+      await supabase.from("profiles").upsert({ id: userId, name });
+      setProfile({ id: userId, name });
+    }
     setLoading(false);
   }
 
