@@ -902,7 +902,7 @@ Acércate a esta práctica con libertad interior. Si sientes resistencia, no la 
         { day: "Dom", title: "Misa dominical con atención plena", type: "Misa" },
       ],
     },
-    { title: "Semana 4 · Misión", theme: "Fe en el mundo", color: C.sky, bg: "#DFF0F8",
+    { title: "Semana 5 · Schoenstatt", theme: "Alianza de amor", color: "#A8864A", bg: "#F5EDD8", days: [{day:"Lun",title:"El Padre Kentenich y el origen de Schoenstatt",type:"Lectura"},{day:"Mar",title:"La alianza de amor con Maria",type:"Reflexion"},{day:"Mie",title:"El santuario como hogar espiritual",type:"Practica"},{day:"Jue",title:"La contribucion: ofrenda de amor",type:"Practica"},{day:"Vie",title:"Instrumento en manos de Maria",type:"Reflexion"},{day:"Sab",title:"Examen ignaciano semanal",type:"Examen"},{day:"Dom",title:"Misa y consagracion a Maria",type:"Misa"}]},{ title: "Semana 4 · Misión", theme: "Fe en el mundo", color: C.sky, bg: "#DFF0F8",
       days: [
         { day: "Lun", title: "Vocación: ¿a qué me llama Dios?", type: "Reflexión" },
         { day: "Mar", title: "San Francisco: la fraternidad universal", type: "Lectura" },
