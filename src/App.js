@@ -428,11 +428,7 @@ function HomeScreen({ user, profile, onTabChange }) {
       setSaintOfDay({
         nombre: "Santa María, Madre de Dios",
         fecha: "1 de enero",
-        historia: "María, la Madre de Jesús, es la figura más venerada en la Iglesia Católica. Su vida entera fue un sí a Dios, desde la Anunciación hasta el pie de la Cruz.
-
-Su maternidad divina no es solo un privilegio personal — es un don para toda la humanidad. Al ser Madre de Cristo, es también Madre de todos los miembros de su Cuerpo, la Iglesia.
-
-La devoción a María no desvía de Cristo sino que lleva a Él. Ella siempre apunta hacia su Hijo, como en Caná: 'Haced lo que Él os diga.'",
+        historia: "Maria, la Madre de Jesus, es la figura mas venerada en la Iglesia Catolica. Su vida entera fue un si a Dios, desde la Anunciacion hasta el pie de la Cruz.\n\nSu maternidad divina es un don para toda la humanidad. Al ser Madre de Cristo, es tambien Madre de todos los miembros de su Cuerpo, la Iglesia.\n\nLa devocion a Maria lleva a Cristo. Ella siempre apunta hacia su Hijo: Haced lo que El os diga.",
         oracion: "Santa María, Madre de Dios y Madre nuestra, intercede por nosotros ante tu Hijo Jesús. Ayúdanos a decir sí a Dios en cada momento de nuestra vida. Amén.",
         dato: "El título 'Madre de Dios' (Theotokos) fue declarado dogma en el Concilio de Éfeso en el año 431."
       });
