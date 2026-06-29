@@ -856,25 +856,41 @@ function PlanScreen({ user }) {
   async function fetchGospelOfDay() {
     if (gospelOfDay) return;
     setLoadingGospel(true);
-    const today = new Date().toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
     try {
-      const text = await callAI(
-        `Eres un asistente litúrgico católico experto. Conoces el calendario litúrgico y las lecturas diarias del Leccionario Romano. Respondes SOLO en JSON válido, sin texto adicional, sin bloques de código.`,
-        `Hoy es ${today}. Dame el evangelio exacto de hoy según el Leccionario Romano de la USCCB. Responde SOLO con este JSON: {"referencia":"Evangelio según San X, X:X-X","texto":"Primeras dos líneas del texto","reflexion":"Reflexión de 3 párrafos breves para jóvenes adultos","preguntas":["pregunta 1","pregunta 2","pregunta 3"],"tiempo":"Tiempo litúrgico actual"}`
-      );
-      setGospelOfDay(JSON.parse(text));
+      // Fetch directo desde evangeli.net — evangelio del día en español
+      const res = await fetch("https://evangeli.net/evangelio/dia/json");
+      const data = await res.json();
+      if (data && (data.texto || data.text)) {
+        setGospelOfDay({
+          referencia: data.referencia || data.reference || "Evangelio del día",
+          tiempo: data.liturgia || data.liturgy || "Tiempo Ordinario",
+          textoCompleto: data.texto || data.text,
+        });
+      } else {
+        throw new Error("Sin datos");
+      }
     } catch {
-      setGospelOfDay({
-        referencia: "Juan 15:1-8",
-        texto: "Yo soy la vid verdadera y mi Padre es el viñador.",
-        reflexion: "Jesús se presenta como la vid y nosotros como los sarmientos. Sin Él no podemos hacer nada.\n\nPermanecer en Jesús no es una actitud pasiva sino una decisión diaria de elegirle a Él antes que a cualquier otra cosa.\n\nHoy, ¿cómo puedes permanecer más unido a Cristo en tu vida cotidiana?",
-        preguntas: ["¿En qué áreas de tu vida sientes que estás separado de la vid?", "¿Qué frutos está produciendo tu unión con Cristo?", "¿Qué necesitas podar para dar más fruto?"],
-        tiempo: "Tiempo Ordinario",
-      });
+      // Fallback con la IA
+      try {
+        const today = new Date().toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+        const text = await callAI(
+          `Eres un experto en liturgia católica. Conoces el Leccionario Romano exactamente. Respondes SOLO en JSON válido sin bloques de código.`,
+          `Hoy es ${today}. Dame el texto bíblico COMPLETO del evangelio de hoy según el Leccionario Romano, en español. Solo el texto bíblico. Responde SOLO con: {"referencia":"Evangelio según San X, X:X-X","tiempo":"Tiempo litúrgico","textoCompleto":"Texto completo del evangelio"}`
+        );
+        const parsed = JSON.parse(text.replace(/\`\`\`json|\`\`\`/g, "").trim());
+        setGospelOfDay(parsed);
+      } catch {
+        setGospelOfDay({
+          referencia: "Juan 15:1-8",
+          tiempo: "Tiempo Ordinario",
+          textoCompleto: "En aquel tiempo, dijo Jesús a sus discípulos:\n\n«Yo soy la vid verdadera y mi Padre es el viñador. Todo sarmiento que en mí no da fruto, lo arranca, y todo el que da fruto, lo poda para que dé más fruto.\n\nVosotros ya estáis limpios gracias a la palabra que os he hablado. Permaneced en mí y yo en vosotros. Como el sarmiento no puede dar fruto por sí mismo si no permanece en la vid, así tampoco vosotros si no permanecéis en mí.\n\nYo soy la vid; vosotros los sarmientos. El que permanece en mí y yo en él, ese da mucho fruto; porque sin mí no podéis hacer nada.\n\nSi permanecéis en mí y mis palabras permanecen en vosotros, pedid lo que queráis y se os dará. Con esto recibe gloria mi Padre: con que deis mucho fruto, y seáis mis discípulos.»",
+        });
+      }
     } finally {
       setLoadingGospel(false);
     }
   }
+
 
   function getStaticDayContent(weekIdx, dayIdx) {
     const allContent = [
@@ -1053,16 +1069,8 @@ function PlanScreen({ user }) {
           ) : gospelOfDay ? (
             <>
               <p style={{ fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: C.gold, margin: "0 0 6px", fontWeight: 700 }}>📖 Evangelio del día · {gospelOfDay.tiempo}</p>
-              <p style={{ fontSize: 14, fontWeight: 700, color: C.navy, margin: "0 0 6px" }}>{gospelOfDay.referencia}</p>
-              <p style={{ fontSize: 12, fontStyle: "italic", color: C.inkMid, margin: "0 0 10px", lineHeight: 1.6 }}>«{gospelOfDay.texto}»</p>
-              <p style={{ fontSize: 12, color: C.inkMid, lineHeight: 1.65, margin: "0 0 12px", whiteSpace: "pre-line" }}>{gospelOfDay.reflexion}</p>
-              <p style={{ fontSize: 11, fontWeight: 700, color: C.blue, margin: "0 0 8px", letterSpacing: "0.08em", textTransform: "uppercase" }}>Preguntas para orar</p>
-              {gospelOfDay.preguntas?.map((q, i) => (
-                <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 8 }}>
-                  <div style={{ width: 20, height: 20, borderRadius: "50%", background: `${C.blue}20`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: C.blue, fontSize: 10, fontWeight: 700 }}>{i + 1}</div>
-                  <p style={{ fontSize: 12, color: C.ink, lineHeight: 1.6, margin: 0 }}>{q}</p>
-                </div>
-              ))}
+              <p style={{ fontSize: 14, fontWeight: 700, color: C.navy, margin: "0 0 12px" }}>{gospelOfDay.referencia}</p>
+              <p style={{ fontSize: 13, color: C.ink, lineHeight: 1.85, margin: 0, whiteSpace: "pre-line", fontStyle: "italic", borderLeft: `3px solid ${C.gold}`, paddingLeft: 14 }}>{gospelOfDay.textoCompleto}</p>
             </>
           ) : (
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
