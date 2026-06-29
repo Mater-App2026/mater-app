@@ -312,6 +312,9 @@ function HomeScreen({ user, profile, onTabChange }) {
   const [streakDays, setStreakDays] = useState([false, false, false, false, false, false, false]);
   const [streakCount, setStreakCount] = useState(0);
   const [dailyVerse, setDailyVerse] = useState(null);
+  const [saintOfDay, setSaintOfDay] = useState(null);
+  const [loadingSaint, setLoadingSaint] = useState(false);
+  const [saintOpen, setSaintOpen] = useState(false);
   const [practiceAIContent, setPracticeAIContent] = useState({});
   const [loadingPractice, setLoadingPractice] = useState(false);
   const practiceCache = useRef({});
@@ -396,7 +399,47 @@ function HomeScreen({ user, profile, onTabChange }) {
 
     loadStreak();
     loadPractices();
+    fetchSaintOfDay();
   }, [user]);
+
+  async function fetchSaintOfDay() {
+    const today = new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" });
+    const cacheKey = "saint-" + new Date().toDateString();
+    const cached = sessionStorage.getItem(cacheKey);
+    if (cached) { setSaintOfDay(JSON.parse(cached)); return; }
+    setLoadingSaint(true);
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-6",
+          max_tokens: 1000,
+          system: "Eres un experto en hagiografia catolica. Conoces el calendario de santos de la Iglesia Catolica. Respondes SOLO en JSON valido sin bloques de codigo.",
+          messages: [{ role: "user", content: "Hoy es " + today + ". Dame el santo o beato que se celebra hoy segun el calendario catolico. Responde SOLO con JSON: {nombre: 'nombre completo del santo', fecha: 'dia y mes', historia: 'historia breve de 3 parrafos sobre su vida y virtudes destacadas', oracion: 'oracion corta de 3-4 lineas dirigida al santo pidiendo su intercesion', dato: 'un dato curioso o poco conocido sobre este santo'}" }],
+        }),
+      });
+      const data = await res.json();
+      const text = data.content?.map(b => b.text || "").join("") || "{}";
+      const parsed = JSON.parse(text.replace(/```json|```/g, "").trim());
+      sessionStorage.setItem(cacheKey, JSON.stringify(parsed));
+      setSaintOfDay(parsed);
+    } catch {
+      setSaintOfDay({
+        nombre: "Santa María, Madre de Dios",
+        fecha: "1 de enero",
+        historia: "María, la Madre de Jesús, es la figura más venerada en la Iglesia Católica. Su vida entera fue un sí a Dios, desde la Anunciación hasta el pie de la Cruz.
+
+Su maternidad divina no es solo un privilegio personal — es un don para toda la humanidad. Al ser Madre de Cristo, es también Madre de todos los miembros de su Cuerpo, la Iglesia.
+
+La devoción a María no desvía de Cristo sino que lleva a Él. Ella siempre apunta hacia su Hijo, como en Caná: 'Haced lo que Él os diga.'",
+        oracion: "Santa María, Madre de Dios y Madre nuestra, intercede por nosotros ante tu Hijo Jesús. Ayúdanos a decir sí a Dios en cada momento de nuestra vida. Amén.",
+        dato: "El título 'Madre de Dios' (Theotokos) fue declarado dogma en el Concilio de Éfeso en el año 431."
+      });
+    } finally {
+      setLoadingSaint(false);
+    }
+  }
 
   async function markPracticeDone(index) {
     const key = `${index}-${todayKey}`;
@@ -784,6 +827,47 @@ function HomeScreen({ user, profile, onTabChange }) {
           <p style={{ fontSize: 15, lineHeight: 1.7, fontStyle: "italic", margin: "0 0 10px", fontFamily: "'Cormorant Garamond', serif" }}>{dailyVerse?.text}</p>
           <p style={{ fontSize: 10, opacity: 0.6, margin: 0, letterSpacing: "0.06em" }}>{dailyVerse?.ref}</p>
         </div>
+
+        {/* Santo del día */}
+        {saintOpen && saintOfDay && (
+          <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: "flex-end" }} onClick={() => setSaintOpen(false)}>
+            <div onClick={e => e.stopPropagation()} style={{ background: C.white, borderRadius: "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: 390, margin: "0 auto", maxHeight: "85vh", overflowY: "auto" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+                <div>
+                  <p style={{ fontSize: 10, color: C.gold, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 4px" }}>✨ Santo del día</p>
+                  <p style={{ fontSize: 18, fontWeight: 800, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>{saintOfDay.nombre}</p>
+                </div>
+                <button onClick={() => setSaintOpen(false)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+              </div>
+              <p style={{ fontSize: 13, color: C.inkMid, lineHeight: 1.8, margin: "0 0 20px", whiteSpace: "pre-line" }}>{saintOfDay.historia}</p>
+              <div style={{ background: C.iceBlue, borderRadius: 14, padding: "14px 16px", marginBottom: 16, borderLeft: `3px solid ${C.gold}` }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: C.gold, margin: "0 0 8px", letterSpacing: "0.08em", textTransform: "uppercase" }}>🙏 Oración</p>
+                <p style={{ fontSize: 13, fontStyle: "italic", color: C.inkMid, lineHeight: 1.7, margin: 0 }}>{saintOfDay.oracion}</p>
+              </div>
+              <div style={{ background: C.fog, borderRadius: 12, padding: "12px 14px" }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: C.blue, margin: "0 0 6px", letterSpacing: "0.08em", textTransform: "uppercase" }}>💡 ¿Sabías que...?</p>
+                <p style={{ fontSize: 12, color: C.inkMid, lineHeight: 1.65, margin: 0 }}>{saintOfDay.dato}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <button onClick={() => setSaintOpen(true)} style={{ marginTop: 12, width: "100%", borderRadius: 12, background: C.cream, border: `1px solid ${C.mist}`, borderLeft: `3px solid ${C.gold}`, padding: "14px 16px", display: "flex", alignItems: "center", gap: 12, cursor: "pointer", textAlign: "left" }}>
+          <span style={{ fontSize: 24 }}>✨</span>
+          <div style={{ flex: 1 }}>
+            {loadingSaint ? (
+              <p style={{ fontSize: 13, color: C.slateLight, margin: 0 }}>Cargando santo del día...</p>
+            ) : saintOfDay ? (
+              <>
+                <p style={{ fontSize: 10, color: C.gold, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", margin: "0 0 2px" }}>Santo del día</p>
+                <p style={{ fontSize: 13, fontWeight: 700, color: C.ink, margin: 0 }}>{saintOfDay.nombre}</p>
+              </>
+            ) : (
+              <p style={{ fontSize: 13, color: C.slateLight, margin: 0 }}>Santo del día</p>
+            )}
+          </div>
+          <Icon name="chevron" size={16} color={C.gold} />
+        </button>
       </div>
 
       <div style={{ padding: "22px 22px 0" }}>
