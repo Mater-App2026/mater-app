@@ -567,11 +567,10 @@ function HomeScreen({ user, profile, onTabChange }) {
 
         // 2. Generar la Lectio Divina con los 4 pasos usando la IA
         const todayStr = new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" });
+        const instrJSON = '{"referencia":"ref","lectio":"texto lectio","meditatio":"texto meditatio","oratio":"texto oratio","contemplatio":"texto contemplatio","palabra_clave":"palabra"}';
         const prompt = textoEvangelio
-          ? `Hoy es ${todayStr}. El evangelio de hoy es ${referenciaEvangelio}: "${textoEvangelio.substring(0, 800)}..."
-
-Crea una Lectio Divina completa con los 4 pasos clásicos basada en ESTE evangelio específico. Responde SOLO con JSON válido sin bloques de código: {"referencia":"${referenciaEvangelio}","lectio":"Invitación a leer el texto despacio, señalando 1-2 palabras o frases clave para quedarse","meditatio":"Reflexión profunda de 3 párrafos sobre lo que el texto dice hoy a un joven adulto de 25-35 años","oratio":"Oración breve y personal en primera persona surgida del texto, 3-4 líneas","contemplatio":"Invitación al silencio contemplativo — qué actitud o gesto interior proponer","palabra_clave":"Una sola palabra del evangelio para llevar durante el día"}`
-          : `Hoy es ${todayStr}. No tengo el texto del evangelio disponible. Crea una Lectio Divina sobre un pasaje del evangelio apropiado para hoy según el Ciclo A del Leccionario. Responde SOLO con JSON válido sin bloques de código: {"referencia":"referencia bíblica","lectio":"Invitación a leer el texto","meditatio":"Reflexión de 3 párrafos profundos","oratio":"Oración personal en primera persona","contemplatio":"Invitación al silencio","palabra_clave":"Una palabra para llevar el día"}`;
+          ? "Hoy es " + todayStr + ". Evangelio de hoy " + referenciaEvangelio + ": \"" + textoEvangelio.substring(0, 600) + "\"\n\nCrea una Lectio Divina con 4 pasos basada en este evangelio. Responde SOLO JSON sin bloques de codigo: " + instrJSON
+          : "Hoy es " + todayStr + ". Ciclo A del Leccionario. Crea una Lectio Divina sobre el evangelio de hoy. Responde SOLO JSON: " + instrJSON
 
         const aiRes = await fetch("/api/chat", {
           method: "POST",
