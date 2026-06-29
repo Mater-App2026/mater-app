@@ -121,7 +121,7 @@ function OnboardingScreen({ onComplete }) {
 
   const steps = [
     { title: "Bienvenido a Mater", subtitle: "Tu guía de coaching espiritual católico", body: "Mater te acompaña en tu camino de fe con reflexiones diarias, el evangelio de cada día, un diario espiritual y Mater, tu guía con IA.", cta: "Comenzar" },
-    { title: "¿Cómo te llamas?", subtitle: "Para personalizar tu experiencia", body: null, cta: "Continuar", input: true },
+
     { title: "Las 3 prácticas del día", subtitle: "Tu rutina espiritual diaria", body: "Cada día encontrarás 3 prácticas — Oración de la mañana, Lectio Divina y Examen de conciencia. Al completarlas construyes tu ritmo semanal.", cta: "Siguiente" },
     { title: "Habla con Mater", subtitle: "Tu guía espiritual personal", body: "Mater está disponible para acompañarte en momentos de duda, discernimiento o simplemente para rezar juntos.", cta: "Entrar a Mater", last: true },
   ];
@@ -129,9 +129,8 @@ function OnboardingScreen({ onComplete }) {
   const s = steps[step];
 
   function handleNext() {
-    if (s.input && !name.trim()) return;
     if (s.last) {
-      onComplete(name.trim() || "Amigo");
+      onComplete("Amigo");
     } else {
       setStep(prev => prev + 1);
     }
