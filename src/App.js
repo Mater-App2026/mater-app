@@ -1274,7 +1274,6 @@ function PlanScreen({ user }) {
 }
 
 
-);
 
 function DiaryEntryForm({ data, onChange, onSave, onCancel, saving: isSaving, title }) {
   const moods = ["😊", "🙏", "😔", "😌", "🥹", "😤", "🤔", "❤️"];
