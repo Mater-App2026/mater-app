@@ -595,16 +595,52 @@ function HomeScreen({ user, profile, onTabChange }) {
         practiceCache.current[cacheKey] = lectioContent;
         setPracticeAIContent(prev => ({ ...prev, [index]: lectioContent }));
       } catch(e) {
-        const fallback = {
-          santo: "Lectio Divina - Evangelio del dia",
-          cita: "«Habla, Señor, que tu siervo escucha.» — 1 Samuel 3:9",
-          reflexion: "📖 LECTIO — Leer\nAbre el evangelio de hoy y leelo despacio, dos veces.\n\n🤔 MEDITATIO — Rumiar\n¿Hay alguna palabra que te llame la atencion? Quedatez con ella y repitela despacio.\n\n🙏 ORATIO — Responder\nSeñor, gracias por hablarme hoy a traves de tu Palabra. Que esta Palabra baje a mis manos y decisiones. Amen.\n\n✨ CONTEMPLATIO — Descansar\nCierra los ojos un momento. No hagas nada. Solo recibe en silencio.",
-          preguntas: [
-            "¿Que palabra del evangelio de hoy te quedo resonando?",
-            "¿Que te dice Dios personalmente a traves de este texto?",
-            "¿Como puedes llevar esta Palabra a tu vida concreta hoy?"
-          ]
-        };
+        const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+        const fallbacks = [
+          {
+            santo: "San Bernardo de Claraval",
+            cita: "«El que bebe de Mí tendrá en sí mismo un manantial que salta hasta la vida eterna.»",
+            reflexion: ["📖 LECTIO — Leer", "Lee el evangelio de hoy despacio, dos veces. La primera para entender. La segunda para sentir. Deja que las palabras aterricen en tu interior sin prisa.", "🤔 MEDITATIO — Rumiar", "¿Hay una palabra o frase que te llamó la atención? Quédate con ella. Repítela como quien saborea algo bueno. No necesitas entenderlo todo — necesitas dejarte tocar.", "🙏 ORATIO — Responder", "Señor, gracias por hablarme hoy a través de tu Palabra. Que no quede solo en mi mente, sino que baje a mis manos y a mis decisiones. Amén.", "✨ CONTEMPLATIO — Descansar", "Cierra los ojos un momento. No hagas nada. Solo recibe. La Palabra ya fue sembrada — ahora deja que germine en el silencio."].join("\n\n"),
+            preguntas: ["¿Qué palabra del evangelio de hoy te quedó resonando?", "¿Qué te dice Dios personalmente a través de este texto?", "¿Cómo puedes llevar esta Palabra a tu vida concreta hoy?"]
+          },
+          {
+            santo: "San Gregorio Magno",
+            cita: "«La Sagrada Escritura crece con quien la lee.»",
+            reflexion: ["📖 LECTIO — Leer", "Abre el evangelio de hoy y léelo con calma. Si puedes, léelo en voz alta — escuchar las palabras con los oídos ayuda a recibirlas de manera diferente.", "🤔 MEDITATIO — Rumiar", "¿Qué personaje del evangelio de hoy te llama más la atención? ¿Con cuál te identificas? Ponte en su lugar y observa qué sientes desde ahí.", "🙏 ORATIO — Responder", "Señor, tu Palabra es viva y activa. Haz que lo que leí hoy no se quede en el papel sino que cambie algo en mí. Habla, que te escucho.", "✨ CONTEMPLATIO — Descansar", "Quédate un momento en silencio con Jesús. Sin palabras. Solo presencia. Él está aquí."].join("\n\n"),
+            preguntas: ["¿Con qué personaje del evangelio de hoy te identificas más — y por qué?", "¿Qué acción concreta te inspira el texto de hoy?", "¿Qué cambiaría en tu día si vivieras lo que el evangelio propone?"]
+          },
+          {
+            santo: "San Jerónimo",
+            cita: "«Ignorar la Escritura es ignorar a Cristo.»",
+            reflexion: ["📖 LECTIO — Leer", "Lee el evangelio de hoy tres veces. La primera rápido. La segunda despacio. La tercera deteniéndote en la frase que más te llame la atención.", "🤔 MEDITATIO — Rumiar", "¿Qué te sorprende de este texto? ¿Hay algo que no esperabas encontrar? La sorpresa es señal de que Dios está hablando donde menos lo esperabas.", "🙏 ORATIO — Responder", "Jesús, el mismo que habla en este evangelio está aquí conmigo ahora. Quiero escucharte. Quiero que tu Palabra cambie lo que necesita cambiar en mi vida. Confío en ti.", "✨ CONTEMPLATIO — Descansar", "Elige una sola palabra del evangelio de hoy y llévala contigo durante el día. Que sea como una semilla que sigue creciendo mientras vives."].join("\n\n"),
+            preguntas: ["¿Qué te sorprendió del evangelio de hoy?", "¿Hay algo en el texto que te incomoda — y qué te dice esa incomodidad?", "¿Cuál es la palabra que llevarás contigo el resto del día?"]
+          },
+          {
+            santo: "Padre José Kentenich",
+            cita: "«La Palabra de Dios es la voz de la Madre que nos habla a través de la Escritura.»",
+            reflexion: ["📖 LECTIO — Leer", "Lee el evangelio de hoy con María a tu lado. Ella fue la primera en recibir la Palabra — en el corazón antes que en los oídos. Pídele que te ayude a escuchar como ella.", "🤔 MEDITATIO — Rumiar", "¿Dónde aparece el amor en este evangelio? ¿Cómo ama Jesús en este pasaje? ¿A quién? ¿De qué manera? Quédate con esa imagen de amor.", "🙏 ORATIO — Responder", "María, ayúdame a recibir esta Palabra como tú la recibiste: con el corazón abierto, sin resistencia, con un sí total. Que el Fiat de tu vida sea también el mío hoy.", "✨ CONTEMPLATIO — Descansar", "Imagina que estás sentado junto a María escuchando a Jesús. Estás en buena compañía. Descansa ahí un momento."].join("\n\n"),
+            preguntas: ["¿Cómo ama Jesús en el evangelio de hoy — qué gesto de amor ves?", "¿Qué te enseña María sobre cómo recibir la Palabra de Dios?", "¿Cómo puedes imitar ese amor hoy en tu vida concreta?"]
+          },
+          {
+            santo: "San Agustín de Hipona",
+            cita: "«Nuestro corazón está inquieto hasta que descanse en Ti.»",
+            reflexion: ["📖 LECTIO — Leer", "Lee el evangelio de hoy sin prisa. Si te distraes, vuelve al texto sin juzgarte. La fidelidad en la Lectio no es concentración perfecta — es el deseo de volver siempre.", "🤔 MEDITATIO — Rumiar", "¿Hay alguna pregunta que el evangelio de hoy despierta en ti? ¿Algo que no entiendes, algo que te provoca, algo que quisieras preguntarle a Jesús directamente?", "🙏 ORATIO — Responder", "Señor, traigo al evangelio de hoy mis preguntas, mis dudas y mi fe imperfecta. No necesito entender todo. Solo necesito confiar en que tú estás aquí y que tu Palabra es buena.", "✨ CONTEMPLATIO — Descansar", "San Agustín tardó décadas en encontrar el descanso en Dios. Tú lo tienes disponible ahora mismo. Descansa un momento en el Señor que te habló hoy."].join("\n\n"),
+            preguntas: ["¿Qué pregunta te despierta el evangelio de hoy?", "¿Hay algo en el texto con lo que luchas — algo difícil de aceptar o de creer?", "¿Qué necesitas pedirle a Dios después de leer este evangelio?"]
+          },
+          {
+            santo: "Santa Teresa de Ávila",
+            cita: "«La oración no es otra cosa que un trato de amistad íntimo con quien sabemos que nos ama.»",
+            reflexion: ["📖 LECTIO — Leer", "Lee el evangelio de hoy como si fuera la primera vez que lo escuchas. Deja de lado lo que ya sabes. Llega al texto con ojos nuevos y corazón limpio.", "🤔 MEDITATIO — Rumiar", "¿Qué dice este evangelio sobre quién es Dios? ¿Cómo se revela a sí mismo en este pasaje? ¿Cómo te cambia esa imagen de Dios?", "🙏 ORATIO — Responder", "Señor, gracias por revelarme hoy algo más de quién eres. Quiero conocerte más. Quiero que nuestra amistad crezca. Que esta Palabra sea un paso más en ese camino.", "✨ CONTEMPLATIO — Descansar", "Quédate en silencio con la imagen de Dios que el evangelio de hoy te regaló. Deja que esa imagen se asiente en tu corazón."].join("\n\n"),
+            preguntas: ["¿Qué revela el evangelio de hoy sobre quién es Dios?", "¿Esa imagen de Dios coincide con la que llevas en tu corazón — o te desafía?", "¿Cómo quieres que cambie tu relación con Dios a partir de lo que leíste hoy?"]
+          },
+          {
+            santo: "San Francisco de Asís",
+            cita: "«Predica el Evangelio siempre; si es necesario, usa palabras.»",
+            reflexion: ["📖 LECTIO — Leer", "Lee el evangelio de hoy lentamente. Después de leerlo, cierra los ojos e imagina la escena. ¿Dónde está Jesús? ¿Qué hay alrededor? ¿Qué se escucha, qué se siente?", "🤔 MEDITATIO — Rumiar", "¿Cuál es el gesto más pequeño de amor en este evangelio? Francisco decía que la santidad vive en los detalles. ¿Qué detalle pequeño del texto te habla hoy?", "🙏 ORATIO — Responder", "Señor, haz de mí un instrumento de tu paz. Que lo que leí hoy en el evangelio no quede solo en mi oración sino que salga a las calles en mis acciones. Amén.", "✨ CONTEMPLATIO — Descansar", "Imagina que eres el pájaro al que Francisco predicó. Recibe la Buena Noticia sin análisis, sin juicio — solo con la confianza simple de quien sabe que es amado."].join("\n\n"),
+            preguntas: ["¿Cuál es el gesto más pequeño y concreto de amor en el evangelio de hoy?", "¿Cómo puedes llevar ese gesto a tu vida hoy — en una acción específica?", "¿Hay alguien concreto a quien llevarle la Buena Noticia hoy?"]
+          },
+        ];
+        const fallback = fallbacks[dayOfYear % fallbacks.length];
         practiceCache.current[cacheKey] = fallback;
         setPracticeAIContent(prev => ({ ...prev, [index]: fallback }));
       } finally {
