@@ -121,7 +121,7 @@ function OnboardingScreen({ onComplete }) {
   const steps = [
     { title: "Bienvenido a Mater", subtitle: "Tu guía de coaching espiritual católico", body: "Mater te acompaña en tu camino de fe con reflexiones diarias, el evangelio de cada día, un diario espiritual y Mater, tu guía con IA.", cta: "Comenzar" },
     { title: "¿Cómo te llamas?", subtitle: "Para personalizar tu experiencia", body: null, cta: "Continuar", input: true },
-    { title: "Las 3 prácticas del día", subtitle: "Tu rutina espiritual diaria", body: "Cada día encontrarás 3 prácticas — Oración de la mañana, Lectio Divina y Examen de conciencia. Al completarlas construyes tu racha semanal.", cta: "Siguiente" },
+    { title: "Las 3 prácticas del día", subtitle: "Tu rutina espiritual diaria", body: "Cada día encontrarás 3 prácticas — Oración de la mañana, Lectio Divina y Examen de conciencia. Al completarlas construyes tu ritmo semanal.", cta: "Siguiente" },
     { title: "Habla con Mater", subtitle: "Tu guía espiritual personal", body: "Mater está disponible para acompañarte en momentos de duda, discernimiento o simplemente para rezar juntos.", cta: "Entrar a Mater", last: true },
   ];
 
@@ -450,16 +450,78 @@ function HomeScreen({ user, profile, onTabChange }) {
 
     // Contenido para Examen de conciencia (index 2) — 30 variaciones
     const examenContent = [
-      { santo: "San Ignacio de Loyola", cita: "«El examen de conciencia no es contabilidad espiritual de pecados. Es aprender a leer la vida como Dios la lee.»", reflexion: "San Ignacio consideraba el Examen la práctica más importante de la vida espiritual — más que la oración de la mañana, más que la Misa, más que cualquier otra devoción. No porque sea más sagrada, sino porque es la que más integra la fe con la vida real.\n\nEl Examen ignaciano tiene cinco pasos: gratitud, petición de luz, revisión del día, reconocimiento y propósito. No son pasos mecánicos — son movimientos del alma que aprende a verse con los ojos de Dios.\n\nLo que hace único al Examen es que no separa lo 'espiritual' de lo 'cotidiano'. Dios está en la reunión difícil, en la conversación tensa, en el cansancio del final del día. El Examen nos entrena para reconocer esa presencia donde menos la esperamos.\n\nHoy, dedica cinco minutos a recorrer el día con Dios. No para juzgarte — para ver.", preguntas: ["¿Por qué tres momentos de hoy puedo dar gracias a Dios?", "¿En qué momento sentí mayor paz interior? ¿Y en cuál más lejanía de Dios?", "¿Hay algo que mañana quiero vivir de manera diferente?"] },
-      { santo: "San Ignacio de Loyola", cita: "«Dame, Señor, ver claro lo que debo ver, amar lo que debo amar, y hacer lo que debo hacer.»", reflexion: "El segundo paso del Examen ignaciano es la petición de luz — pedir a Dios que nos ayude a ver nuestro día con claridad. No con la claridad cruel de la autocrítica, sino con la claridad compasiva del amor.\n\nHay una diferencia fundamental entre el Examen y el autoanálisis psicológico. El Examen se hace en presencia de Dios — no soy yo mirándome a mí mismo, sino yo mirándome con Él. Esa presencia cambia todo: el juicio se convierte en misericordia, la crítica en discernimiento.\n\nIgnacio sabía que sin esa luz de Dios, el Examen puede convertirse en escrúpulo o en autocomplacencia. La luz que pedimos es la misma que iluminó el corazón de Pedro después de su negación: no lo aplastó, lo transformó.\n\nHoy, comienza el Examen pidiendo esa luz. 'Señor, ayúdame a ver mi día como Tú lo ves — con tu misericordia y tu verdad.'", preguntas: ["¿Tiendes más al escrúpulo (exigirte demasiado) o a la autocomplacencia (justificarte todo)?", "¿Cómo sería verte a ti mismo con los ojos de Dios — qué cambiaría?", "¿Qué área de tu vida necesita más la luz del Examen en este momento?"] },
-      { santo: "San Pedro Fabro", cita: "«El que sabe examinar su día, aprende a vivir.»", reflexion: "San Pedro Fabro fue el primer compañero de Ignacio de Loyola — el primero en recibir los Ejercicios Espirituales y en practicar el Examen diariamente. En sus memoriales, narra cómo esta práctica fue transformando su manera de relacionarse con Dios y con los demás.\n\nFabro descubrió algo que parece simple pero es profundo: el Examen no solo nos ayuda a ver el pasado — nos prepara para el futuro. Al revisar cómo respondimos hoy, aprendemos a responder mejor mañana. Es una escuela de amor graduada en la vida real.\n\nEl Examen de Fabro no era sombrío ni angustiado. Era el gesto de un amigo que revisa el día con su mejor amigo — Dios — buscando juntos los momentos de gracia y los momentos de oscuridad, sin dramatismo, con serenidad.\n\nHoy, haz el Examen con esa actitud de amistad. Cuéntale a Dios tu día como lo contarías a un amigo íntimo.", preguntas: ["¿Cómo fue la calidad de tu presencia en las personas que encontraste hoy?", "¿Hubo un momento en que elegiste el bien aunque costara — y cómo te sentiste?", "¿Qué quieres hacer diferente mañana, a partir de lo que revisaste hoy?"] },
-      { santo: "Santa Teresa de Calcuta", cita: "«Al final del día, lo que importa es cuánto amor pusiste en lo que hiciste.»", reflexion: "La Madre Teresa hacía el Examen de conciencia con una pregunta central: '¿Amé hoy?' No '¿fui productivo?', no '¿cumplí mis obligaciones?', no '¿fui perfecto?' — '¿Amé?'\n\nEsta pregunta simplifica el Examen de manera radical. No necesitas recordar cada detalle del día. Solo necesitas preguntarte: ¿hubo amor en mis palabras? ¿En mis silencios? ¿En mi manera de mirar a las personas?\n\nLa Madre Teresa decía que el amor no es un sentimiento — es una decisión que se toma muchas veces al día, en los gestos más pequeños. El Examen nos ayuda a ver cuántas veces tomamos esa decisión y cuántas veces la evitamos.\n\nHoy, recorre el día con la pregunta de Teresa: '¿Dónde amé? ¿Dónde pude haber amado más y no lo hice? ¿Qué me lo impidió?'", preguntas: ["¿Cuánto amor pusiste en las cosas pequeñas de hoy — en los gestos cotidianos?", "¿Hubo alguien que necesitaba ser amado hoy y no lo viste — o lo viste pero no respondiste?", "¿Qué te impide amar más libremente — el miedo, el cansancio, el orgullo?"] },
-      { santo: "San Francisco de Sales", cita: "«Sé paciente con todos, pero especialmente contigo mismo.»", reflexion: "San Francisco de Sales es el patrono de la mansedumbre — y esa mansedumbre incluye la que debemos tener con nosotros mismos. El Examen de conciencia que él proponía no era un tribunal sino una conversación entre amigos.\n\nUno de los errores más comunes en la vida espiritual es convertir el Examen en una sesión de autocrítica destructiva. Francisco advertía contra esto: la dureza con uno mismo no es virtud — es falta de humildad, porque asume que deberíamos ser perfectos ya.\n\nEl Examen salesiano comienza siempre desde la gratitud y termina siempre con un propósito concreto y alcanzable — no con resoluciones grandiosas que no se pueden cumplir. 'Mañana voy a escuchar mejor a mi familia al llegar a casa' — eso es un propósito salesiano.\n\nHoy, haz el Examen con la bondad que Francisco te enseña. Mira tus fallos sin dramatismo y tus aciertos sin orgullo.", preguntas: ["¿Eres más duro contigo mismo o más compasivo — y cuál de los dos extremos predomina?", "¿Cuál es un propósito concreto y alcanzable que puedes proponerte para mañana?", "¿Cómo sería el Examen si lo hicieras con la misma compasión que le tendrías a un amigo?"] },
-      { santo: "San Juan de la Cruz", cita: "«En el atardecer de la vida, seremos examinados en el amor.»", reflexion: "San Juan de la Cruz condensó toda la espiritualidad cristiana en una frase: 'En el atardecer de la vida, seremos examinados en el amor.' No en los méritos acumulados, no en las oraciones rezadas, no en los sacramentos recibidos — en el amor.\n\nEsta perspectiva escatológica ilumina el Examen cotidiano. Cada vez que revisamos el día preguntándonos '¿amé?', estamos haciendo un ensayo del juicio final. No con miedo, sino con la claridad que da saber cuál es el único criterio que importa.\n\nJuan de la Cruz vivió esta lógica hasta el extremo. En sus últimos días, cuando sus hermanos le preguntaban cómo estaba, respondía con una sola frase: 'Preparándome para el amor.' Eso era su Examen final.\n\nHoy, cierra el día con la pregunta de Juan: '¿Amé? ¿Cómo amé? ¿Qué quedó sin amar?'", preguntas: ["¿Si este fuera tu último día, de qué del día de hoy estarías más satisfecho?", "¿Hay alguna relación en tu vida que necesita más amor — y qué podrías hacer mañana?", "¿Cómo quieres ser recordado — y tu día de hoy va en esa dirección?"] },
-      { santo: "Beata Carlos de Foucauld", cita: "«Vivir como si cada momento fuera el último — y amar como si fuera el único.»", reflexion: "El Beato Carlos de Foucauld pasó años en el desierto del Sahara, entre los tuareg, practicando lo que él llamaba 'la vida oculta de Nazaret'. Su Examen de conciencia era muy simple: ¿estuve presente? ¿Estuve disponible? ¿Estuve con Jesús?\n\nCarlos había aprendido en el desierto que la vida espiritual no se mide en grandes gestos sino en la calidad de la presencia. Estar plenamente presente a cada persona, a cada tarea, a cada momento — eso era para él la santidad.\n\nEl Examen de Foucauld revisaba el día buscando los momentos de presencia y los momentos de ausencia. ¿Cuándo estuve realmente aquí — con mi corazón y no solo mi cuerpo? ¿Cuándo me evadí — en la pantalla, en la queja, en la distracción?\n\nHoy, revisa el día con la pregunta de Carlos: '¿Estuve presente? ¿Estuve disponible? ¿Estuve con Jesús?'", preguntas: ["¿En qué momentos de hoy estuviste realmente presente — no solo físicamente sino con el corazón?", "¿En qué momentos te evadiste — y de qué te estabas escapando?", "¿Cómo sería tu vida si pudieras vivir cada momento con más presencia y menos distracción?"] },
+      {
+        santo: "Padre José Kentenich",
+        cita: "«El amor de Dios nos sale al encuentro en cada acontecimiento del día — aprender a verlo es el arte de la vida espiritual.»",
+        reflexion: `Al final de este día, detente un momento y recorre lo vivido con los ojos del corazón.\n\nEl Padre Kentenich nos enseñó a hacer el examen de la jornada a partir de tres preguntas esenciales — no para juzgarnos, sino para aprender a leer la vida como Dios la escribe.\n\nNo busques perfección en tus respuestas. Busca honestidad y amor. El Señor no pide cuentas como un juez — las pide como un Padre que quiere saber cómo estuvo el día de su hijo.\n\nResponde despacio. Con calma. Deja que cada pregunta haga su trabajo en el interior.`,
+        preguntas: [
+          "🙏 VÍNCULO CON DIOS: ¿He descubierto hoy la mano amorosa de Dios en los acontecimientos de mi jornada? ¿Dediqué tiempo a la oración o me dejé llevar por el activismo?",
+          "💙 ALIANZA DE AMOR: ¿He actuado hoy como un instrumento dócil en manos de María? ¿Visité el Santuario — espiritual o físicamente — en mis pensamientos o con una oración?",
+          "🤝 PRÓJIMO: ¿He sido paciente, comprensivo y caritativo con las personas que me rodean? ¿Juzgué a los demás o busqué ayudarles?"
+        ]
+      },
+      {
+        santo: "Padre José Kentenich",
+        cita: "«El que sabe leer la providencia en lo cotidiano, ha encontrado el secreto de la paz interior.»",
+        reflexion: `Cierra los ojos un momento. Deja que el día pase ante ti como una película — sin pausa, sin edición, tal como fue.\n\nVerás momentos luminosos que quizás dejaste pasar sin agradecerlos. Verás momentos oscuros que cargaste solo sin necesidad. Verás personas que te dieron algo y personas a quienes tú diste.\n\nEl Padre Kentenich creía que Dios habla en el lenguaje de los acontecimientos. No solo en la oración formal — en la llamada inesperada, en el contratiempo del mediodía, en la conversación que no tenías planeada.\n\nAhora, con esa película del día en la mente, responde las tres preguntas con libertad y amor.`,
+        preguntas: [
+          "🙏 VÍNCULO CON DIOS: ¿He descubierto hoy la mano amorosa de Dios en los acontecimientos de mi jornada? ¿Dediqué tiempo a la oración o me dejé llevar por el activismo?",
+          "💙 ALIANZA DE AMOR: ¿He actuado hoy como un instrumento dócil en manos de María? ¿Visité el Santuario — espiritual o físicamente — en mis pensamientos o con una oración?",
+          "🤝 PRÓJIMO: ¿He sido paciente, comprensivo y caritativo con las personas que me rodean? ¿Juzgué a los demás o busqué ayudarles?"
+        ]
+      },
+      {
+        santo: "Padre José Kentenich",
+        cita: "«Dios nos habla a través de los pequeños acontecimientos de cada día — solo necesitamos aprender su idioma.»",
+        reflexion: `El día que termina estuvo lleno de momentos pequeños. La mayoría los dejamos pasar sin advertir que eran mensajes de amor.\n\nUna palabra amable en el momento justo. Una dificultad que te obligó a confiar. Una alegría que llegó sin que la buscaras. Una persona que necesitaba algo que solo tú podías darle.\n\nEl Padre Kentenich nos enseñó que la santidad se teje en la trama ordinaria de los días fieles. La fidelidad en lo pequeño es la puerta a la grandeza interior.\n\nHoy, en este examen, busca los hilos dorados que Dios tejió en tu jornada. Están ahí, aunque no los hayas visto en su momento.`,
+        preguntas: [
+          "🙏 VÍNCULO CON DIOS: ¿He descubierto hoy la mano amorosa de Dios en los acontecimientos de mi jornada? ¿Dediqué tiempo a la oración o me dejé llevar por el activismo?",
+          "💙 ALIANZA DE AMOR: ¿He actuado hoy como un instrumento dócil en manos de María? ¿Visité el Santuario — espiritual o físicamente — en mis pensamientos o con una oración?",
+          "🤝 PRÓJIMO: ¿He sido paciente, comprensivo y caritativo con las personas que me rodean? ¿Juzgué a los demás o busqué ayudarles?"
+        ]
+      },
+      {
+        santo: "Padre José Kentenich",
+        cita: "«María recoge nuestras contribuciones — las pequeñas fidelidades del día — y las transforma en capital de gracias para el mundo.»",
+        reflexion: `Cada día es una oportunidad de contribuir al capital de gracias del Santuario. No con gestos heroicos, sino con la moneda pequeña de la vida cotidiana: la paciencia que costó, el servicio que nadie vio, la oración que rezaste sin ganas pero la rezaste.\n\nEl Padre Kentenich creía que nada de lo que vivimos con amor se pierde. Todo — absolutamente todo — que se ofrece a María con intención de amor, es recibido por ella y transformado en gracia para el mundo.\n\nEsto le da un peso inmenso a lo ordinario. El día de hoy, con sus rutinas y sus sorpresas, sus logros y sus fracasos, es material de santidad si lo ofreces con amor.\n\nAl responder las tres preguntas de hoy, recuerda: no te examinas para condenarte sino para crecer en amor.`,
+        preguntas: [
+          "🙏 VÍNCULO CON DIOS: ¿He descubierto hoy la mano amorosa de Dios en los acontecimientos de mi jornada? ¿Dediqué tiempo a la oración o me dejé llevar por el activismo?",
+          "💙 ALIANZA DE AMOR: ¿He actuado hoy como un instrumento dócil en manos de María? ¿Visité el Santuario — espiritual o físicamente — en mis pensamientos o con una oración?",
+          "🤝 PRÓJIMO: ¿He sido paciente, comprensivo y caritativo con las personas que me rodean? ¿Juzgué a los demás o busqué ayudarles?"
+        ]
+      },
+      {
+        santo: "Padre José Kentenich",
+        cita: "«El instrumento perfecto no es el que nunca falla — es el que siempre vuelve a ponerse en manos de María.»",
+        reflexion: `Nadie termina el día habiendo sido perfecto. Nadie. Ni los santos, ni los místicos, ni los más fieles miembros del Movimiento.\n\nLo que distingue al alma que crece no es la ausencia de fallos sino la velocidad con que vuelve. Vuelve a la oración. Vuelve a María. Vuelve al amor.\n\nEl Padre Kentenich entendía la vida espiritual como un proceso dinámico, no como un estado estático. Cada día es un nuevo comienzo. Cada examen es una nueva oportunidad de ajustar el rumbo.\n\nSi hoy fallaste en alguna de las tres dimensiones — no te condenes. Reconócelo con sencillez, ofrécelo a María y proponte una cosa concreta para mañana. Solo una. Eso es suficiente.`,
+        preguntas: [
+          "🙏 VÍNCULO CON DIOS: ¿He descubierto hoy la mano amorosa de Dios en los acontecimientos de mi jornada? ¿Dediqué tiempo a la oración o me dejé llevar por el activismo?",
+          "💙 ALIANZA DE AMOR: ¿He actuado hoy como un instrumento dócil en manos de María? ¿Visité el Santuario — espiritual o físicamente — en mis pensamientos o con una oración?",
+          "🤝 PRÓJIMO: ¿He sido paciente, comprensivo y caritativo con las personas que me rodean? ¿Juzgué a los demás o busqué ayudarles?"
+        ]
+      },
+      {
+        santo: "Padre José Kentenich",
+        cita: "«La vida interior no es una fuga del mundo — es aprender a encontrar a Dios en el corazón del mundo.»",
+        reflexion: `El Padre Kentenich no formó contemplativos que huyeran del mundo. Formó personas que aprendieran a encontrar a Dios en el corazón del mundo — en el trabajo, en la familia, en la ciudad, en las tensiones y alegrías de la vida moderna.\n\nEste examen que haces al final del día es precisamente eso: aprender a leer el mundo con ojos de fe. No como una carga religiosa más, sino como el gesto del hijo que al volver a casa le cuenta al Padre cómo le fue.\n\nEl Señor quiere saber de tu día. Le interesa la reunión que fue difícil, la conversación que te alegró, el momento en que sentiste su presencia y el momento en que lo olvidaste.\n\nCuéntaselo. Sin ornamentos. Con la confianza de un hijo que sabe que es amado.`,
+        preguntas: [
+          "🙏 VÍNCULO CON DIOS: ¿He descubierto hoy la mano amorosa de Dios en los acontecimientos de mi jornada? ¿Dediqué tiempo a la oración o me dejé llevar por el activismo?",
+          "💙 ALIANZA DE AMOR: ¿He actuado hoy como un instrumento dócil en manos de María? ¿Visité el Santuario — espiritual o físicamente — en mis pensamientos o con una oración?",
+          "🤝 PRÓJIMO: ¿He sido paciente, comprensivo y caritativo con las personas que me rodean? ¿Juzgué a los demás o busqué ayudarles?"
+        ]
+      },
+      {
+        santo: "Padre José Kentenich",
+        cita: "«Al final del día, lo que importa no es cuánto hiciste sino con cuánto amor lo hiciste.»",
+        reflexion: `Domingo. El día del Señor llega a su fin. Ha sido un día para descansar, para celebrar, para estar con las personas que amas, para encontrarte con Dios en la Eucaristía.\n\n¿Cómo fue? ¿Fue realmente un día de descanso interior o estuvo lleno de agitación disfrazada de ocio? ¿Encontraste a Dios en la Misa, en la familia, en el silencio de la tarde?\n\nEl Padre Kentenich creía que el domingo bien vivido carga las baterías de toda la semana — no como recarga de energía física sino como renovación del espíritu.\n\nAl hacer el examen de este domingo, además de las tres preguntas habituales, añade una cuarta para ti: ¿Descansé de verdad — descansé en Dios?`,
+        preguntas: [
+          "🙏 VÍNCULO CON DIOS: ¿He descubierto hoy la mano amorosa de Dios en los acontecimientos de mi jornada? ¿Dediqué tiempo a la oración o me dejé llevar por el activismo?",
+          "💙 ALIANZA DE AMOR: ¿He actuado hoy como un instrumento dócil en manos de María? ¿Visité el Santuario — espiritual o físicamente — en mis pensamientos o con una oración?",
+          "🤝 PRÓJIMO: ¿He sido paciente, comprensivo y caritativo con las personas que me rodean? ¿Juzgué a los demás o busqué ayudarles?"
+        ]
+      },
     ];
-
-    const practiceArrays = [laudesContent, lectioContent, examenContent];
+        const practiceArrays = [laudesContent, lectioContent, examenContent];
     const arr = practiceArrays[index] || laudesContent;
     // Laudes rota por día de la semana (0=Dom, 1=Lun...6=Sáb)
     // Lectio y Examen rotan por día del año
@@ -499,7 +561,7 @@ function HomeScreen({ user, profile, onTabChange }) {
     },
     {
       icon: "heart", color: C.periwinkle, bg: "#E4EDF7",
-      label: "Examen de conciencia", sub: "Método ignaciano · 5 pasos",
+      label: "Examen de conciencia", sub: "Examen de conciencia",
       saint: "San Ignacio de Loyola",
       saintQuote: "«El examen de conciencia no es contabilidad espiritual de pecados. Es aprender a leer la vida como Dios la lee.»",
       reflection: `San Ignacio consideraba el Examen la práctica más importante de la vida espiritual. No es una lista de pecados — es aprender a ver la propia vida con los ojos de Dios.\n\nSus cinco pasos: gratitud, petición de luz, revisión del día, reconocimiento y propósito.\n\nLo que hace único al Examen ignaciano es que no separa lo "espiritual" de lo "cotidiano". Dios está en la reunión difícil, en la conversación tensa, en el cansancio del final del día.\n\nEl Examen nos entrena para reconocer esa presencia donde menos la esperamos.`,
@@ -583,7 +645,7 @@ function HomeScreen({ user, profile, onTabChange }) {
 
       <div style={{ padding: "22px 22px 0" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-          <p style={{ fontSize: 11, fontWeight: 600, color: C.inkLight, margin: 0, letterSpacing: "0.1em", textTransform: "uppercase" }}>Racha semanal</p>
+          <p style={{ fontSize: 11, fontWeight: 600, color: C.inkLight, margin: 0, letterSpacing: "0.1em", textTransform: "uppercase" }}>Ritmo semanal</p>
           <span style={{ fontSize: 11, color: C.gold, fontWeight: 600 }}>{streakCount} {streakCount === 1 ? "día" : "días"}</span>
         </div>
         <div style={{ display: "flex", gap: 6 }}>
@@ -795,35 +857,19 @@ function PlanScreen({ user }) {
     if (gospelOfDay) return;
     setLoadingGospel(true);
     const today = new Date().toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
-    const todayEN = new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
     try {
       const text = await callAI(
-        `Eres un experto en liturgia católica con conocimiento preciso del Leccionario Romano y el calendario litúrgico de la USCCB (United States Conference of Catholic Bishops). Conoces exactamente qué evangelio corresponde a cada día del año litúrgico. Respondes SOLO en JSON válido, sin texto adicional, sin bloques de código markdown.`,
-        `Hoy es ${today} (${todayEN}). Dame el evangelio completo de hoy según el calendario litúrgico de la USCCB en usccb.org/bible/readings. 
-
-IMPORTANTE: 
-- Incluye el TEXTO COMPLETO del evangelio en español, tal como aparece en la Biblia de América o la Nueva Biblia de Jerusalén
-- No resumas ni acortes el texto del evangelio
-- El texto debe ser el pasaje bíblico completo que se proclama en Misa hoy
-
-Responde SOLO con este JSON exacto:
-{
-  "referencia": "Evangelio según San [nombre], [capítulo]:[versículos]",
-  "tiempo": "Tiempo litúrgico actual (ej: Tiempo Ordinario, Adviento, Cuaresma, Pascua)",
-  "textoCompleto": "TEXTO COMPLETO del evangelio de hoy en español, párrafo por párrafo, tal como aparece en la Biblia",
-  "reflexion": "Reflexión de 3 párrafos profundos para jóvenes adultos de 25-35 años, conectando el evangelio con la vida cotidiana",
-  "preguntas": ["pregunta 1 específica al evangelio de hoy", "pregunta 2", "pregunta 3"]
-}`
+        `Eres un asistente litúrgico católico experto. Conoces el calendario litúrgico y las lecturas diarias del Leccionario Romano. Respondes SOLO en JSON válido, sin texto adicional, sin bloques de código.`,
+        `Hoy es ${today}. Dame el evangelio exacto de hoy según el Leccionario Romano de la USCCB. Responde SOLO con este JSON: {"referencia":"Evangelio según San X, X:X-X","texto":"Primeras dos líneas del texto","reflexion":"Reflexión de 3 párrafos breves para jóvenes adultos","preguntas":["pregunta 1","pregunta 2","pregunta 3"],"tiempo":"Tiempo litúrgico actual"}`
       );
-      const parsed = JSON.parse(text);
-      setGospelOfDay(parsed);
+      setGospelOfDay(JSON.parse(text));
     } catch {
       setGospelOfDay({
         referencia: "Juan 15:1-8",
-        tiempo: "Tiempo Ordinario",
-        textoCompleto: "En aquel tiempo, dijo Jesús a sus discípulos:\n\n«Yo soy la vid verdadera y mi Padre es el viñador. Todo sarmiento que en mí no da fruto, lo arranca, y todo el que da fruto, lo poda para que dé más fruto.\n\nVosotros ya estáis limpios gracias a la palabra que os he hablado. Permaneced en mí y yo en vosotros. Como el sarmiento no puede dar fruto por sí mismo si no permanece en la vid, así tampoco vosotros si no permanecéis en mí.\n\nYo soy la vid; vosotros los sarmientos. El que permanece en mí y yo en él, ese da mucho fruto; porque sin mí no podéis hacer nada. Al que no permanece en mí lo tiran fuera, como el sarmiento, y se seca; luego los recogen y los echan al fuego, y arden.\n\nSi permanecéis en mí y mis palabras permanecen en vosotros, pedid lo que queráis y se os dará. Con esto recibe gloria mi Padre: con que deis mucho fruto, y seáis mis discípulos.»",
-        reflexion: "Jesús se presenta como la vid y nosotros como los sarmientos. Sin Él no podemos hacer nada — no como limitación sino como realidad de amor: el sarmiento no existe separado de la vid.\n\nPermanecer en Jesús no es una actitud pasiva sino una decisión diaria de elegirle a Él antes que a cualquier otra cosa. En cada momento del día, hay una pequeña elección: ¿permanezco en Él o me alejo?\n\nEl fruto del que habla Jesús no es éxito ni productividad. Es amor, paz, paciencia — los frutos del Espíritu que solo brotan cuando la raíz está bien plantada en Cristo.",
+        texto: "Yo soy la vid verdadera y mi Padre es el viñador.",
+        reflexion: "Jesús se presenta como la vid y nosotros como los sarmientos. Sin Él no podemos hacer nada.\n\nPermanecer en Jesús no es una actitud pasiva sino una decisión diaria de elegirle a Él antes que a cualquier otra cosa.\n\nHoy, ¿cómo puedes permanecer más unido a Cristo en tu vida cotidiana?",
         preguntas: ["¿En qué áreas de tu vida sientes que estás separado de la vid?", "¿Qué frutos está produciendo tu unión con Cristo?", "¿Qué necesitas podar para dar más fruto?"],
+        tiempo: "Tiempo Ordinario",
       });
     } finally {
       setLoadingGospel(false);
@@ -1008,7 +1054,7 @@ Responde SOLO con este JSON exacto:
             <>
               <p style={{ fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: C.gold, margin: "0 0 6px", fontWeight: 700 }}>📖 Evangelio del día · {gospelOfDay.tiempo}</p>
               <p style={{ fontSize: 14, fontWeight: 700, color: C.navy, margin: "0 0 6px" }}>{gospelOfDay.referencia}</p>
-              <p style={{ fontSize: 13, color: C.ink, lineHeight: 1.8, margin: "0 0 14px", whiteSpace: "pre-line", fontStyle: "italic", borderLeft: `3px solid ${C.gold}`, paddingLeft: 14 }}>{gospelOfDay.textoCompleto}</p>
+              <p style={{ fontSize: 12, fontStyle: "italic", color: C.inkMid, margin: "0 0 10px", lineHeight: 1.6 }}>«{gospelOfDay.texto}»</p>
               <p style={{ fontSize: 12, color: C.inkMid, lineHeight: 1.65, margin: "0 0 12px", whiteSpace: "pre-line" }}>{gospelOfDay.reflexion}</p>
               <p style={{ fontSize: 11, fontWeight: 700, color: C.blue, margin: "0 0 8px", letterSpacing: "0.08em", textTransform: "uppercase" }}>Preguntas para orar</p>
               {gospelOfDay.preguntas?.map((q, i) => (
