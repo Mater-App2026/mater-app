@@ -653,7 +653,7 @@ Cierra los ojos un momento. No hagas nada. Solo recibe. La Palabra ya fue sembra
       label: "Oración de la mañana", sub: "Oración para arrancar el día · 5 min",
       saint: "San Juan de la Cruz",
       saintQuote: "«En el principio de la mañana, antes de que el alma se ocupe en ninguna cosa, consagre a Dios el primer movimiento del corazón.»",
-      reflection: `Los Laudes — la oración de la mañana de la Iglesia — son una declaración teológica: antes de que el mundo me reclame, yo me pertenezco a Dios.\n\nSan Benito enseñaba que la primera obra del monje cada mañana debía ser la oración, no porque Dios la necesite, sino porque el alma la necesita.\n\nLa persona que ora en la mañana lleva consigo durante el día una quietud interior que no depende de las circunstancias. Santa Teresa de Ávila llamaba a esto "el punto de Arquímedes del alma".\n\nHoy, antes de revisar el teléfono, dedica estos minutos a consagrar el día a Dios. San Juan Vianney decía que bastaba con "mirar a Dios y dejar que Dios te mire."`,
+      reflection: "Los Laudes son una declaración teológica: antes de que el mundo me reclame, yo me pertenezco a Dios. Hoy, dedica estos minutos a consagrar el día a Dios.",
       questions: ["¿Cómo llego a este nuevo día — con gratitud, con ansiedad, con prisa?", "¿Hay algo que quiero entregar específicamente a Dios esta mañana?", "¿Qué gracia concreta necesito hoy?"],
     },
     {
@@ -661,7 +661,7 @@ Cierra los ojos un momento. No hagas nada. Solo recibe. La Palabra ya fue sembra
       label: "Lectio Divina", sub: "Lectio divina diaria",
       saint: "San Bernardo de Claraval",
       saintQuote: "«El río que no regresa a su manantial se seca.»",
-      reflection: `La escena de Betania es una de las más cargadas de tensión y de gracia en todo el Evangelio. Marta entra apresurada, con las manos llenas y el corazón ocupado. María está sentada a los pies de Jesús.\n\nJesús dice algo que ha desconcertado a los cristianos activos durante dos milenios: "María ha elegido la parte mejor."\n\nNo se trata de una condena al trabajo. Lo que Jesús señala es una prioridad: primero escuchar, luego actuar. Primero ser, luego hacer.\n\nLa Lectio Divina es el arte de sentarse con María mientras el mundo grita con Marta.`,
+      reflection: "La Lectio Divina es el arte de sentarse con María mientras el mundo grita con Marta. Primero escuchar, luego actuar.",
       questions: ["¿Me identifico más con Marta o con María en este momento?", "¿Hay alguna Palabra que Dios ha estado queriendo decirme?", "¿Qué pasaría si dedicara 15 minutos diarios a escuchar a Dios?"],
     },
     {
@@ -669,7 +669,7 @@ Cierra los ojos un momento. No hagas nada. Solo recibe. La Palabra ya fue sembra
       label: "Examen de conciencia", sub: "Examen de conciencia",
       saint: "San Ignacio de Loyola",
       saintQuote: "«El examen de conciencia no es contabilidad espiritual de pecados. Es aprender a leer la vida como Dios la lee.»",
-      reflection: `San Ignacio consideraba el Examen la práctica más importante de la vida espiritual. No es una lista de pecados — es aprender a ver la propia vida con los ojos de Dios.\n\nSus cinco pasos: gratitud, petición de luz, revisión del día, reconocimiento y propósito.\n\nLo que hace único al Examen ignaciano es que no separa lo "espiritual" de lo "cotidiano". Dios está en la reunión difícil, en la conversación tensa, en el cansancio del final del día.\n\nEl Examen nos entrena para reconocer esa presencia donde menos la esperamos.`,
+      reflection: "El Examen ignaciano no es una lista de pecados — es aprender a ver la propia vida con los ojos de Dios. Sus cinco pasos: gratitud, luz, revisión, reconocimiento y propósito.",
       questions: ["¿Por qué tres momentos de hoy puedo dar gracias a Dios?", "¿En qué momento sentí mayor paz interior? ¿Y en cuál más lejanía de Dios?", "¿Hay algo que mañana quiero vivir de manera diferente?"],
     },
   ];
