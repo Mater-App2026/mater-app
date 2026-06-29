@@ -857,33 +857,40 @@ function PlanScreen({ user }) {
     if (gospelOfDay) return;
     setLoadingGospel(true);
     try {
-      // Fetch directo desde evangeli.net — evangelio del día en español
-      const res = await fetch("https://evangeli.net/evangelio/dia/json");
+      // Construir URL de USCCB para hoy — formato MMDDYY Ciclo A
+      const now = new Date();
+      const mm = String(now.getMonth() + 1).padStart(2, "0");
+      const dd = String(now.getDate()).padStart(2, "0");
+      const yy = String(now.getFullYear()).slice(-2);
+      const usccbUrl = `https://bible.usccb.org/es/bible/lecturas/${mm}${dd}${yy}.cfm`;
+
+      // Pasar por nuestro proxy para evitar CORS
+      const res = await fetch("/api/gospel", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: usccbUrl }),
+      });
       const data = await res.json();
-      if (data && (data.texto || data.text)) {
-        setGospelOfDay({
-          referencia: data.referencia || data.reference || "Evangelio del día",
-          tiempo: data.liturgia || data.liturgy || "Tiempo Ordinario",
-          textoCompleto: data.texto || data.text,
-        });
+      if (data && data.referencia) {
+        setGospelOfDay(data);
       } else {
         throw new Error("Sin datos");
       }
     } catch {
-      // Fallback con la IA
+      // Fallback IA
       try {
         const today = new Date().toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
         const text = await callAI(
-          `Eres un experto en liturgia católica. Conoces el Leccionario Romano exactamente. Respondes SOLO en JSON válido sin bloques de código.`,
-          `Hoy es ${today}. Dame el texto bíblico COMPLETO del evangelio de hoy según el Leccionario Romano, en español. Solo el texto bíblico. Responde SOLO con: {"referencia":"Evangelio según San X, X:X-X","tiempo":"Tiempo litúrgico","textoCompleto":"Texto completo del evangelio"}`
+          `Eres un experto en liturgia católica. Conoces el Leccionario Romano Ciclo A exactamente. Respondes SOLO en JSON válido sin bloques de código.`,
+          `Hoy es ${today}. Estamos en el Ciclo A del leccionario. Dame el texto bíblico COMPLETO del evangelio de hoy. SOLO el texto bíblico del evangelio, no las otras lecturas. Responde SOLO con: {"referencia":"Evangelio según San X, X:X-X","tiempo":"Tiempo litúrgico","textoCompleto":"Texto completo del evangelio en español"}`
         );
-        const parsed = JSON.parse(text.replace(/\`\`\`json|\`\`\`/g, "").trim());
+        const parsed = JSON.parse(text.replace(/```json|```/g, "").trim());
         setGospelOfDay(parsed);
       } catch {
         setGospelOfDay({
           referencia: "Juan 15:1-8",
           tiempo: "Tiempo Ordinario",
-          textoCompleto: "En aquel tiempo, dijo Jesús a sus discípulos:\n\n«Yo soy la vid verdadera y mi Padre es el viñador. Todo sarmiento que en mí no da fruto, lo arranca, y todo el que da fruto, lo poda para que dé más fruto.\n\nVosotros ya estáis limpios gracias a la palabra que os he hablado. Permaneced en mí y yo en vosotros. Como el sarmiento no puede dar fruto por sí mismo si no permanece en la vid, así tampoco vosotros si no permanecéis en mí.\n\nYo soy la vid; vosotros los sarmientos. El que permanece en mí y yo en él, ese da mucho fruto; porque sin mí no podéis hacer nada.\n\nSi permanecéis en mí y mis palabras permanecen en vosotros, pedid lo que queráis y se os dará. Con esto recibe gloria mi Padre: con que deis mucho fruto, y seáis mis discípulos.»",
+          textoCompleto: "En aquel tiempo, dijo Jesús a sus discípulos:\n\n«Yo soy la vid verdadera y mi Padre es el viñador. Todo sarmiento que en mí no da fruto, lo arranca, y todo el que da fruto, lo poda para que dé más fruto.\n\nVosotros ya estáis limpios gracias a la palabra que os he hablado. Permaneced en mí y yo en vosotros. Como el sarmiento no puede dar fruto por sí mismo si no permanece en la vid, así tampoco vosotros si no permanecéis en mí.\n\nYo soy la vid; vosotros los sarmientos. El que permanece en mí y yo en él, ese da mucho fruto; porque sin mí no podéis hacer nada.\n\nSi permanecéis en mí y mis palabras permanecen en vosotros, pedid lo que queráis y se os dará.»",
         });
       }
     } finally {
