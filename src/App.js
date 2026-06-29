@@ -523,10 +523,12 @@ function HomeScreen({ user, profile, onTabChange }) {
     ];
         const practiceArrays = [laudesContent, lectioContent, examenContent];
     const arr = practiceArrays[index] || laudesContent;
-    // Laudes rota por día de la semana (0=Dom, 1=Lun...6=Sáb)
-    // Lectio y Examen rotan por día del año
+    // Laudes rota por día de la semana
+    // getDay(): 0=Dom, 1=Lun, 2=Mar, 3=Mié, 4=Jue, 5=Vie, 6=Sáb
+    // Array: 0=Lun, 1=Mar, 2=Mié, 3=Jue, 4=Vie, 5=Sáb, 6=Dom
     const weekDay = new Date().getDay(); // 0=Dom...6=Sáb
-    const rotationIdx = index === 0 ? weekDay : dayOfYear % arr.length;
+    const laudesIdx = weekDay === 0 ? 6 : weekDay - 1; // convertir a índice del array
+    const rotationIdx = index === 0 ? laudesIdx : dayOfYear % arr.length;
     return arr[rotationIdx % arr.length];
   }
 
