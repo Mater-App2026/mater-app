@@ -758,17 +758,17 @@ function PlanScreen({ user }) {
     try {
       const text = await callAI(
         `Eres Mater, guía espiritual católica. Integras espiritualidad ignaciana, mariana, franciscana, carmelita y schoenstattiana. Respondes SOLO en JSON válido, sin bloques de código.`,
-        `Crea contenido espiritual para: "${day.title}" (${day.type}) de la ${weekTitle}. Responde SOLO con: {"santo":"nombre","cita":"cita auténtica","reflexion":"4 párrafos profundos mínimo 200 palabras","preguntas":["pregunta 1","pregunta 2","pregunta 3"]}`
+`Crea contenido espiritual profundo y específico sobre el tema: "${day.title}" (tipo: ${day.type}) de la ${weekTitle}. El contenido DEBE ser específicamente sobre "${day.title}", no genérico. Elige el santo más relevante para este tema específico. Responde SOLO con JSON válido: {"santo":"nombre del santo más relevante para este tema","cita":"cita auténtica de ese santo relacionada con el tema","reflexion":"4 párrafos profundos de mínimo 200 palabras ESPECÍFICAMENTE sobre ${day.title}","preguntas":["pregunta 1 específica sobre el tema","pregunta 2 específica","pregunta 3 específica"]}`
       );
       const parsed = JSON.parse(text);
       contentCache.current[cacheKey] = parsed;
       setDayContent(parsed);
     } catch {
       const fallback = {
-        santo: "San Ignacio de Loyola",
-        cita: "«Busca y hallarás a Dios en todas las cosas.»",
-        reflexion: `La práctica espiritual no es un ejercicio más en nuestra agenda. Es el espacio donde Dios nos habla en el silencio de nuestra vida interior.\n\nSan Ignacio descubrió esta verdad en su convalecencia en Loyola. Poco a poco notó que ciertos pensamientos le dejaban paz duradera, otros alegría superficial que pronto se convertía en vacío.\n\nEsta práctica es una invitación a ese mismo discernimiento. No se trata de hacer algo perfecto sino de hacerlo con amor.\n\nAcércate con libertad interior. Si sientes resistencia, no la huyas — ofrécela a Dios.`,
-        preguntas: ["¿Qué resistencias encuentras ante esta práctica?", "¿En qué momento concreto puedes integrar esto en tu vida?", "¿Qué gracia quieres pedirle a Dios al terminar?"]
+        santo: day.type === "Misa" ? "San Pío de Pietrelcina" : day.type === "Lectio" ? "San Bernardo de Claraval" : day.type === "Examen" ? "San Ignacio de Loyola" : day.type === "Silencio" ? "San Juan de la Cruz" : "Santa Teresa de Ávila",
+        cita: day.type === "Misa" ? "«La Misa es el Calvario prolongado a través de los siglos.»" : day.type === "Lectio" ? "«El río que no regresa a su manantial se seca.»" : day.type === "Examen" ? "«Busca y hallarás a Dios en todas las cosas.»" : day.type === "Silencio" ? "«En el silencio y la esperanza está vuestra fortaleza.»" : "«La oración es un trato de amistad íntimo con quien sabemos que nos ama.»",
+        reflexion: `${day.title} es una invitación a profundizar tu relación con Dios hoy.\n\nCada práctica espiritual tiene su propio ritmo y fruto. No se trata de hacer algo perfecto sino de hacerlo con amor y constancia.\n\nPermite que Dios te hable a través de esta práctica. Acércate con libertad interior y corazón abierto.\n\nSi sientes resistencia, no la huyas — ofrécela a Dios como parte de tu ofrenda de amor.`,
+        preguntas: [`¿Qué me quiere decir Dios hoy a través de "${day.title}"?`, "¿En qué momento concreto de mi día puedo vivir esto?", "¿Qué gracia concreta quiero pedirle a Dios al terminar?"]
       };
       contentCache.current[cacheKey] = fallback;
       setDayContent(fallback);
