@@ -532,26 +532,23 @@ function HomeScreen({ user, profile, onTabChange }) {
 
   async function fetchPracticeContent(index, practiceLabel, practiceSub) {
     const today = new Date().toDateString();
-    const cacheKey = `${index}-${today}`;
+    const cacheKey = index + "-" + today;
     if (practiceCache.current[cacheKey]) {
       setPracticeAIContent(prev => ({ ...prev, [index]: practiceCache.current[cacheKey] }));
       return;
     }
 
-    // Lectio Divina (index 1) — generada a partir del evangelio del día
     if (index === 1) {
       setLoadingPractice(true);
       try {
-        // 1. Obtener el evangelio del día de la USCCB
         const now = new Date();
         const mm = String(now.getMonth() + 1).padStart(2, "0");
         const dd = String(now.getDate()).padStart(2, "0");
         const yy = String(now.getFullYear()).slice(-2);
-        const usccbUrl = `https://bible.usccb.org/es/bible/lecturas/${mm}${dd}${yy}.cfm`;
+        const usccbUrl = "https://bible.usccb.org/es/bible/lecturas/" + mm + dd + yy + ".cfm";
 
         let textoEvangelio = "";
         let referenciaEvangelio = "Evangelio del día";
-
         try {
           const gospelRes = await fetch("/api/gospel", {
             method: "POST",
@@ -563,14 +560,12 @@ function HomeScreen({ user, profile, onTabChange }) {
             textoEvangelio = gospelData.textoCompleto;
             referenciaEvangelio = gospelData.referencia || "Evangelio del día";
           }
-        } catch { /* usar fallback */ }
+        } catch(e) { console.log("Gospel fetch failed", e); }
 
-        // 2. Generar la Lectio Divina con los 4 pasos usando la IA
         const todayStr = new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" });
-        const instrJSON = '{"referencia":"ref","lectio":"texto lectio","meditatio":"texto meditatio","oratio":"texto oratio","contemplatio":"texto contemplatio","palabra_clave":"palabra"}';
-        const prompt = textoEvangelio
-          ? "Hoy es " + todayStr + ". Evangelio de hoy " + referenciaEvangelio + ": \"" + textoEvangelio.substring(0, 600) + "\"\n\nCrea una Lectio Divina con 4 pasos basada en este evangelio. Responde SOLO JSON sin bloques de codigo: " + instrJSON
-          : "Hoy es " + todayStr + ". Ciclo A del Leccionario. Crea una Lectio Divina sobre el evangelio de hoy. Responde SOLO JSON: " + instrJSON
+        const userMsg = textoEvangelio
+          ? "Hoy es " + todayStr + ". Evangelio: " + referenciaEvangelio + ". Texto: " + textoEvangelio.substring(0, 500) + ". Crea una Lectio Divina completa con 4 pasos (lectio, meditatio, oratio, contemplatio) basada en este evangelio. Responde SOLO con JSON valido: {referencia, lectio, meditatio, oratio, contemplatio, palabra_clave}"
+          : "Hoy es " + todayStr + ". Ciclo A. Crea una Lectio Divina del evangelio de hoy con 4 pasos. Responde SOLO con JSON: {referencia, lectio, meditatio, oratio, contemplatio, palabra_clave}";
 
         const aiRes = await fetch("/api/chat", {
           method: "POST",
@@ -578,59 +573,56 @@ function HomeScreen({ user, profile, onTabChange }) {
           body: JSON.stringify({
             model: "claude-sonnet-4-6",
             max_tokens: 1500,
-            system: "Eres Mater, guía espiritual católica experta en Lectio Divina. Creas lectios profundas, personales y conectadas con la vida cotidiana. Respondes SOLO en JSON válido sin bloques de código.",
-            messages: [{ role: "user", content: prompt }],
+            system: "Eres Mater, guia espiritual catolica experta en Lectio Divina. Creas lectios profundas y personales. Respondes SOLO en JSON valido sin bloques de codigo.",
+            messages: [{ role: "user", content: userMsg }],
           }),
         });
         const aiData = await aiRes.json();
         const aiText = aiData.content?.map(b => b.text || "").join("") || "{}";
-        const parsed = JSON.parse(aiText.replace(/```json|```/g, "").trim());
+        const cleaned = aiText.replace(/```[\s\S]*?```/g, "").replace(/```/g, "").trim();
+        const parsed = JSON.parse(cleaned);
 
         const lectioContent = {
-          santo: `Lectio Divina · ${parsed.referencia || referenciaEvangelio}`,
-          cita: `«${parsed.palabra_clave || "Permaneced en mí"}» — Palabra para llevar hoy`,
-          reflexion: `📖 LECTIO — Leer
-${parsed.lectio || "Lee el evangelio de hoy despacio, dos veces."}
+          santo: "Lectio Divina - " + (parsed.referencia || referenciaEvangelio),
+          cita: "«" + (parsed.palabra_clave || "Permaneced en mi") + "» — Palabra para llevar hoy",
+          reflexion: "📖 LECTIO — Leer
+" + (parsed.lectio || "Lee el evangelio de hoy despacio, dos veces.") + "
 
 🤔 MEDITATIO — Rumiar
-${parsed.meditatio || "¿Qué palabra o frase del evangelio resuena más en tu corazón hoy?"}
+" + (parsed.meditatio || "¿Qué palabra resuena en tu corazon?") + "
 
 🙏 ORATIO — Responder
-${parsed.oratio || "Señor, habla que tu siervo escucha."}
+" + (parsed.oratio || "Señor, habla que tu siervo escucha.") + "
 
 ✨ CONTEMPLATIO — Descansar
-${parsed.contemplatio || "Quédate en silencio unos minutos con la Palabra recibida."}`,
+" + (parsed.contemplatio || "Quedate en silencio con la Palabra recibida."),
           preguntas: [
-            `¿Qué palabra o frase del evangelio de hoy (${parsed.referencia || referenciaEvangelio}) te llamó más la atención?`,
-            "¿Qué te dice Dios personalmente a través de este texto hoy?",
-            `¿Cómo puedes llevar la palabra «${parsed.palabra_clave || "amor"}» a tu vida concreta hoy?`
+            "¿Qué palabra del evangelio de hoy (" + (parsed.referencia || referenciaEvangelio) + ") te llamo mas la atencion?",
+            "¿Que te dice Dios personalmente a traves de este texto hoy?",
+            "¿Como puedes llevar la palabra «" + (parsed.palabra_clave || "amor") + "» a tu vida concreta hoy?"
           ]
         };
-
         practiceCache.current[cacheKey] = lectioContent;
         setPracticeAIContent(prev => ({ ...prev, [index]: lectioContent }));
-      } catch {
-        // Fallback estático para Lectio
+      } catch(e) {
         const fallback = {
-          santo: "Lectio Divina · Evangelio del día",
+          santo: "Lectio Divina - Evangelio del dia",
           cita: "«Habla, Señor, que tu siervo escucha.» — 1 Samuel 3:9",
-          reflexion: `📖 LECTIO — Leer
-Abre el evangelio de hoy y léelo despacio, dos veces. La primera para entender. La segunda para sentir. Deja que las palabras aterricen en tu corazón sin prisa.
+          reflexion: "📖 LECTIO — Leer
+Abre el evangelio de hoy y leelo despacio, dos veces.
 
 🤔 MEDITATIO — Rumiar
-¿Hay alguna palabra o frase que te llame la atención, que te incomode o que te traiga paz? Quédate con ella. Repítela como quien saborea algo bueno.
-
-No necesitas entenderlo todo. La Lectio Divina no es estudio bíblico — es encuentro personal con el Dios que habla hoy, a ti, en este momento concreto de tu vida.
+¿Hay alguna palabra que te llame la atencion? Quedatez con ella y repitela despacio.
 
 🙏 ORATIO — Responder
-Señor, gracias por hablarme hoy a través de tu Palabra. Recibo lo que me quieres decir con corazón abierto. Que esta Palabra no quede solo en mi mente sino que baje a mis manos y a mis decisiones. Amén.
+Señor, gracias por hablarme hoy a traves de tu Palabra. Que esta Palabra baje a mis manos y decisiones. Amen.
 
 ✨ CONTEMPLATIO — Descansar
-Cierra los ojos un momento. No hagas nada. Solo recibe. La Palabra ya fue sembrada — ahora deja que germine en el silencio.",
+Cierra los ojos un momento. No hagas nada. Solo recibe en silencio.",
           preguntas: [
-            "¿Qué palabra o frase del evangelio de hoy te quedó resonando?",
-            "¿Qué te dice Dios personalmente a través de este texto?",
-            "¿Cómo puedes llevar esta Palabra a tu vida concreta hoy?"
+            "¿Que palabra del evangelio de hoy te quedo resonando?",
+            "¿Que te dice Dios personalmente a traves de este texto?",
+            "¿Como puedes llevar esta Palabra a tu vida concreta hoy?"
           ]
         };
         practiceCache.current[cacheKey] = fallback;
@@ -641,7 +633,6 @@ Cierra los ojos un momento. No hagas nada. Solo recibe. La Palabra ya fue sembra
       return;
     }
 
-    // Para Oración de la mañana (0) y Examen (2) — contenido estático
     const staticContent = getStaticPracticeContent(index);
     practiceCache.current[cacheKey] = staticContent;
     setPracticeAIContent(prev => ({ ...prev, [index]: staticContent }));
@@ -653,7 +644,7 @@ Cierra los ojos un momento. No hagas nada. Solo recibe. La Palabra ya fue sembra
       label: "Oración de la mañana", sub: "Oración para arrancar el día · 5 min",
       saint: "San Juan de la Cruz",
       saintQuote: "«En el principio de la mañana, antes de que el alma se ocupe en ninguna cosa, consagre a Dios el primer movimiento del corazón.»",
-      reflection: "Los Laudes son una declaración teológica: antes de que el mundo me reclame, yo me pertenezco a Dios. Hoy, dedica estos minutos a consagrar el día a Dios.",
+      reflection: `Los Laudes — la oración de la mañana de la Iglesia — son una declaración teológica: antes de que el mundo me reclame, yo me pertenezco a Dios.\n\nSan Benito enseñaba que la primera obra del monje cada mañana debía ser la oración, no porque Dios la necesite, sino porque el alma la necesita.\n\nLa persona que ora en la mañana lleva consigo durante el día una quietud interior que no depende de las circunstancias. Santa Teresa de Ávila llamaba a esto "el punto de Arquímedes del alma".\n\nHoy, antes de revisar el teléfono, dedica estos minutos a consagrar el día a Dios. San Juan Vianney decía que bastaba con "mirar a Dios y dejar que Dios te mire."`,
       questions: ["¿Cómo llego a este nuevo día — con gratitud, con ansiedad, con prisa?", "¿Hay algo que quiero entregar específicamente a Dios esta mañana?", "¿Qué gracia concreta necesito hoy?"],
     },
     {
@@ -661,7 +652,7 @@ Cierra los ojos un momento. No hagas nada. Solo recibe. La Palabra ya fue sembra
       label: "Lectio Divina", sub: "Lectio divina diaria",
       saint: "San Bernardo de Claraval",
       saintQuote: "«El río que no regresa a su manantial se seca.»",
-      reflection: "La Lectio Divina es el arte de sentarse con María mientras el mundo grita con Marta. Primero escuchar, luego actuar.",
+      reflection: `La escena de Betania es una de las más cargadas de tensión y de gracia en todo el Evangelio. Marta entra apresurada, con las manos llenas y el corazón ocupado. María está sentada a los pies de Jesús.\n\nJesús dice algo que ha desconcertado a los cristianos activos durante dos milenios: "María ha elegido la parte mejor."\n\nNo se trata de una condena al trabajo. Lo que Jesús señala es una prioridad: primero escuchar, luego actuar. Primero ser, luego hacer.\n\nLa Lectio Divina es el arte de sentarse con María mientras el mundo grita con Marta.`,
       questions: ["¿Me identifico más con Marta o con María en este momento?", "¿Hay alguna Palabra que Dios ha estado queriendo decirme?", "¿Qué pasaría si dedicara 15 minutos diarios a escuchar a Dios?"],
     },
     {
@@ -669,7 +660,7 @@ Cierra los ojos un momento. No hagas nada. Solo recibe. La Palabra ya fue sembra
       label: "Examen de conciencia", sub: "Examen de conciencia",
       saint: "San Ignacio de Loyola",
       saintQuote: "«El examen de conciencia no es contabilidad espiritual de pecados. Es aprender a leer la vida como Dios la lee.»",
-      reflection: "El Examen ignaciano no es una lista de pecados — es aprender a ver la propia vida con los ojos de Dios. Sus cinco pasos: gratitud, luz, revisión, reconocimiento y propósito.",
+      reflection: `San Ignacio consideraba el Examen la práctica más importante de la vida espiritual. No es una lista de pecados — es aprender a ver la propia vida con los ojos de Dios.\n\nSus cinco pasos: gratitud, petición de luz, revisión del día, reconocimiento y propósito.\n\nLo que hace único al Examen ignaciano es que no separa lo "espiritual" de lo "cotidiano". Dios está en la reunión difícil, en la conversación tensa, en el cansancio del final del día.\n\nEl Examen nos entrena para reconocer esa presencia donde menos la esperamos.`,
       questions: ["¿Por qué tres momentos de hoy puedo dar gracias a Dios?", "¿En qué momento sentí mayor paz interior? ¿Y en cuál más lejanía de Dios?", "¿Hay algo que mañana quiero vivir de manera diferente?"],
     },
   ];
