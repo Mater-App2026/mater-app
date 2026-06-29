@@ -1554,7 +1554,7 @@ function ProfileScreen({ user, profile, setProfile, onLogout }) {
 }
 
 export default function App() {
-  const [screen, setScreen] = useState("landing");
+  const [screen, setScreen] = useState("auth");
   const [activeTab, setActiveTab] = useState("home");
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
