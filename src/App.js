@@ -795,19 +795,35 @@ function PlanScreen({ user }) {
     if (gospelOfDay) return;
     setLoadingGospel(true);
     const today = new Date().toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+    const todayEN = new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
     try {
       const text = await callAI(
-        `Eres un asistente litúrgico católico experto. Conoces el calendario litúrgico y las lecturas diarias del Leccionario Romano. Respondes SOLO en JSON válido, sin texto adicional, sin bloques de código.`,
-        `Hoy es ${today}. Dame el evangelio exacto de hoy según el Leccionario Romano de la USCCB. Responde SOLO con este JSON: {"referencia":"Evangelio según San X, X:X-X","texto":"Primeras dos líneas del texto","reflexion":"Reflexión de 3 párrafos breves para jóvenes adultos","preguntas":["pregunta 1","pregunta 2","pregunta 3"],"tiempo":"Tiempo litúrgico actual"}`
+        `Eres un experto en liturgia católica con conocimiento preciso del Leccionario Romano y el calendario litúrgico de la USCCB (United States Conference of Catholic Bishops). Conoces exactamente qué evangelio corresponde a cada día del año litúrgico. Respondes SOLO en JSON válido, sin texto adicional, sin bloques de código markdown.`,
+        `Hoy es ${today} (${todayEN}). Dame el evangelio completo de hoy según el calendario litúrgico de la USCCB en usccb.org/bible/readings. 
+
+IMPORTANTE: 
+- Incluye el TEXTO COMPLETO del evangelio en español, tal como aparece en la Biblia de América o la Nueva Biblia de Jerusalén
+- No resumas ni acortes el texto del evangelio
+- El texto debe ser el pasaje bíblico completo que se proclama en Misa hoy
+
+Responde SOLO con este JSON exacto:
+{
+  "referencia": "Evangelio según San [nombre], [capítulo]:[versículos]",
+  "tiempo": "Tiempo litúrgico actual (ej: Tiempo Ordinario, Adviento, Cuaresma, Pascua)",
+  "textoCompleto": "TEXTO COMPLETO del evangelio de hoy en español, párrafo por párrafo, tal como aparece en la Biblia",
+  "reflexion": "Reflexión de 3 párrafos profundos para jóvenes adultos de 25-35 años, conectando el evangelio con la vida cotidiana",
+  "preguntas": ["pregunta 1 específica al evangelio de hoy", "pregunta 2", "pregunta 3"]
+}`
       );
-      setGospelOfDay(JSON.parse(text));
+      const parsed = JSON.parse(text);
+      setGospelOfDay(parsed);
     } catch {
       setGospelOfDay({
         referencia: "Juan 15:1-8",
-        texto: "Yo soy la vid verdadera y mi Padre es el viñador.",
-        reflexion: "Jesús se presenta como la vid y nosotros como los sarmientos. Sin Él no podemos hacer nada.\n\nPermanecer en Jesús no es una actitud pasiva sino una decisión diaria de elegirle a Él antes que a cualquier otra cosa.\n\nHoy, ¿cómo puedes permanecer más unido a Cristo en tu vida cotidiana?",
-        preguntas: ["¿En qué áreas de tu vida sientes que estás separado de la vid?", "¿Qué frutos está produciendo tu unión con Cristo?", "¿Qué necesitas podar para dar más fruto?"],
         tiempo: "Tiempo Ordinario",
+        textoCompleto: "En aquel tiempo, dijo Jesús a sus discípulos:\n\n«Yo soy la vid verdadera y mi Padre es el viñador. Todo sarmiento que en mí no da fruto, lo arranca, y todo el que da fruto, lo poda para que dé más fruto.\n\nVosotros ya estáis limpios gracias a la palabra que os he hablado. Permaneced en mí y yo en vosotros. Como el sarmiento no puede dar fruto por sí mismo si no permanece en la vid, así tampoco vosotros si no permanecéis en mí.\n\nYo soy la vid; vosotros los sarmientos. El que permanece en mí y yo en él, ese da mucho fruto; porque sin mí no podéis hacer nada. Al que no permanece en mí lo tiran fuera, como el sarmiento, y se seca; luego los recogen y los echan al fuego, y arden.\n\nSi permanecéis en mí y mis palabras permanecen en vosotros, pedid lo que queráis y se os dará. Con esto recibe gloria mi Padre: con que deis mucho fruto, y seáis mis discípulos.»",
+        reflexion: "Jesús se presenta como la vid y nosotros como los sarmientos. Sin Él no podemos hacer nada — no como limitación sino como realidad de amor: el sarmiento no existe separado de la vid.\n\nPermanecer en Jesús no es una actitud pasiva sino una decisión diaria de elegirle a Él antes que a cualquier otra cosa. En cada momento del día, hay una pequeña elección: ¿permanezco en Él o me alejo?\n\nEl fruto del que habla Jesús no es éxito ni productividad. Es amor, paz, paciencia — los frutos del Espíritu que solo brotan cuando la raíz está bien plantada en Cristo.",
+        preguntas: ["¿En qué áreas de tu vida sientes que estás separado de la vid?", "¿Qué frutos está produciendo tu unión con Cristo?", "¿Qué necesitas podar para dar más fruto?"],
       });
     } finally {
       setLoadingGospel(false);
@@ -992,7 +1008,7 @@ function PlanScreen({ user }) {
             <>
               <p style={{ fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: C.gold, margin: "0 0 6px", fontWeight: 700 }}>📖 Evangelio del día · {gospelOfDay.tiempo}</p>
               <p style={{ fontSize: 14, fontWeight: 700, color: C.navy, margin: "0 0 6px" }}>{gospelOfDay.referencia}</p>
-              <p style={{ fontSize: 12, fontStyle: "italic", color: C.inkMid, margin: "0 0 10px", lineHeight: 1.6 }}>«{gospelOfDay.texto}»</p>
+              <p style={{ fontSize: 13, color: C.ink, lineHeight: 1.8, margin: "0 0 14px", whiteSpace: "pre-line", fontStyle: "italic", borderLeft: `3px solid ${C.gold}`, paddingLeft: 14 }}>{gospelOfDay.textoCompleto}</p>
               <p style={{ fontSize: 12, color: C.inkMid, lineHeight: 1.65, margin: "0 0 12px", whiteSpace: "pre-line" }}>{gospelOfDay.reflexion}</p>
               <p style={{ fontSize: 11, fontWeight: 700, color: C.blue, margin: "0 0 8px", letterSpacing: "0.08em", textTransform: "uppercase" }}>Preguntas para orar</p>
               {gospelOfDay.preguntas?.map((q, i) => (
