@@ -530,13 +530,119 @@ function HomeScreen({ user, profile, onTabChange }) {
     return arr[rotationIdx % arr.length];
   }
 
-  function fetchPracticeContent(index, practiceLabel, practiceSub) {
+  async function fetchPracticeContent(index, practiceLabel, practiceSub) {
     const today = new Date().toDateString();
     const cacheKey = `${index}-${today}`;
     if (practiceCache.current[cacheKey]) {
       setPracticeAIContent(prev => ({ ...prev, [index]: practiceCache.current[cacheKey] }));
       return;
     }
+
+    // Lectio Divina (index 1) — generada a partir del evangelio del día
+    if (index === 1) {
+      setLoadingPractice(true);
+      try {
+        // 1. Obtener el evangelio del día de la USCCB
+        const now = new Date();
+        const mm = String(now.getMonth() + 1).padStart(2, "0");
+        const dd = String(now.getDate()).padStart(2, "0");
+        const yy = String(now.getFullYear()).slice(-2);
+        const usccbUrl = `https://bible.usccb.org/es/bible/lecturas/${mm}${dd}${yy}.cfm`;
+
+        let textoEvangelio = "";
+        let referenciaEvangelio = "Evangelio del día";
+
+        try {
+          const gospelRes = await fetch("/api/gospel", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url: usccbUrl }),
+          });
+          const gospelData = await gospelRes.json();
+          if (gospelData && gospelData.textoCompleto) {
+            textoEvangelio = gospelData.textoCompleto;
+            referenciaEvangelio = gospelData.referencia || "Evangelio del día";
+          }
+        } catch { /* usar fallback */ }
+
+        // 2. Generar la Lectio Divina con los 4 pasos usando la IA
+        const todayStr = new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" });
+        const prompt = textoEvangelio
+          ? `Hoy es ${todayStr}. El evangelio de hoy es ${referenciaEvangelio}: "${textoEvangelio.substring(0, 800)}..."
+
+Crea una Lectio Divina completa con los 4 pasos clásicos basada en ESTE evangelio específico. Responde SOLO con JSON válido sin bloques de código: {"referencia":"${referenciaEvangelio}","lectio":"Invitación a leer el texto despacio, señalando 1-2 palabras o frases clave para quedarse","meditatio":"Reflexión profunda de 3 párrafos sobre lo que el texto dice hoy a un joven adulto de 25-35 años","oratio":"Oración breve y personal en primera persona surgida del texto, 3-4 líneas","contemplatio":"Invitación al silencio contemplativo — qué actitud o gesto interior proponer","palabra_clave":"Una sola palabra del evangelio para llevar durante el día"}`
+          : `Hoy es ${todayStr}. No tengo el texto del evangelio disponible. Crea una Lectio Divina sobre un pasaje del evangelio apropiado para hoy según el Ciclo A del Leccionario. Responde SOLO con JSON válido sin bloques de código: {"referencia":"referencia bíblica","lectio":"Invitación a leer el texto","meditatio":"Reflexión de 3 párrafos profundos","oratio":"Oración personal en primera persona","contemplatio":"Invitación al silencio","palabra_clave":"Una palabra para llevar el día"}`;
+
+        const aiRes = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: "claude-sonnet-4-6",
+            max_tokens: 1500,
+            system: "Eres Mater, guía espiritual católica experta en Lectio Divina. Creas lectios profundas, personales y conectadas con la vida cotidiana. Respondes SOLO en JSON válido sin bloques de código.",
+            messages: [{ role: "user", content: prompt }],
+          }),
+        });
+        const aiData = await aiRes.json();
+        const aiText = aiData.content?.map(b => b.text || "").join("") || "{}";
+        const parsed = JSON.parse(aiText.replace(/```json|```/g, "").trim());
+
+        const lectioContent = {
+          santo: `Lectio Divina · ${parsed.referencia || referenciaEvangelio}`,
+          cita: `«${parsed.palabra_clave || "Permaneced en mí"}» — Palabra para llevar hoy`,
+          reflexion: `📖 LECTIO — Leer
+${parsed.lectio || "Lee el evangelio de hoy despacio, dos veces."}
+
+🤔 MEDITATIO — Rumiar
+${parsed.meditatio || "¿Qué palabra o frase del evangelio resuena más en tu corazón hoy?"}
+
+🙏 ORATIO — Responder
+${parsed.oratio || "Señor, habla que tu siervo escucha."}
+
+✨ CONTEMPLATIO — Descansar
+${parsed.contemplatio || "Quédate en silencio unos minutos con la Palabra recibida."}`,
+          preguntas: [
+            `¿Qué palabra o frase del evangelio de hoy (${parsed.referencia || referenciaEvangelio}) te llamó más la atención?`,
+            "¿Qué te dice Dios personalmente a través de este texto hoy?",
+            `¿Cómo puedes llevar la palabra «${parsed.palabra_clave || "amor"}» a tu vida concreta hoy?`
+          ]
+        };
+
+        practiceCache.current[cacheKey] = lectioContent;
+        setPracticeAIContent(prev => ({ ...prev, [index]: lectioContent }));
+      } catch {
+        // Fallback estático para Lectio
+        const fallback = {
+          santo: "Lectio Divina · Evangelio del día",
+          cita: "«Habla, Señor, que tu siervo escucha.» — 1 Samuel 3:9",
+          reflexion: `📖 LECTIO — Leer
+Abre el evangelio de hoy y léelo despacio, dos veces. La primera para entender. La segunda para sentir. Deja que las palabras aterricen en tu corazón sin prisa.
+
+🤔 MEDITATIO — Rumiar
+¿Hay alguna palabra o frase que te llame la atención, que te incomode o que te traiga paz? Quédate con ella. Repítela como quien saborea algo bueno.
+
+No necesitas entenderlo todo. La Lectio Divina no es estudio bíblico — es encuentro personal con el Dios que habla hoy, a ti, en este momento concreto de tu vida.
+
+🙏 ORATIO — Responder
+Señor, gracias por hablarme hoy a través de tu Palabra. Recibo lo que me quieres decir con corazón abierto. Que esta Palabra no quede solo en mi mente sino que baje a mis manos y a mis decisiones. Amén.
+
+✨ CONTEMPLATIO — Descansar
+Cierra los ojos un momento. No hagas nada. Solo recibe. La Palabra ya fue sembrada — ahora deja que germine en el silencio.",
+          preguntas: [
+            "¿Qué palabra o frase del evangelio de hoy te quedó resonando?",
+            "¿Qué te dice Dios personalmente a través de este texto?",
+            "¿Cómo puedes llevar esta Palabra a tu vida concreta hoy?"
+          ]
+        };
+        practiceCache.current[cacheKey] = fallback;
+        setPracticeAIContent(prev => ({ ...prev, [index]: fallback }));
+      } finally {
+        setLoadingPractice(false);
+      }
+      return;
+    }
+
+    // Para Oración de la mañana (0) y Examen (2) — contenido estático
     const staticContent = getStaticPracticeContent(index);
     practiceCache.current[cacheKey] = staticContent;
     setPracticeAIContent(prev => ({ ...prev, [index]: staticContent }));
@@ -553,7 +659,7 @@ function HomeScreen({ user, profile, onTabChange }) {
     },
     {
       icon: "book", color: C.navy, bg: "#DDE8F2",
-      label: "Lectio Divina", sub: "Lucas 10:38-42 · María y Marta",
+      label: "Lectio Divina", sub: "Lectio divina diaria",
       saint: "San Bernardo de Claraval",
       saintQuote: "«El río que no regresa a su manantial se seca.»",
       reflection: `La escena de Betania es una de las más cargadas de tensión y de gracia en todo el Evangelio. Marta entra apresurada, con las manos llenas y el corazón ocupado. María está sentada a los pies de Jesús.\n\nJesús dice algo que ha desconcertado a los cristianos activos durante dos milenios: "María ha elegido la parte mejor."\n\nNo se trata de una condena al trabajo. Lo que Jesús señala es una prioridad: primero escuchar, luego actuar. Primero ser, luego hacer.\n\nLa Lectio Divina es el arte de sentarse con María mientras el mundo grita con Marta.`,
