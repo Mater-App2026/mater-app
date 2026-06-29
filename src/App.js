@@ -312,6 +312,9 @@ function HomeScreen({ user, profile, onTabChange }) {
   const [streakDays, setStreakDays] = useState([false, false, false, false, false, false, false]);
   const [streakCount, setStreakCount] = useState(0);
   const [dailyVerse, setDailyVerse] = useState(null);
+  const [practiceAIContent, setPracticeAIContent] = useState({});
+  const [loadingPractice, setLoadingPractice] = useState(false);
+  const practiceCache = useRef({});
 
   const now = new Date();
   const todayKey = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0");
@@ -383,6 +386,37 @@ function HomeScreen({ user, profile, onTabChange }) {
     }
   }
 
+  async function fetchPracticeContent(index, practiceLabel, practiceSub) {
+    const today = new Date().toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+    const cacheKey = `${index}-${today}`;
+    if (practiceCache.current[cacheKey]) {
+      setPracticeAIContent(prev => ({ ...prev, [index]: practiceCache.current[cacheKey] }));
+      return;
+    }
+    setLoadingPractice(true);
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-6",
+          max_tokens: 1500,
+          system: "Eres Mater, guía espiritual católica. Integras espiritualidad ignaciana, mariana, franciscana, carmelita y schoenstattiana. Respondes SOLO en JSON válido, sin bloques de código, sin texto adicional.",
+          messages: [{ role: "user", content: `Hoy es ${today}. Crea contenido espiritual fresco y original para la práctica: "${practiceLabel}" (${practiceSub}). El contenido debe ser único para el día de hoy. Responde SOLO con este JSON: {"santo":"nombre del santo","cita":"cita auténtica del santo","reflexion":"reflexión profunda de 4 párrafos mínimo 200 palabras relacionada con el día de hoy","preguntas":["pregunta 1","pregunta 2","pregunta 3"]}` }],
+        }),
+      });
+      const data = await res.json();
+      const text = data.content?.map(b => b.text || "").join("") || "{}";
+      const parsed = JSON.parse(text.replace(/```json|```/g, "").trim());
+      practiceCache.current[cacheKey] = parsed;
+      setPracticeAIContent(prev => ({ ...prev, [index]: parsed }));
+    } catch {
+      // keep static content as fallback
+    } finally {
+      setLoadingPractice(false);
+    }
+  }
+
   const practiceContent = [
     {
       icon: "moon", color: C.blue, bg: C.iceBlue,
@@ -429,20 +463,28 @@ function HomeScreen({ user, profile, onTabChange }) {
               </div>
               <button onClick={() => setOpenCard(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
             </div>
-            <div style={{ background: practiceContent[openCard].bg, borderRadius: 14, padding: "14px 16px", marginBottom: 20, borderLeft: `3px solid ${practiceContent[openCard].color}` }}>
-              <p style={{ fontSize: 13, fontStyle: "italic", color: C.inkMid, margin: "0 0 6px", lineHeight: 1.6 }}>{practiceContent[openCard].saintQuote}</p>
-              <p style={{ fontSize: 11, fontWeight: 700, color: practiceContent[openCard].color, margin: 0 }}>{practiceContent[openCard].saint}</p>
-            </div>
-            <p style={{ fontSize: 13, color: C.inkMid, lineHeight: 1.8, margin: "0 0 24px", whiteSpace: "pre-line" }}>{practiceContent[openCard].reflection}</p>
-            <p style={{ fontSize: 12, fontWeight: 700, color: practiceContent[openCard].color, letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 12px" }}>Preguntas para orar</p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {practiceContent[openCard].questions.map((q, i) => (
-                <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                  <div style={{ width: 24, height: 24, borderRadius: "50%", background: `${practiceContent[openCard].color}20`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: practiceContent[openCard].color, fontSize: 11, fontWeight: 700 }}>{i + 1}</div>
-                  <p style={{ fontSize: 13, color: C.ink, lineHeight: 1.6, margin: 0 }}>{q}</p>
+            {loadingPractice ? (
+              <div style={{ textAlign: "center", padding: "40px 0" }}>
+                <p style={{ color: C.slateLight, fontSize: 14 }}>✨ Mater está preparando tu reflexión...</p>
+              </div>
+            ) : (
+              <>
+                <div style={{ background: practiceContent[openCard].bg, borderRadius: 14, padding: "14px 16px", marginBottom: 20, borderLeft: `3px solid ${practiceContent[openCard].color}` }}>
+                  <p style={{ fontSize: 13, fontStyle: "italic", color: C.inkMid, margin: "0 0 6px", lineHeight: 1.6 }}>{practiceAIContent[openCard]?.cita || practiceContent[openCard].saintQuote}</p>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: practiceContent[openCard].color, margin: 0 }}>{practiceAIContent[openCard]?.santo || practiceContent[openCard].saint}</p>
                 </div>
-              ))}
-            </div>
+                <p style={{ fontSize: 13, color: C.inkMid, lineHeight: 1.8, margin: "0 0 24px", whiteSpace: "pre-line" }}>{practiceAIContent[openCard]?.reflexion || practiceContent[openCard].reflection}</p>
+                <p style={{ fontSize: 12, fontWeight: 700, color: practiceContent[openCard].color, letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 12px" }}>Preguntas para orar</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {(practiceAIContent[openCard]?.preguntas || practiceContent[openCard].questions).map((q, i) => (
+                    <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                      <div style={{ width: 24, height: 24, borderRadius: "50%", background: `${practiceContent[openCard].color}20`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: practiceContent[openCard].color, fontSize: 11, fontWeight: 700 }}>{i + 1}</div>
+                      <p style={{ fontSize: 13, color: C.ink, lineHeight: 1.6, margin: 0 }}>{q}</p>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
             <button
               onClick={() => { markPracticeDone(openCard); setOpenCard(null); }}
               style={{ width: "100%", marginTop: 28, padding: "14px", background: `linear-gradient(135deg, ${C.navy}, ${C.blue})`, border: "none", borderRadius: 14, color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}
@@ -499,7 +541,7 @@ function HomeScreen({ user, profile, onTabChange }) {
           {practiceContent.map((c, i) => {
             const isDone = completedPractices[`${i}-${todayKey}`] || false;
             return (
-              <button key={i} onClick={() => setOpenCard(i)} style={{ background: isDone ? C.fog : C.cream, borderRadius: 12, padding: "14px 16px", display: "flex", alignItems: "center", gap: 14, border: `1px solid ${C.mist}`, borderLeft: isDone ? `3px solid ${C.gold}` : `3px solid transparent`, cursor: "pointer", textAlign: "left", width: "100%" }}>
+              <button key={i} onClick={() => { setOpenCard(i); fetchPracticeContent(i, c.label, c.sub); }} style={{ background: isDone ? C.fog : C.cream, borderRadius: 12, padding: "14px 16px", display: "flex", alignItems: "center", gap: 14, border: `1px solid ${C.mist}`, borderLeft: isDone ? `3px solid ${C.gold}` : `3px solid transparent`, cursor: "pointer", textAlign: "left", width: "100%" }}>
                 <div style={{ width: 36, height: 36, borderRadius: 10, background: C.iceBlue, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, border: `1px solid ${C.mist}` }}>
                   <Icon name={c.icon} size={18} color={isDone ? C.gold : C.blue} />
                 </div>
