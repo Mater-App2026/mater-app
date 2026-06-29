@@ -1501,6 +1501,11 @@ export default function App() {
         setUser(session.user);
         loadProfile(session.user.id);
         setScreen("app");
+      } else {
+        const onboardingDone = localStorage.getItem("mater_onboarding_done");
+        if (onboardingDone) {
+          setScreen("auth");
+        }
       }
       setLoadingAuth(false);
     });
@@ -1526,6 +1531,8 @@ export default function App() {
   }
 
   async function handleOnboardingComplete(name) {
+    // Marcar que el onboarding ya fue completado
+    localStorage.setItem("mater_onboarding_done", "true");
     if (user) {
       await supabase.from("profiles").upsert({ id: user.id, name });
       setProfile(prev => ({ ...prev, name }));
