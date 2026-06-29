@@ -1581,7 +1581,7 @@ export default function App() {
       } else {
         setUser(null);
         setProfile(null);
-        setScreen("landing");
+        setScreen("auth");
       }
     });
 
