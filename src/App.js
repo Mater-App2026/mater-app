@@ -1567,10 +1567,8 @@ export default function App() {
         loadProfile(session.user.id);
         setScreen("app");
       } else {
-        const onboardingDone = localStorage.getItem("mater_onboarding_done");
-        if (onboardingDone) {
-          setScreen("auth");
-        }
+        // Siempre ir directo al login si no hay sesión activa
+        setScreen("auth");
       }
       setLoadingAuth(false);
     });
