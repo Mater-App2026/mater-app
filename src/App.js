@@ -1300,10 +1300,11 @@ function DiaryScreen({ user }) {
     loadEntries();
   }, [user]);
 
-  async function saveEntry() {
-    if (!draft.title || !draft.text) return;
+  async function saveEntry(formData) {
+    const entryData = formData || draft;
+    if (!entryData.title || !entryData.text) return;
     setSaving(true);
-    const { data, error } = await supabase.from("diary_entries").insert({ user_id: user.id, title: draft.title, text: draft.text, mood: draft.mood, tag: draft.tag }).select().single();
+    const { data, error } = await supabase.from("diary_entries").insert({ user_id: user.id, title: entryData.title, text: entryData.text, mood: entryData.mood, tag: entryData.tag }).select().single();
     if (!error && data) {
       setEntries(prev => [data, ...prev]);
       setDraft({ mood: "", title: "", text: "", tag: "Consolación" });
@@ -1312,12 +1313,13 @@ function DiaryScreen({ user }) {
     setSaving(false);
   }
 
-  async function saveEdit() {
-    if (!editDraft.title || !editDraft.text) return;
+  async function saveEdit(formData) {
+    const entryData = formData || editDraft;
+    if (!entryData.title || !entryData.text) return;
     setSavingEdit(true);
-    const { error } = await supabase.from("diary_entries").update({ title: editDraft.title, text: editDraft.text, mood: editDraft.mood, tag: editDraft.tag }).eq("id", editingEntry.id).eq("user_id", user.id);
+    const { error } = await supabase.from("diary_entries").update({ title: entryData.title, text: entryData.text, mood: entryData.mood, tag: entryData.tag }).eq("id", editingEntry.id).eq("user_id", user.id);
     if (!error) {
-      setEntries(prev => prev.map(e => e.id === editingEntry.id ? { ...e, ...editDraft } : e));
+      setEntries(prev => prev.map(e => e.id === editingEntry.id ? { ...e, ...entryData } : e));
       setEditingEntry(null);
     }
     setSavingEdit(false);
@@ -1341,8 +1343,7 @@ function DiaryScreen({ user }) {
     function handleSave() {
       const titleVal = titleRef.current ? titleRef.current.value : data.title;
       const textVal = textRef.current ? textRef.current.value : data.text;
-      onChange({ ...data, title: titleVal, text: textVal });
-      setTimeout(() => onSave(), 50);
+      onSave({ ...data, title: titleVal, text: textVal });
     }
 
     return (
