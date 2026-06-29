@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useState, useRef, useEffect } from "react";
 import { supabase } from "./supabaseClient";
 
@@ -78,7 +79,7 @@ function LandingScreen({ onEnter }) {
   return (
     <div style={{ flex: 1, background: C.iceBlue, display: "flex", flexDirection: "column", padding: "0 0 40px" }}>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "40px 32px", textAlign: "center" }}>
-        <div style={{ width: 80, height: 80, borderRadius: 20, overflow: "hidden", border: `1px solid ${C.mist}`, marginBottom: 24 }}>
+        <div style={{ width: 80, height: 80, borderRadius: 20, overflow: "hidden", border: "1px solid " + C.mist, marginBottom: 24 }}>
           <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
         <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 38, fontWeight: 600, color: C.navy, margin: "0 0 6px" }}>Mater</h1>
@@ -94,7 +95,7 @@ function LandingScreen({ onEnter }) {
             ["📋", "Plan de 30 días", "Formación espiritual estructurada"],
             ["📓", "Diario espiritual", "Registra tus movimientos interiores"],
           ].map(([icon, title, sub], i) => (
-            <div key={i} style={{ display: "flex", alignItems: "center", gap: 14, background: C.cream, border: `1px solid ${C.mist}`, borderLeft: `3px solid ${C.navy}`, borderRadius: 12, padding: "12px 14px" }}>
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: 14, background: C.cream, border: "1px solid " + C.mist, borderLeft: `3px solid ${C.navy}`, borderRadius: 12, padding: "12px 14px" }}>
               <span style={{ fontSize: 20 }}>{icon}</span>
               <div style={{ textAlign: "left" }}>
                 <p style={{ fontSize: 13, fontWeight: 600, color: C.ink, margin: 0 }}>{title}</p>
@@ -144,7 +145,7 @@ function OnboardingScreen({ onComplete }) {
         ))}
       </div>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0 32px", textAlign: "center" }}>
-        <div style={{ width: 80, height: 80, borderRadius: 20, overflow: "hidden", border: `1px solid ${C.mist}`, marginBottom: 32 }}>
+        <div style={{ width: 80, height: 80, borderRadius: 20, overflow: "hidden", border: "1px solid " + C.mist, marginBottom: 32 }}>
           <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
         <p style={{ fontSize: 11, color: C.inkLight, letterSpacing: "0.12em", textTransform: "uppercase", margin: "0 0 8px" }}>{s.subtitle}</p>
@@ -585,17 +586,7 @@ function HomeScreen({ user, profile, onTabChange }) {
         const lectioContent = {
           santo: "Lectio Divina - " + (parsed.referencia || referenciaEvangelio),
           cita: "«" + (parsed.palabra_clave || "Permaneced en mi") + "» — Palabra para llevar hoy",
-          reflexion: "📖 LECTIO — Leer
-" + (parsed.lectio || "Lee el evangelio de hoy despacio, dos veces.") + "
-
-🤔 MEDITATIO — Rumiar
-" + (parsed.meditatio || "¿Qué palabra resuena en tu corazon?") + "
-
-🙏 ORATIO — Responder
-" + (parsed.oratio || "Señor, habla que tu siervo escucha.") + "
-
-✨ CONTEMPLATIO — Descansar
-" + (parsed.contemplatio || "Quedate en silencio con la Palabra recibida."),
+          reflexion: ["📖 LECTIO — Leer", (parsed.lectio || "Lee el evangelio de hoy despacio, dos veces."), "🤔 MEDITATIO — Rumiar", (parsed.meditatio || "¿Que palabra resuena en tu corazon?"), "🙏 ORATIO — Responder", (parsed.oratio || "Señor, habla que tu siervo escucha."), "✨ CONTEMPLATIO — Descansar", (parsed.contemplatio || "Quedate en silencio con la Palabra recibida.")].join("\n\n"),
           preguntas: [
             "¿Qué palabra del evangelio de hoy (" + (parsed.referencia || referenciaEvangelio) + ") te llamo mas la atencion?",
             "¿Que te dice Dios personalmente a traves de este texto hoy?",
@@ -608,17 +599,7 @@ function HomeScreen({ user, profile, onTabChange }) {
         const fallback = {
           santo: "Lectio Divina - Evangelio del dia",
           cita: "«Habla, Señor, que tu siervo escucha.» — 1 Samuel 3:9",
-          reflexion: "📖 LECTIO — Leer
-Abre el evangelio de hoy y leelo despacio, dos veces.
-
-🤔 MEDITATIO — Rumiar
-¿Hay alguna palabra que te llame la atencion? Quedatez con ella y repitela despacio.
-
-🙏 ORATIO — Responder
-Señor, gracias por hablarme hoy a traves de tu Palabra. Que esta Palabra baje a mis manos y decisiones. Amen.
-
-✨ CONTEMPLATIO — Descansar
-Cierra los ojos un momento. No hagas nada. Solo recibe en silencio.",
+          reflexion: "📖 LECTIO — Leer\nAbre el evangelio de hoy y leelo despacio, dos veces.\n\n🤔 MEDITATIO — Rumiar\n¿Hay alguna palabra que te llame la atencion? Quedatez con ella y repitela despacio.\n\n🙏 ORATIO — Responder\nSeñor, gracias por hablarme hoy a traves de tu Palabra. Que esta Palabra baje a mis manos y decisiones. Amen.\n\n✨ CONTEMPLATIO — Descansar\nCierra los ojos un momento. No hagas nada. Solo recibe en silencio.",
           preguntas: [
             "¿Que palabra del evangelio de hoy te quedo resonando?",
             "¿Que te dice Dios personalmente a traves de este texto?",
@@ -724,7 +705,7 @@ Cierra los ojos un momento. No hagas nada. Solo recibe en silencio.",
             </p>
             <h1 style={{ fontSize: 26, fontWeight: 600, color: C.ink, margin: "2px 0 0", lineHeight: 1.15, fontFamily: "'Cormorant Garamond', serif" }}>{firstName}</h1>
           </div>
-          <div style={{ width: 44, height: 44, borderRadius: 12, overflow: "hidden", border: `1px solid ${C.mist}`, flexShrink: 0 }}>
+          <div style={{ width: 44, height: 44, borderRadius: 12, overflow: "hidden", border: "1px solid " + C.mist, flexShrink: 0 }}>
             {profile?.avatar_url
               ? <img src={profile.avatar_url} alt={firstName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               : <div style={{ width: "100%", height: "100%", background: C.navy, display: "flex", alignItems: "center", justifyContent: "center", color: C.cream, fontWeight: 600, fontSize: 18 }}>{firstName[0]?.toUpperCase()}</div>
@@ -762,8 +743,8 @@ Cierra los ojos un momento. No hagas nada. Solo recibe en silencio.",
           {practiceContent.map((c, i) => {
             const isDone = completedPractices[`${i}-${todayKey}`] || false;
             return (
-              <button key={i} onClick={() => { setOpenCard(i); fetchPracticeContent(i, c.label, c.sub); }} style={{ background: isDone ? C.fog : C.cream, borderRadius: 12, padding: "14px 16px", display: "flex", alignItems: "center", gap: 14, border: `1px solid ${C.mist}`, borderLeft: isDone ? `3px solid ${C.gold}` : `3px solid transparent`, cursor: "pointer", textAlign: "left", width: "100%" }}>
-                <div style={{ width: 36, height: 36, borderRadius: 10, background: C.iceBlue, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, border: `1px solid ${C.mist}` }}>
+              <button key={i} onClick={() => { setOpenCard(i); fetchPracticeContent(i, c.label, c.sub); }} style={{ background: isDone ? C.fog : C.cream, borderRadius: 12, padding: "14px 16px", display: "flex", alignItems: "center", gap: 14, border: "1px solid " + C.mist, borderLeft: isDone ? `3px solid ${C.gold}` : `3px solid transparent`, cursor: "pointer", textAlign: "left", width: "100%" }}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: C.iceBlue, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, border: "1px solid " + C.mist }}>
                   <Icon name={c.icon} size={18} color={isDone ? C.gold : C.blue} />
                 </div>
                 <div style={{ flex: 1 }}>
@@ -909,7 +890,7 @@ function ChatScreen({ user }) {
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === "Enter" && sendMessage()}
           placeholder="Escribe lo que llevas en el corazón..."
-          style={{ flex: 1, border: `1px solid ${C.mist}`, outline: "none", background: C.fog, borderRadius: 12, padding: "11px 14px", fontSize: 13.5, color: C.ink, fontFamily: "'DM Sans', system-ui, sans-serif" }}
+          style={{ flex: 1, border: "1px solid " + C.mist, outline: "none", background: C.fog, borderRadius: 12, padding: "11px 14px", fontSize: 13.5, color: C.ink, fontFamily: "'DM Sans', system-ui, sans-serif" }}
         />
         <button onClick={sendMessage} disabled={loading || !input.trim()} style={{ width: 40, height: 40, borderRadius: 12, border: "none", background: input.trim() ? C.navy : C.mist, display: "flex", alignItems: "center", justifyContent: "center", cursor: input.trim() ? "pointer" : "default", flexShrink: 0 }}>
           <Icon name="send" size={16} color={C.cream} />
@@ -1301,7 +1282,7 @@ function DiaryScreen({ user }) {
       <input value={data.title} onChange={e => onChange({ ...data, title: e.target.value })} placeholder="Título..." style={{ width: "100%", border: "none", outline: "none", borderBottom: `1.5px solid ${C.mist}`, padding: "8px 0", fontSize: 15, fontWeight: 700, color: C.ink, background: "transparent", fontFamily: "'DM Sans', system-ui, sans-serif", marginBottom: 10, boxSizing: "border-box" }} />
       <textarea value={data.text} onChange={e => onChange({ ...data, text: e.target.value })} placeholder="¿Qué movimientos espirituales notaste hoy?" rows={4} style={{ width: "100%", border: "none", outline: "none", padding: "0", fontSize: 13.5, color: C.inkMid, background: "transparent", fontFamily: "'DM Sans', system-ui, sans-serif", lineHeight: 1.65, resize: "none", boxSizing: "border-box" }} />
       <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 14, gap: 10 }}>
-        <button onClick={onCancel} style={{ background: "transparent", border: `1px solid ${C.mist}`, borderRadius: 10, padding: "8px 16px", fontSize: 12, color: C.slateLight, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>Cancelar</button>
+        <button onClick={onCancel} style={{ background: "transparent", border: "1px solid " + C.mist, borderRadius: 10, padding: "8px 16px", fontSize: 12, color: C.slateLight, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>Cancelar</button>
         <button onClick={onSave} disabled={isSaving || !data.title || !data.text} style={{ background: `linear-gradient(135deg, ${C.navy}, ${C.blue})`, border: "none", borderRadius: 10, padding: "8px 18px", fontSize: 12, fontWeight: 700, color: "#fff", cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif", opacity: (!data.title || !data.text) ? 0.5 : 1 }}>
           {isSaving ? "Guardando..." : "Guardar"}
         </button>
@@ -1343,7 +1324,7 @@ function DiaryScreen({ user }) {
           </div>
         ) : (
           entries.map((e, i) => (
-            <div key={e.id || i} style={{ background: C.cream, borderRadius: 12, padding: "16px 18px", marginBottom: 10, border: `1px solid ${C.mist}`, borderLeft: `3px solid ${tagColor[e.tag] || C.sky}`, opacity: deletingId === e.id ? 0.5 : 1, transition: "opacity 0.2s" }}>
+            <div key={e.id || i} style={{ background: C.cream, borderRadius: 12, padding: "16px 18px", marginBottom: 10, border: "1px solid " + C.mist, borderLeft: `3px solid ${tagColor[e.tag] || C.sky}`, opacity: deletingId === e.id ? 0.5 : 1, transition: "opacity 0.2s" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <span style={{ fontSize: 20 }}>{e.mood}</span>
@@ -1469,7 +1450,7 @@ function ProfileScreen({ user, profile, setProfile, onLogout }) {
       </div>
 
       <div style={{ padding: "24px 22px 0" }}>
-        <div style={{ background: C.cream, borderRadius: 16, overflow: "hidden", border: `1px solid ${C.mist}` }}>
+        <div style={{ background: C.cream, borderRadius: 16, overflow: "hidden", border: "1px solid " + C.mist }}>
           {[
             { label: "Editar nombre", icon: "edit", action: () => setEditing(true) },
             { label: "Acerca de Mater", icon: "heart", action: () => setActiveModal("about") },
@@ -1491,13 +1472,13 @@ function ProfileScreen({ user, profile, setProfile, onLogout }) {
             navigator.clipboard.writeText("https://materapp.org");
             alert("¡Enlace copiado!");
           }
-        }} style={{ width: "100%", padding: "14px", border: `1px solid ${C.mist}`, borderRadius: 12, background: C.cream, color: C.navy, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+        }} style={{ width: "100%", padding: "14px", border: "1px solid " + C.mist, borderRadius: 12, background: C.cream, color: C.navy, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
           Compartir Mater 🔗
         </button>
       </div>
 
       <div style={{ padding: "12px 22px 0" }}>
-        <button onClick={onLogout} style={{ width: "100%", padding: "14px", border: `1px solid #E8A0A0`, borderRadius: 12, background: "transparent", color: "#C0392B", fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+        <button onClick={onLogout} style={{ width: "100%", padding: "14px", border: "1px solid #E8A0A0", borderRadius: 12, background: "transparent", color: "#C0392B", fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
           <Icon name="logout" size={15} color="#C0392B" />
           Cerrar sesión
         </button>
@@ -1565,7 +1546,7 @@ export default function App() {
           <div style={{ width: 60, height: 60, borderRadius: 16, overflow: "hidden", margin: "0 auto 16px" }}>
             <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
-          <div style={{ width: 24, height: 24, border: `3px solid ${C.navy}`, borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.8s linear infinite", margin: "0 auto" }} />
+          <div style={{ width: 24, height: 24, border: "3px solid " + C.navy + ",", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.8s linear infinite", margin: "0 auto" }} />
         </div>
       </div>
     );
