@@ -377,9 +377,10 @@ function HomeScreen({ user, profile, onTabChange }) {
       }
       const weekStreak = days.map((_, i) => dateSet.has(localDate(i - todayIdx)));
       setStreakDays(weekStreak);
-      let count = 0, offset = 0;
-      while (offset <= 365) {
-        if (dateSet.has(localDate(-offset))) { count++; offset++; } else break;
+      // Contar solo los días completados en la semana actual (Lun-Dom)
+      let count = 0;
+      for (let i = 0; i < 7; i++) {
+        if (weekStreak[i]) count++;
       }
       setStreakCount(count);
     }
@@ -788,7 +789,7 @@ function HomeScreen({ user, profile, onTabChange }) {
       <div style={{ padding: "22px 22px 0" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
           <p style={{ fontSize: 11, fontWeight: 600, color: C.inkLight, margin: 0, letterSpacing: "0.1em", textTransform: "uppercase" }}>Ritmo semanal</p>
-          <span style={{ fontSize: 11, color: C.gold, fontWeight: 600 }}>{streakCount} {streakCount === 1 ? "día" : "días"}</span>
+          <span style={{ fontSize: 11, color: C.gold, fontWeight: 600 }}>{streakCount} {streakCount === 1 ? "día esta semana" : "días esta semana"}</span>
         </div>
         <div style={{ display: "flex", gap: 6 }}>
           {days.map((d, i) => (
