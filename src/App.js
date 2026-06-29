@@ -567,13 +567,10 @@ function ChatScreen({ user }) {
     setInput("");
     setLoading(true);
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": process.env.REACT_APP_ANTHROPIC_API_KEY,
-          "anthropic-version": "2023-06-01",
-          "anthropic-dangerous-direct-browser-calls": "true",
         },
         body: JSON.stringify({
           model: "claude-sonnet-4-6",
@@ -671,13 +668,10 @@ function PlanScreen({ user }) {
   const contentCache = useRef({});
 
   async function callAI(systemPrompt, userMessage) {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
+    const res = await fetch("/api/chat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.REACT_APP_ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
-        "anthropic-dangerous-direct-browser-calls": "true",
       },
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
