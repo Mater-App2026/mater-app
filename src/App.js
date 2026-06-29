@@ -1273,10 +1273,57 @@ function PlanScreen({ user }) {
   );
 }
 
+
+);
+
+function DiaryEntryForm({ data, onChange, onSave, onCancel, saving: isSaving, title }) {
+  const moods = ["😊", "🙏", "😔", "😌", "🥹", "😤", "🤔", "❤️"];
+  const tags = ["Consolación", "Discernimiento", "Acción de gracias", "Desolación"];
+  const tagColor = { "Consolación": C.sky, "Discernimiento": C.blue, "Acción de gracias": C.gold, "Desolación": C.periwinkle };
+  return (
+    <div style={{ background: C.white, borderRadius: 20, padding: 18, marginBottom: 16, boxShadow: "0 6px 24px rgba(30,58,95,0.12)" }}>
+      <p style={{ fontSize: 12, fontWeight: 700, color: C.blue, margin: "0 0 12px", textTransform: "uppercase", letterSpacing: "0.1em" }}>{title}</p>
+      <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
+        {moods.map(m => (
+          <button key={m} onClick={() => onChange({ ...data, mood: m })} style={{ width: 36, height: 36, borderRadius: 10, border: "none", background: data.mood === m ? C.blue + "20" : C.mist + "55", fontSize: 18, cursor: "pointer", outline: data.mood === m ? "2px solid " + C.blue : "none" }}>{m}</button>
+        ))}
+      </div>
+      <div style={{ display: "flex", gap: 6, marginBottom: 12, flexWrap: "wrap" }}>
+        {tags.map(t => (
+          <button key={t} onClick={() => onChange({ ...data, tag: t })} style={{ padding: "4px 10px", borderRadius: 100, border: "none", background: data.tag === t ? tagColor[t] + "30" : C.iceBlue, color: data.tag === t ? tagColor[t] : C.slateLight, fontSize: 11, fontWeight: 600, cursor: "pointer" }}>{t}</button>
+        ))}
+      </div>
+      <input
+        value={data.title}
+        onChange={e => onChange({ ...data, title: e.target.value })}
+        placeholder="Título..."
+        autoComplete="off"
+        style={{ width: "100%", border: "none", outline: "none", borderBottom: "1.5px solid " + C.mist, padding: "8px 0", fontSize: 15, fontWeight: 700, color: C.ink, background: "transparent", fontFamily: "'DM Sans', system-ui, sans-serif", marginBottom: 10, boxSizing: "border-box" }}
+      />
+      <textarea
+        value={data.text}
+        onChange={e => onChange({ ...data, text: e.target.value })}
+        placeholder="¿Qué movimientos espirituales notaste hoy?"
+        rows={4}
+        autoComplete="off"
+        style={{ width: "100%", border: "none", outline: "none", padding: "0", fontSize: 13.5, color: C.inkMid, background: "transparent", fontFamily: "'DM Sans', system-ui, sans-serif", lineHeight: 1.65, resize: "none", boxSizing: "border-box" }}
+      />
+      <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 14, gap: 10 }}>
+        <button onClick={onCancel} style={{ background: "transparent", border: "1px solid " + C.mist, borderRadius: 10, padding: "8px 16px", fontSize: 12, color: C.slateLight, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>Cancelar</button>
+        <button onClick={onSave} disabled={isSaving || !data.title || !data.text} style={{ background: "linear-gradient(135deg, " + C.navy + ", " + C.blue + ")", border: "none", borderRadius: 10, padding: "8px 18px", fontSize: 12, fontWeight: 700, color: "#fff", cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif", opacity: (!data.title || !data.text) ? 0.5 : 1 }}>
+          {isSaving ? "Guardando..." : "Guardar"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+
 function DiaryScreen({ user }) {
   const [entries, setEntries] = useState([]);
   const [writing, setWriting] = useState(false);
   const [draft, setDraft] = useState({ mood: "", title: "", text: "", tag: "Consolación" });
+  const setDraftStable = React.useCallback((newDraft) => setDraft(newDraft), []);
   const [loadingEntries, setLoadingEntries] = useState(true);
   const [saving, setSaving] = useState(false);
   const [editingEntry, setEditingEntry] = useState(null);
@@ -1344,8 +1391,8 @@ function DiaryScreen({ user }) {
           <button key={t} onClick={() => onChange({ ...data, tag: t })} style={{ padding: "4px 10px", borderRadius: 100, border: "none", background: data.tag === t ? `${tagColor[t]}30` : C.iceBlue, color: data.tag === t ? tagColor[t] : C.slateLight, fontSize: 11, fontWeight: 600, cursor: "pointer" }}>{t}</button>
         ))}
       </div>
-      <input value={data.title} onChange={e => onChange({ ...data, title: e.target.value })} placeholder="Título..." style={{ width: "100%", border: "none", outline: "none", borderBottom: `1.5px solid ${C.mist}`, padding: "8px 0", fontSize: 15, fontWeight: 700, color: C.ink, background: "transparent", fontFamily: "'DM Sans', system-ui, sans-serif", marginBottom: 10, boxSizing: "border-box" }} />
-      <textarea value={data.text} onChange={e => onChange({ ...data, text: e.target.value })} placeholder="¿Qué movimientos espirituales notaste hoy?" rows={4} style={{ width: "100%", border: "none", outline: "none", padding: "0", fontSize: 13.5, color: C.inkMid, background: "transparent", fontFamily: "'DM Sans', system-ui, sans-serif", lineHeight: 1.65, resize: "none", boxSizing: "border-box" }} />
+      <input value={data.title} onChange={e => onChange({ ...data, title: e.target.value })} placeholder="Título..." autoComplete="off" autoCorrect="off" spellCheck="false" style={{ width: "100%", border: "none", outline: "none", borderBottom: "1.5px solid " + C.mist, padding: "8px 0", fontSize: 15, fontWeight: 700, color: C.ink, background: "transparent", fontFamily: "'DM Sans', system-ui, sans-serif", marginBottom: 10, boxSizing: "border-box" }} />
+      <textarea value={data.text} onChange={e => onChange({ ...data, text: e.target.value })} placeholder="¿Qué movimientos espirituales notaste hoy?" rows={4} autoComplete="off" autoCorrect="off" style={{ width: "100%", border: "none", outline: "none", padding: "0", fontSize: 13.5, color: C.inkMid, background: "transparent", fontFamily: "'DM Sans', system-ui, sans-serif", lineHeight: 1.65, resize: "none", boxSizing: "border-box" }} />
       <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 14, gap: 10 }}>
         <button onClick={onCancel} style={{ background: "transparent", border: "1px solid " + C.mist, borderRadius: 10, padding: "8px 16px", fontSize: 12, color: C.slateLight, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>Cancelar</button>
         <button onClick={onSave} disabled={isSaving || !data.title || !data.text} style={{ background: `linear-gradient(135deg, ${C.navy}, ${C.blue})`, border: "none", borderRadius: 10, padding: "8px 18px", fontSize: 12, fontWeight: 700, color: "#fff", cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif", opacity: (!data.title || !data.text) ? 0.5 : 1 }}>
@@ -1360,7 +1407,7 @@ function DiaryScreen({ user }) {
       {editingEntry && (
         <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: "flex-end" }} onClick={() => setEditingEntry(null)}>
           <div onClick={e => e.stopPropagation()} style={{ background: C.white, borderRadius: "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: 390, margin: "0 auto", maxHeight: "80vh", overflowY: "auto" }}>
-            <EntryForm data={editDraft} onChange={setEditDraft} onSave={saveEdit} onCancel={() => setEditingEntry(null)} saving={savingEdit} title="Editar entrada" />
+            <DiaryEntryForm data={editDraft} onChange={setEditDraft} onSave={saveEdit} onCancel={() => setEditingEntry(null)} saving={savingEdit} title="Editar entrada" />
           </div>
         </div>
       )}
@@ -1377,7 +1424,7 @@ function DiaryScreen({ user }) {
 
       <div style={{ flex: 1, overflowY: "auto", padding: "0 22px", paddingBottom: 90 }}>
         {writing && (
-          <EntryForm data={draft} onChange={setDraft} onSave={saveEntry} onCancel={() => setWriting(false)} saving={saving} title="Nueva entrada" />
+          <DiaryEntryForm data={draft} onChange={setDraft} onSave={saveEntry} onCancel={() => setWriting(false)} saving={saving} title="Nueva entrada" />
         )}
         {loadingEntries ? (
           <p style={{ textAlign: "center", color: C.slateLight, fontSize: 13, marginTop: 32 }}>Cargando entradas...</p>
