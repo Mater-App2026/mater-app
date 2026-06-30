@@ -86,6 +86,15 @@ const Icon = ({ name, size = 22, color = "currentColor" }) => {
   );
 };
 
+function shareContent(text, title = "Mater") {
+  if (navigator.share) {
+    navigator.share({ title, text, url: "https://materapp.org" });
+  } else {
+    const encoded = encodeURIComponent(text + "\n\nhttps://materapp.org");
+    window.open("https://wa.me/?text=" + encoded, "_blank");
+  }
+}
+
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600;700&display=swap');
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -834,12 +843,20 @@ function HomeScreen({ user, profile, onTabChange }) {
                 </div>
               </>
             )}
-            <button
-              onClick={() => { markPracticeDone(openCard); setOpenCard(null); }}
-              style={{ width: "100%", marginTop: 28, padding: "14px", background: `linear-gradient(135deg, ${C.navy}, ${C.blue})`, border: "none", borderRadius: 14, color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}
-            >
-              Amén ✓
-            </button>
+            <div style={{ display: "flex", gap: 10, marginTop: 28 }}>
+              <button
+                onClick={() => shareContent(practiceAIContent[openCard]?.cita || practiceContent[openCard]?.saintQuote || "", "Reflexión de Mater 🙏")}
+                style={{ padding: "14px", background: C.iceBlue, border: "none", borderRadius: 14, color: C.navy, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif", display: "flex", alignItems: "center", gap: 6 }}
+              >
+                📤
+              </button>
+              <button
+                onClick={() => { markPracticeDone(openCard); setOpenCard(null); }}
+                style={{ flex: 1, padding: "14px", background: `linear-gradient(135deg, ${C.navy}, ${C.blue})`, border: "none", borderRadius: 14, color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}
+              >
+                Amén ✓
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -861,7 +878,12 @@ function HomeScreen({ user, profile, onTabChange }) {
         </div>
 
         <div style={{ marginTop: 20, borderRadius: 12, background: C.navy, padding: "20px 22px", color: C.cream, borderLeft: `3px solid ${C.gold}` }}>
-          <p style={{ fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", opacity: 0.6, margin: "0 0 10px" }}>Versículo del día</p>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+            <p style={{ fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", opacity: 0.6, margin: 0 }}>Versículo del día</p>
+            <button onClick={() => shareContent(dailyVerse?.text + " — " + dailyVerse?.ref + "\n\nCompartido desde Mater 🙏")} style={{ background: "rgba(255,255,255,0.15)", border: "none", borderRadius: 8, padding: "4px 10px", color: C.cream, fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+              <span>📤</span> Compartir
+            </button>
+          </div>
           <p style={{ fontSize: 15, lineHeight: 1.7, fontStyle: "italic", margin: "0 0 10px", fontFamily: "'Cormorant Garamond', serif" }}>{dailyVerse?.text}</p>
           <p style={{ fontSize: 10, opacity: 0.6, margin: 0, letterSpacing: "0.06em" }}>{dailyVerse?.ref}</p>
         </div>
@@ -1353,11 +1375,19 @@ function PlanScreen({ user }) {
                     </div>
                   ))}
                 </div>
-                <button
-                  onClick={() => { toggleDay(activeWeek, openDay); setOpenDay(null); setDayContent(null); }}
-                  style={{ width: "100%", padding: "14px", background: progress[`${activeWeek}-${openDay}`] ? C.mist : `linear-gradient(135deg, ${C.navy}, ${C.blue})`, border: "none", borderRadius: 14, color: progress[`${activeWeek}-${openDay}`] ? C.inkMid : "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
-                  {progress[`${activeWeek}-${openDay}`] ? "✓ Completado" : "Amén ✓ — Marcar como hecho"}
-                </button>
+                <div style={{ display: "flex", gap: 10 }}>
+                  <button
+                    onClick={() => shareContent(dayContent?.cita + "\n\n" + dayContent?.santo + "\n\nCompartido desde Mater 🙏", "Reflexión de Mater")}
+                    style={{ padding: "14px", background: C.iceBlue, border: "none", borderRadius: 14, color: C.navy, fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}
+                  >
+                    📤
+                  </button>
+                  <button
+                    onClick={() => { toggleDay(activeWeek, openDay); setOpenDay(null); setDayContent(null); }}
+                    style={{ flex: 1, padding: "14px", background: progress[`${activeWeek}-${openDay}`] ? C.mist : `linear-gradient(135deg, ${C.navy}, ${C.blue})`, border: "none", borderRadius: 14, color: progress[`${activeWeek}-${openDay}`] ? C.inkMid : "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+                    {progress[`${activeWeek}-${openDay}`] ? "✓ Completado" : "Amén ✓ — Marcar como hecho"}
+                  </button>
+                </div>
               </>
             ) : null}
           </div>
