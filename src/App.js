@@ -95,6 +95,53 @@ function shareContent(text, title = "Mater") {
   }
 }
 
+// ─── Notificaciones de práctica diaria ─────────────────────────────────────
+const PRACTICE_NAMES = ["Oración de la mañana", "Lectio Divina", "Examen de conciencia"];
+const PRACTICE_MESSAGES = [
+  "🙏 Es momento de tu oración de la mañana. Comienza el día con Dios.",
+  "📖 Tu Lectio Divina te espera. Deja que la Palabra de hoy te hable.",
+  "🌙 Termina el día con el Examen de conciencia. Revisa tu jornada con Dios."
+];
+
+async function requestNotificationPermission() {
+  if (!("Notification" in window)) return false;
+  if (Notification.permission === "granted") return true;
+  if (Notification.permission === "denied") return false;
+  const result = await Notification.requestPermission();
+  return result === "granted";
+}
+
+function scheduleNotifications(times) {
+  // Limpiar timers anteriores
+  if (window._materNotifTimers) {
+    window._materNotifTimers.forEach(t => clearTimeout(t));
+  }
+  window._materNotifTimers = [];
+
+  if (Notification.permission !== "granted") return;
+
+  times.forEach((time, index) => {
+    if (!time) return;
+    const [hours, minutes] = time.split(":").map(Number);
+    const now = new Date();
+    let target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes, 0);
+    if (target <= now) {
+      target.setDate(target.getDate() + 1);
+    }
+    const delay = target.getTime() - now.getTime();
+    const timer = setTimeout(() => {
+      new Notification("Mater 🙏 " + PRACTICE_NAMES[index], {
+        body: PRACTICE_MESSAGES[index],
+        icon: "/logo.jpeg",
+        badge: "/logo.jpeg",
+      });
+      // Reprogramar para el día siguiente
+      scheduleNotifications(times);
+    }, delay);
+    window._materNotifTimers.push(timer);
+  });
+}
+
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600;700&display=swap');
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -1649,6 +1696,40 @@ function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDa
   const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url || null);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const fileInputRef = useRef(null);
+  const [notifTimes, setNotifTimes] = useState(() => {
+    const saved = localStorage.getItem("mater_notif_times");
+    return saved ? JSON.parse(saved) : ["07:00", "12:00", "21:00"];
+  });
+  const [notifEnabled, setNotifEnabled] = useState(() => localStorage.getItem("mater_notif_enabled") === "true");
+  const [notifStatus, setNotifStatus] = useState("");
+
+  async function toggleNotifications() {
+    if (!notifEnabled) {
+      const granted = await requestNotificationPermission();
+      if (granted) {
+        setNotifEnabled(true);
+        localStorage.setItem("mater_notif_enabled", "true");
+        scheduleNotifications(notifTimes);
+        setNotifStatus("✓ Notificaciones activadas");
+        setTimeout(() => setNotifStatus(""), 3000);
+      } else {
+        setNotifStatus("Permiso denegado. Actívalo en la configuración del navegador.");
+        setTimeout(() => setNotifStatus(""), 4000);
+      }
+    } else {
+      setNotifEnabled(false);
+      localStorage.setItem("mater_notif_enabled", "false");
+      if (window._materNotifTimers) window._materNotifTimers.forEach(t => clearTimeout(t));
+    }
+  }
+
+  function updateNotifTime(index, value) {
+    const newTimes = [...notifTimes];
+    newTimes[index] = value;
+    setNotifTimes(newTimes);
+    localStorage.setItem("mater_notif_times", JSON.stringify(newTimes));
+    if (notifEnabled) scheduleNotifications(newTimes);
+  }
 
   async function uploadAvatar(e) {
     const file = e.target.files[0];
@@ -1749,15 +1830,65 @@ function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDa
               <Icon name="chevron" size={14} color={C.mist} />
             </button>
           ))}
-          <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 16px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 16px", borderBottom: "1px solid " + C.mist }}>
             <Icon name="moon" size={15} color={C.inkLight} />
             <span style={{ fontSize: 13, color: C.ink, flex: 1 }}>Modo oscuro</span>
             <button onClick={toggleDarkMode} style={{ width: 44, height: 26, borderRadius: 13, border: "none", background: darkMode ? C.navy : C.mist, cursor: "pointer", position: "relative", transition: "background 0.3s" }}>
               <div style={{ width: 20, height: 20, borderRadius: "50%", background: "#fff", position: "absolute", top: 3, left: darkMode ? 21 : 3, transition: "left 0.3s" }} />
             </button>
           </div>
+          <button onClick={() => setActiveModal("notifications")} style={{ width: "100%", display: "flex", alignItems: "center", gap: 14, padding: "14px 16px", border: "none", background: "transparent", cursor: "pointer", textAlign: "left" }}>
+            <Icon name="bell" size={15} color={C.inkLight} />
+            <span style={{ fontSize: 13, color: C.ink, flex: 1 }}>Recordatorios diarios</span>
+            <Icon name="chevron" size={14} color={C.mist} />
+          </button>
         </div>
       </div>
+
+      {/* Notifications modal */}
+      {activeModal === "notifications" && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 300, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: "flex-end" }} onClick={() => setActiveModal(null)}>
+          <div onClick={e => e.stopPropagation()} style={{ background: C.white, borderRadius: "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: 390, margin: "0 auto", maxHeight: "80vh", overflowY: "auto" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+              <h2 style={{ fontSize: 18, fontWeight: 800, color: C.ink, margin: 0 }}>🔔 Recordatorios diarios</h2>
+              <button onClick={() => setActiveModal(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: C.iceBlue, borderRadius: 14, padding: "14px 16px", marginBottom: 20 }}>
+              <div>
+                <p style={{ fontSize: 13, fontWeight: 700, color: C.ink, margin: 0 }}>Activar notificaciones</p>
+                <p style={{ fontSize: 11, color: C.slateLight, margin: "2px 0 0" }}>Recibe avisos para tus 3 prácticas</p>
+              </div>
+              <button onClick={toggleNotifications} style={{ width: 48, height: 28, borderRadius: 14, border: "none", background: notifEnabled ? C.navy : C.mist, cursor: "pointer", position: "relative", flexShrink: 0 }}>
+                <div style={{ width: 22, height: 22, borderRadius: "50%", background: "#fff", position: "absolute", top: 3, left: notifEnabled ? 23 : 3, transition: "left 0.3s" }} />
+              </button>
+            </div>
+
+            {notifStatus && <p style={{ fontSize: 12, color: notifStatus.includes("✓") ? C.blue : "#C0392B", textAlign: "center", marginBottom: 16 }}>{notifStatus}</p>}
+
+            <p style={{ fontSize: 11, fontWeight: 700, color: C.slateLight, letterSpacing: "0.08em", textTransform: "uppercase", margin: "0 0 14px" }}>Elige tus horarios</p>
+
+            {PRACTICE_NAMES.map((name, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 0", borderBottom: i < 2 ? "1px solid " + C.mist : "none" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <Icon name={i === 0 ? "moon" : i === 1 ? "book" : "heart"} size={16} color={C.blue} />
+                  <span style={{ fontSize: 13, color: C.ink }}>{name}</span>
+                </div>
+                <input
+                  type="time"
+                  value={notifTimes[i]}
+                  onChange={e => updateNotifTime(i, e.target.value)}
+                  style={{ border: "1px solid " + C.mist, borderRadius: 8, padding: "6px 10px", fontSize: 13, color: C.ink, background: C.fog, fontFamily: "'DM Sans', system-ui, sans-serif" }}
+                />
+              </div>
+            ))}
+
+            <p style={{ fontSize: 11, color: C.slateLight, marginTop: 20, lineHeight: 1.6, textAlign: "center" }}>
+              En iPhone, instala Mater en tu pantalla de inicio (Compartir → Añadir a inicio) para recibir notificaciones.
+            </p>
+          </div>
+        </div>
+      )}
 
       <div style={{ padding: "16px 22px 0" }}>
         <button onClick={() => {
@@ -1825,6 +1956,14 @@ export default function App() {
     });
 
     return () => subscription.unsubscribe();
+  }, []);
+
+  // Reprogramar notificaciones si ya estaban activadas
+  useEffect(() => {
+    if (localStorage.getItem("mater_notif_enabled") === "true" && Notification.permission === "granted") {
+      const times = JSON.parse(localStorage.getItem("mater_notif_times") || '["07:00","12:00","21:00"]');
+      scheduleNotifications(times);
+    }
   }, []);
 
   async function loadProfile(userId) {
