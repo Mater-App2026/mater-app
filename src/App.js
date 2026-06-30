@@ -1861,21 +1861,25 @@ export default function App() {
     );
   }
 
-  const T = darkMode ? DARK : C;
-
   const phone = {
     width: "100%", maxWidth: 390, minHeight: "100vh",
     margin: "0 auto",
     fontFamily: "'DM Sans', system-ui, sans-serif",
     position: "relative",
     display: "flex", flexDirection: "column",
-    background: darkMode ? DARK.iceBlue : C.iceBlue,
+    background: C.iceBlue,
+    filter: darkMode ? "invert(1) hue-rotate(180deg)" : "none",
   };
+
+  const imgFix = darkMode ? `
+    .phone-dark img, .phone-dark video { filter: invert(1) hue-rotate(180deg); }
+  ` : "";
 
   return (
     <>
       <style>{globalStyles}</style>
-      <div style={phone}>
+      <style>{imgFix}</style>
+      <div style={phone} className={darkMode ? "phone-dark" : ""}>
         {screen === "landing" && <LandingScreen onEnter={() => setScreen("onboarding")} />}
         {screen === "onboarding" && <OnboardingScreen onComplete={handleOnboardingComplete} />}
         {screen === "auth" && <AuthScreen onAuth={() => setScreen("app")} />}
