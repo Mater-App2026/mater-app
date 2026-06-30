@@ -315,6 +315,8 @@ function HomeScreen({ user, profile, onTabChange }) {
   const [saintOfDay, setSaintOfDay] = useState(null);
   const [loadingSaint, setLoadingSaint] = useState(false);
   const [saintOpen, setSaintOpen] = useState(false);
+  const [worldIntention, setWorldIntention] = useState(null);
+  const [intentionOpen, setIntentionOpen] = useState(false);
   const [practiceAIContent, setPracticeAIContent] = useState({});
   const [loadingPractice, setLoadingPractice] = useState(false);
   const practiceCache = useRef({});
@@ -400,6 +402,7 @@ function HomeScreen({ user, profile, onTabChange }) {
     loadStreak();
     loadPractices();
     fetchSaintOfDay();
+    fetchWorldIntention();
   }, [user]);
 
   async function fetchSaintOfDay() {
@@ -598,6 +601,40 @@ function HomeScreen({ user, profile, onTabChange }) {
     const laudesIdx = weekDay === 0 ? 6 : weekDay - 1; // convertir a índice del array
     const rotationIdx = index === 0 ? laudesIdx : dayOfYear % arr.length;
     return arr[rotationIdx % arr.length];
+  }
+
+  async function fetchWorldIntention() {
+    const cacheKey = "intention-" + new Date().toDateString();
+    const cached = sessionStorage.getItem(cacheKey);
+    if (cached) { setWorldIntention(JSON.parse(cached)); return; }
+    try {
+      const today = new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-6",
+          max_tokens: 800,
+          system: "Eres un asistente de oracion catolico. Conoces las situaciones actuales del mundo que necesitan intercesion. Respondes SOLO en JSON valido sin bloques de codigo.",
+          messages: [{ role: "user", content: "Hoy es " + today + ". Dame UNA situacion real y urgente en el mundo que necesite oracion hoy (puede ser un conflicto, desastre natural, crisis humanitaria, situacion de injusticia, etc.). Elige algo que este ocurriendo actualmente o recientemente. Responde SOLO con JSON: {titulo: 'titulo corto', lugar: 'pais o region', descripcion: 'descripcion breve de la situacion en 2 oraciones', oracion: 'oracion de intercesion de 4-5 lineas por esta situacion', emoji: 'un emoji que represente la situacion', color1: 'color hex oscuro para gradiente', color2: 'color hex medio para gradiente'}" }],
+        }),
+      });
+      const data = await res.json();
+      const text = data.content?.map(b => b.text || "").join("") || "{}";
+      const parsed = JSON.parse(text.replace(/```json|```/g, "").trim());
+      sessionStorage.setItem(cacheKey, JSON.stringify(parsed));
+      setWorldIntention(parsed);
+    } catch {
+      setWorldIntention({
+        titulo: "Paz en el mundo",
+        lugar: "Zonas de conflicto",
+        descripcion: "Millones de personas en el mundo viven bajo la amenaza de conflictos armados, desplazamiento forzado y crisis humanitarias. Sus vidas están marcadas por el sufrimiento y la incertidumbre.",
+        oracion: "Señor de la paz, te pedimos por todos los que sufren a causa de la guerra y la violencia. Convierte los corazones de quienes promueven el odio. Fortalece a quienes trabajan por la reconciliación. Que tu paz, que supera todo entendimiento, reine en cada rincón del mundo. Amén.",
+        emoji: "🕊️",
+        color1: "#1a3a5c",
+        color2: "#2d6a8f"
+      });
+    }
   }
 
   async function fetchPracticeContent(index, practiceLabel, practiceSub) {
@@ -904,6 +941,41 @@ function HomeScreen({ user, profile, onTabChange }) {
             );
           })}
         </div>
+      </div>
+
+      {/* Intención del mundo */}
+      <div style={{ padding: "22px 22px 0" }}>
+        {intentionOpen && worldIntention && (
+          <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: "flex-end" }} onClick={() => setIntentionOpen(false)}>
+            <div onClick={e => e.stopPropagation()} style={{ background: C.white, borderRadius: "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: 390, margin: "0 auto", maxHeight: "85vh", overflowY: "auto" }}>
+              <div style={{ borderRadius: 16, background: "linear-gradient(135deg, " + (worldIntention.color1 || "#1a3a5c") + ", " + (worldIntention.color2 || "#2d6a8f") + ")", padding: "20px", marginBottom: 20, textAlign: "center" }}>
+                <p style={{ fontSize: 40, margin: "0 0 8px" }}>{worldIntention.emoji}</p>
+                <p style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 4px" }}>{worldIntention.lugar}</p>
+                <p style={{ fontSize: 18, fontWeight: 800, color: "#fff", margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>{worldIntention.titulo}</p>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                <p style={{ fontSize: 10, color: C.gold, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>Intencion del mundo</p>
+                <button onClick={() => setIntentionOpen(false)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>x</button>
+              </div>
+              <p style={{ fontSize: 13, color: C.inkMid, lineHeight: 1.8, margin: "0 0 20px" }}>{worldIntention.descripcion}</p>
+              <div style={{ background: C.iceBlue, borderRadius: 14, padding: "16px", borderLeft: "3px solid " + (worldIntention.color1 || C.navy) }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: worldIntention.color1 || C.navy, margin: "0 0 10px", letterSpacing: "0.08em", textTransform: "uppercase" }}>Oracion de intercesion</p>
+                <p style={{ fontSize: 13, fontStyle: "italic", color: C.inkMid, lineHeight: 1.8, margin: 0 }}>{worldIntention.oracion}</p>
+              </div>
+            </div>
+          </div>
+        )}
+        <button onClick={() => setIntentionOpen(true)} style={{ width: "100%", borderRadius: 16, overflow: "hidden", cursor: "pointer", border: "none", padding: 0, textAlign: "left" }}>
+          <div style={{ background: "linear-gradient(135deg, " + (worldIntention && worldIntention.color1 ? worldIntention.color1 : "#1a3a5c") + ", " + (worldIntention && worldIntention.color2 ? worldIntention.color2 : "#2d6a8f") + ")", padding: "16px 18px", display: "flex", alignItems: "center", gap: 14 }}>
+            <span style={{ fontSize: 28, flexShrink: 0 }}>{worldIntention ? worldIntention.emoji : "🌍"}</span>
+            <div style={{ flex: 1 }}>
+              <p style={{ fontSize: 10, color: "rgba(255,255,255,0.7)", letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 2px" }}>Intencion del mundo</p>
+              <p style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>{worldIntention ? worldIntention.titulo : "Cargando..."}</p>
+              {worldIntention && <p style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", margin: "2px 0 0" }}>{worldIntention.lugar}</p>}
+            </div>
+            <Icon name="chevron" size={18} color="rgba(255,255,255,0.7)" />
+          </div>
+        </button>
       </div>
 
       <div style={{ padding: "22px 22px 0" }}>
