@@ -23,6 +23,26 @@ const C = {
   cream: "#F7F4EE",
 };
 
+const DARK = {
+  navy: "#4A7AB5",
+  blue: "#5A8AC0",
+  sky: "#7EA8D8",
+  periwinkle: "#8BA3C7",
+  mist: "#2A3A4A",
+  iceBlue: "#151E2A",
+  fog: "#1A2330",
+  gold: "#D4A855",
+  goldLight: "#E8C870",
+  ink: "#E8F0F8",
+  inkMid: "#B0C4D8",
+  inkLight: "#7A95B0",
+  slate: "#7A95B0",
+  slateLight: "#5A7890",
+  teal: "#5AAABB",
+  white: "#1E2A38",
+  cream: "#1A2535",
+};
+
 const gradients = {
   home: "#EEF2F7",
   chat: "#EBF0F7",
@@ -273,7 +293,8 @@ function AuthScreen({ onAuth }) {
   );
 }
 
-function NavBar({ active, onChange }) {
+function NavBar({ active, onChange, darkMode }) {
+  const T = darkMode ? DARK : C;
   const tabs = [
     { id: "home", icon: "home", label: "Inicio" },
     { id: "chat", icon: "chat", label: "Mater" },
@@ -285,7 +306,7 @@ function NavBar({ active, onChange }) {
     <div style={{
       position: "fixed", bottom: 0, left: "50%", transform: "translateX(-50%)",
       width: "100%", maxWidth: 390,
-      background: C.white, borderTop: `1px solid ${C.mist}`,
+      background: T.white, borderTop: `1px solid ${T.mist}`,
       display: "flex", zIndex: 100,
       paddingBottom: "env(safe-area-inset-bottom, 0px)",
     }}>
@@ -293,10 +314,10 @@ function NavBar({ active, onChange }) {
         <button key={t.id} onClick={() => onChange(t.id)} style={{
           flex: 1, display: "flex", flexDirection: "column", alignItems: "center",
           gap: 3, padding: "10px 4px 8px", border: "none", background: "transparent",
-          color: active === t.id ? C.navy : C.inkLight, cursor: "pointer",
+          color: active === t.id ? T.navy : T.inkLight, cursor: "pointer",
           transition: "color 0.15s",
         }}>
-          <Icon name={t.icon} size={20} color={active === t.id ? C.navy : C.inkLight} />
+          <Icon name={t.icon} size={20} color={active === t.id ? T.navy : T.inkLight} />
           <span style={{ fontSize: 9, fontWeight: active === t.id ? 700 : 400, letterSpacing: "0.04em", fontFamily: "'DM Sans', system-ui, sans-serif" }}>{t.label}</span>
         </button>
       ))}
@@ -1581,7 +1602,7 @@ function DiaryScreen({ user }) {
   );
 }
 
-function ProfileScreen({ user, profile, setProfile, onLogout }) {
+function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDarkMode }) {
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(profile?.name || "");
   const [saving, setSaving] = useState(false);
@@ -1684,12 +1705,19 @@ function ProfileScreen({ user, profile, setProfile, onLogout }) {
             { label: "Editar nombre", icon: "edit", action: () => setEditing(true) },
             { label: "Acerca de Mater", icon: "heart", action: () => setActiveModal("about") },
           ].map((item, i, arr) => (
-            <button key={i} onClick={item.action} style={{ width: "100%", display: "flex", alignItems: "center", gap: 14, padding: "14px 16px", border: "none", background: "transparent", borderBottom: i < arr.length - 1 ? `1px solid ${C.mist}` : "none", cursor: "pointer", textAlign: "left" }}>
+            <button key={i} onClick={item.action} style={{ width: "100%", display: "flex", alignItems: "center", gap: 14, padding: "14px 16px", border: "none", background: "transparent", borderBottom: "1px solid " + C.mist, cursor: "pointer", textAlign: "left" }}>
               <Icon name={item.icon} size={15} color={C.inkLight} />
               <span style={{ fontSize: 13, color: C.ink, flex: 1 }}>{item.label}</span>
               <Icon name="chevron" size={14} color={C.mist} />
             </button>
           ))}
+          <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 16px" }}>
+            <Icon name="moon" size={15} color={C.inkLight} />
+            <span style={{ fontSize: 13, color: C.ink, flex: 1 }}>Modo oscuro</span>
+            <button onClick={toggleDarkMode} style={{ width: 44, height: 26, borderRadius: 13, border: "none", background: darkMode ? C.navy : C.mist, cursor: "pointer", position: "relative", transition: "background 0.3s" }}>
+              <div style={{ width: 20, height: 20, borderRadius: "50%", background: "#fff", position: "absolute", top: 3, left: darkMode ? 21 : 3, transition: "left 0.3s" }} />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -1723,6 +1751,15 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loadingAuth, setLoadingAuth] = useState(true);
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem("mater_dark_mode") === "true");
+
+  function toggleDarkMode() {
+    setDarkMode(prev => {
+      const next = !prev;
+      localStorage.setItem("mater_dark_mode", String(next));
+      return next;
+    });
+  }
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -1786,13 +1823,15 @@ export default function App() {
     );
   }
 
+  const T = darkMode ? DARK : C;
+
   const phone = {
     width: "100%", maxWidth: 390, minHeight: "100vh",
     margin: "0 auto",
     fontFamily: "'DM Sans', system-ui, sans-serif",
     position: "relative",
     display: "flex", flexDirection: "column",
-    background: C.iceBlue,
+    background: darkMode ? DARK.iceBlue : C.iceBlue,
   };
 
   return (
@@ -1804,12 +1843,12 @@ export default function App() {
         {screen === "auth" && <AuthScreen onAuth={() => setScreen("app")} />}
         {screen === "app" && user && (
           <>
-            {activeTab === "home" && <HomeScreen user={user} profile={profile} onTabChange={setActiveTab} />}
-            {activeTab === "chat" && <ChatScreen user={user} />}
-            {activeTab === "plan" && <PlanScreen user={user} />}
-            {activeTab === "diary" && <DiaryScreen user={user} />}
-            {activeTab === "profile" && <ProfileScreen user={user} profile={profile} setProfile={setProfile} onLogout={handleLogout} />}
-            <NavBar active={activeTab} onChange={setActiveTab} />
+            {activeTab === "home" && <HomeScreen user={user} profile={profile} onTabChange={setActiveTab} darkMode={darkMode} />}
+            {activeTab === "chat" && <ChatScreen user={user} darkMode={darkMode} />}
+            {activeTab === "plan" && <PlanScreen user={user} darkMode={darkMode} />}
+            {activeTab === "diary" && <DiaryScreen user={user} darkMode={darkMode} />}
+            {activeTab === "profile" && <ProfileScreen user={user} profile={profile} setProfile={setProfile} onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
+            <NavBar active={activeTab} onChange={setActiveTab} darkMode={darkMode} />
           </>
         )}
       </div>
