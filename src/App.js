@@ -676,7 +676,7 @@ function HomeScreen({ user, profile, onTabChange }) {
     // Array: 0=Lun, 1=Mar, 2=Mié, 3=Jue, 4=Vie, 5=Sáb, 6=Dom
     const weekDay = new Date().getDay(); // 0=Dom...6=Sáb
     const laudesIdx = weekDay === 0 ? 6 : weekDay - 1; // convertir a índice del array
-    const rotationIdx = index === 0 ? laudesIdx : dayOfYear % arr.length;
+    const rotationIdx = (index === 0 || index === 2) ? laudesIdx : dayOfYear % arr.length;
     return arr[rotationIdx % arr.length];
   }
 
