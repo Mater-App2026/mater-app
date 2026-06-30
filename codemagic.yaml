@@ -1,0 +1,47 @@
+workflows:
+  ios-capacitor-workflow:
+    name: Mater iOS Build
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: codemagic_ios_signing
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: org.materapp.app
+      vars:
+        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
+        XCODE_SCHEME: "App"
+      node: 20.11.0
+    scripts:
+      - name: Install npm dependencies
+        script: |
+          npm install
+      - name: Install Capacitor dependencies
+        script: |
+          npm install @capacitor/core @capacitor/cli @capacitor/ios
+      - name: Build React app
+        script: |
+          npm run build
+      - name: Sync Capacitor
+        script: |
+          npx cap sync ios
+      - name: Set up code signing
+        script: |
+          xcode-project use-profiles
+      - name: Install CocoaPods dependencies
+        script: |
+          find . -name "Podfile" -execdir pod install \;
+      - name: Build ipa for App Store distribution
+        script: |
+          xcode-project build-ipa \
+            --workspace "$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false
