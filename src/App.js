@@ -603,38 +603,22 @@ function HomeScreen({ user, profile, onTabChange }) {
     return arr[rotationIdx % arr.length];
   }
 
-  async function fetchWorldIntention() {
-    const cacheKey = "intention-" + new Date().toDateString();
-    const cached = sessionStorage.getItem(cacheKey);
-    if (cached) { setWorldIntention(JSON.parse(cached)); return; }
-    try {
-      const today = new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-6",
-          max_tokens: 800,
-          system: "Eres un asistente de oracion catolico. Conoces las situaciones actuales del mundo que necesitan intercesion. Respondes SOLO en JSON valido sin bloques de codigo.",
-          messages: [{ role: "user", content: "Hoy es " + today + ". Dame UNA situacion real y urgente en el mundo que necesite oracion hoy (puede ser un conflicto, desastre natural, crisis humanitaria, situacion de injusticia, etc.). Elige algo que este ocurriendo actualmente o recientemente. Responde SOLO con JSON: {titulo: 'titulo corto', lugar: 'pais o region', descripcion: 'descripcion breve de la situacion en 2 oraciones', oracion: 'oracion de intercesion de 4-5 lineas por esta situacion', emoji: 'un emoji que represente la situacion', color1: 'color hex oscuro para gradiente', color2: 'color hex medio para gradiente'}" }],
-        }),
-      });
-      const data = await res.json();
-      const text = data.content?.map(b => b.text || "").join("") || "{}";
-      const parsed = JSON.parse(text.replace(/```json|```/g, "").trim());
-      sessionStorage.setItem(cacheKey, JSON.stringify(parsed));
-      setWorldIntention(parsed);
-    } catch {
-      setWorldIntention({
-        titulo: "Paz en el mundo",
-        lugar: "Zonas de conflicto",
-        descripcion: "Millones de personas en el mundo viven bajo la amenaza de conflictos armados, desplazamiento forzado y crisis humanitarias. Sus vidas están marcadas por el sufrimiento y la incertidumbre.",
-        oracion: "Señor de la paz, te pedimos por todos los que sufren a causa de la guerra y la violencia. Convierte los corazones de quienes promueven el odio. Fortalece a quienes trabajan por la reconciliación. Que tu paz, que supera todo entendimiento, reine en cada rincón del mundo. Amén.",
-        emoji: "🕊️",
-        color1: "#1a3a5c",
-        color2: "#2d6a8f"
-      });
-    }
+  function fetchWorldIntention() {
+    // Las intenciones duran una semana — se actualiza manualmente cada semana
+    const weeklyIntentions = [
+      {
+        titulo: "Terremoto en Venezuela",
+        lugar: "Venezuela",
+        descripcion: "Un terremoto de magnitud 7.3 sacudió el norte de Venezuela, afectando a miles de familias que perdieron sus hogares y seres queridos. Las comunidades más vulnerables enfrentan escasez de agua, alimentos y atención médica en medio de la tragedia.",
+        oracion: "Señor de la vida, te pedimos por las víctimas del terremoto en Venezuela. Consuela a quienes lloran a sus seres queridos, fortalece a los equipos de rescate y auxilio, y abre los corazones de quienes pueden ayudar. Que la Virgen del Valle, Patrona de Venezuela, interceda por su pueblo sufriente. Amén.",
+        emoji: "🙏",
+        color1: "#6b2c2c",
+        color2: "#8f4a2d"
+      },
+    ];
+
+    // Usar la primera intención de la lista (se actualiza manualmente cada semana)
+    setWorldIntention(weeklyIntentions[0]);
   }
 
   async function fetchPracticeContent(index, practiceLabel, practiceSub) {
