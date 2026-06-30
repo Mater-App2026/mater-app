@@ -447,9 +447,9 @@ function HomeScreen({ user, profile, onTabChange }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-sonnet-4-6",
-          max_tokens: 1000,
-          system: "Eres un experto en hagiografia catolica. Conoces el calendario de santos de la Iglesia Catolica. Respondes SOLO en JSON valido sin bloques de codigo.",
-          messages: [{ role: "user", content: "Hoy es " + today + ". Dame el santo o beato que se celebra hoy segun el calendario catolico. Responde SOLO con JSON: {nombre: 'nombre completo del santo', fecha: 'dia y mes', historia: 'historia breve de 3 parrafos sobre su vida y virtudes destacadas', oracion: 'oracion corta de 3-4 lineas dirigida al santo pidiendo su intercesion', dato: 'un dato curioso o poco conocido sobre este santo'}" }],
+          max_tokens: 1200,
+          system: "Eres un experto en hagiografia catolica con rigor academico. Tu fuente de referencia es el Martirologio Romano y el calendario oficial de la Conferencia Episcopal, asi como sitios catolicos reconocidos como vatican.va, catholic.org, aciprensa.com y franciscanmedia.org. SOLO incluyes datos historicos verificables y ampliamente documentados sobre la vida de los santos. Si no estas completamente seguro de un dato especifico (fechas exactas, citas textuales, detalles menores), omites ese dato en lugar de inventarlo. Nunca inventas citas textuales que no esten bien documentadas. Respondes SOLO en JSON valido sin bloques de codigo.",
+          messages: [{ role: "user", content: "Hoy es " + today + " segun el calendario gregoriano. Dame el santo o beato principal que la Iglesia Catolica celebra hoy segun el Martirologio Romano. Usa SOLO informacion historica verificada y ampliamente documentada — no inventes detalles. Si hay incertidumbre historica sobre algun aspecto de su vida, menciona esa incertidumbre en lugar de inventar certeza. Responde SOLO con JSON: {nombre: 'nombre completo y titulo oficial del santo', fecha: 'dia y mes de su fiesta liturgica', siglo: 'siglo o periodo historico en que vivio', historia: 'historia verificada de 3 parrafos sobre su vida, basada en hechos historicos documentados y su significado para la Iglesia', oracion: 'oracion tradicional o composicion respetuosa de intercesion de 3-4 lineas', dato: 'un dato historico verificable y bien documentado sobre este santo, no una curiosidad inventada'}" }],
         }),
       });
       const data = await res.json();
@@ -896,6 +896,7 @@ function HomeScreen({ user, profile, onTabChange }) {
                 <div>
                   <p style={{ fontSize: 10, color: C.gold, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 4px" }}>✨ Santo del día</p>
                   <p style={{ fontSize: 18, fontWeight: 800, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>{saintOfDay.nombre}</p>
+                  {saintOfDay.siglo && <p style={{ fontSize: 11, color: C.slateLight, margin: "2px 0 0" }}>{saintOfDay.siglo}</p>}
                 </div>
                 <button onClick={() => setSaintOpen(false)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
               </div>
