@@ -175,9 +175,9 @@ function scheduleNotifications(times) {
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600;700&display=swap');
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { margin: 0; padding: 0; background: ${C.iceBlue}; overflow-x: hidden; }
+  html, body { margin: 0; padding: 0; background: ${C.iceBlue}; overflow: hidden; height: 100%; overscroll-behavior: none; }
   body { padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right); }
-  #root { min-height: 100vh; }
+  #root { height: 100%; }
   img { max-width: 100%; }
   @keyframes pulse { 0%,100%{opacity:0.3;transform:scale(0.8)} 50%{opacity:1;transform:scale(1.1)} }
   @keyframes spin { to { transform: rotate(360deg); } }
@@ -186,7 +186,7 @@ const globalStyles = `
 
 function LandingScreen({ onEnter }) {
   return (
-    <div style={{ flex: 1, background: C.iceBlue, display: "flex", flexDirection: "column", padding: "0 0 40px" }}>
+    <div style={{ flex: 1, overflowY: "auto", background: C.iceBlue, display: "flex", flexDirection: "column", padding: "0 0 40px" }}>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "40px 32px", textAlign: "center" }}>
         <div style={{ width: 80, height: 80, borderRadius: 20, overflow: "hidden", border: "1px solid " + C.mist, marginBottom: 24 }}>
           <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -246,7 +246,7 @@ function OnboardingScreen({ onComplete }) {
   }
 
   return (
-    <div style={{ flex: 1, background: C.iceBlue, display: "flex", flexDirection: "column", padding: "0 0 40px" }}>
+    <div style={{ flex: 1, overflowY: "auto", background: C.iceBlue, display: "flex", flexDirection: "column", padding: "0 0 40px" }}>
       <div style={{ display: "flex", justifyContent: "center", gap: 6, padding: "60px 0 0" }}>
         {steps.map((_, i) => (
           <div key={i} style={{ width: i === step ? 20 : 6, height: 6, borderRadius: 3, background: i === step ? C.navy : C.mist, transition: "all 0.3s" }} />
@@ -355,7 +355,7 @@ function AuthScreen({ onAuth }) {
   };
 
   return (
-    <div style={{ flex: 1, background: gradients.auth, display: "flex", flexDirection: "column", justifyContent: "center", padding: "2rem 1.5rem" }}>
+    <div style={{ flex: 1, overflowY: "auto", background: gradients.auth, display: "flex", flexDirection: "column", justifyContent: "center", padding: "2rem 1.5rem" }}>
       <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
         <div style={{ width: 72, height: 72, borderRadius: 22, margin: "0 auto 1rem", overflow: "hidden", boxShadow: `0 8px 28px ${C.navy}44` }}>
           <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -420,7 +420,7 @@ function AuthScreen({ onAuth }) {
   );
 }
 
-function NavBar({ active, onChange, darkMode, maxWidth }) {
+function NavBar({ active, onChange, darkMode }) {
   const T = darkMode ? DARK : C;
   const tabs = [
     { id: "home", icon: "home", label: "Inicio" },
@@ -431,10 +431,10 @@ function NavBar({ active, onChange, darkMode, maxWidth }) {
   ];
   return (
     <div style={{
-      position: "fixed", bottom: 0, left: "50%", transform: "translateX(-50%)",
-      width: "100%", maxWidth: maxWidth || 390,
+      position: "absolute", bottom: 0, left: 0, right: 0,
+      width: "100%",
       background: T.white, borderTop: `1px solid ${T.mist}`,
-      display: "flex", zIndex: 100,
+      display: "flex", zIndex: 100, flexShrink: 0,
       paddingBottom: "env(safe-area-inset-bottom, 0px)",
     }}>
       {tabs.map(t => (
@@ -2086,19 +2086,22 @@ export default function App() {
   }
 
   const outerWrap = {
-    minHeight: "100vh",
+    height: "100vh",
+    ...(typeof CSS !== "undefined" && CSS.supports && CSS.supports("height", "100dvh") ? { height: "100dvh" } : {}),
     width: "100%",
     display: "flex",
     justifyContent: "center",
+    overflow: "hidden",
     background: isTablet ? (darkMode ? "#0B121C" : "#D8E1EE") : (darkMode ? DARK.iceBlue : C.iceBlue),
   };
 
   const phone = {
     width: "100%",
     maxWidth: contentMaxWidth,
-    minHeight: "100vh",
+    height: "100%",
     fontFamily: "'DM Sans', system-ui, sans-serif",
     position: "relative",
+    overflow: "hidden",
     display: "flex", flexDirection: "column",
     background: darkMode ? DARK.iceBlue : C.iceBlue,
     boxShadow: isTablet ? "0 0 60px rgba(15,30,50,0.18)" : "none",
@@ -2125,7 +2128,7 @@ export default function App() {
             {activeTab === "plan" && <PlanScreen user={user} darkMode={darkMode} />}
             {activeTab === "diary" && <DiaryScreen user={user} darkMode={darkMode} />}
             {activeTab === "profile" && <ProfileScreen user={user} profile={profile} setProfile={setProfile} onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
-            <NavBar active={activeTab} onChange={setActiveTab} darkMode={darkMode} maxWidth={contentMaxWidth} />
+            <NavBar active={activeTab} onChange={setActiveTab} darkMode={darkMode} />
           </>
         )}
       </div>
