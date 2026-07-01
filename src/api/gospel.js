@@ -20,42 +20,76 @@ export default async function handler(req, res) {
 
     const html = await response.text();
 
-    // Extraer el evangelio del HTML de la USCCB
-    // El evangelio está en una sección <h3> con "Evangelio" seguido del texto
-    const evangelioMatch = html.match(/### Evangelio[\s\S]*?(?=###|$)/) ||
-      html.match(/<h3[^>]*>Evangelio<\/h3>([\s\S]*?)(?=<h3|<\/main|$)/i);
+    // 1) Localizar el encabezado real "Evangelio" (h1-h6), sin depender de
+    //    markdown ni de que la palabra "Evangelio" no aparezca antes en otro
+    //    lugar (p. ej. en la Aclamación, que también menciona "Evangelio").
+    const headingRegex = /<h[1-6][^>]*>\s*Evangelio\s*<\/h[1-6]>/i;
+    const headingMatch = html.match(headingRegex);
+    if (!headingMatch) {
+      throw new Error("No se encontró la sección Evangelio en la página");
+    }
+    const startIdx = headingMatch.index + headingMatch[0].length;
 
-    // Extraer la referencia del evangelio (ej: Mateo 8, 1-4)
-    const refMatch = html.match(/Evangelio\s*\n\n([A-Za-záéíóúÁÉÍÓÚñÑ]+\s+\d+[,\s\d-]+)/m) ||
-      html.match(/<h3[^>]*>Evangelio<\/h3>\s*<p[^>]*>([^<]+)/i);
+    // 2) Cortar hasta el siguiente encabezado h1-h6, o hasta marcadores de
+    //    pie de página conocidos que siempre aparecen después del texto.
+    const rest = html.slice(startIdx);
+    const endMarkers = [
+      /<h[1-6][^>]*>/i,
+      /Los textos de la Sagrada Escritura/i,
+      /In English/i,
+      /Ver Calendario/i,
+      /Suscribase/i,
+    ];
+    let endIdx = rest.length;
+    for (const marker of endMarkers) {
+      const m = rest.match(marker);
+      if (m && m.index < endIdx) endIdx = m.index;
+    }
+    let section = rest.slice(0, endIdx);
 
-    // Extraer el texto del evangelio — buscar "En aquel tiempo" o el inicio típico
-    const textoMatch = html.match(/(En aquel tiempo[\s\S]*?)(?=\n\n###|\n\n## |<\/div|Aclamación|Salmo|oración|R\.|Dijo el Señor)/im);
-
-    if (!textoMatch) {
-      throw new Error("No se pudo extraer el evangelio");
+    // 3) Convertir HTML a texto plano preservando separación de párrafos.
+    function htmlToText(fragment) {
+      return fragment
+        .replace(/<br\s*\/?>/gi, "\n")
+        .replace(/<\/(p|div|li)>/gi, "\n\n")
+        .replace(/<[^>]+>/g, "")
+        .replace(/&nbsp;/g, " ")
+        .replace(/&aacute;/g, "á").replace(/&eacute;/g, "é").replace(/&iacute;/g, "í")
+        .replace(/&oacute;/g, "ó").replace(/&uacute;/g, "ú").replace(/&ntilde;/g, "ñ")
+        .replace(/&Aacute;/g, "Á").replace(/&Eacute;/g, "É").replace(/&Iacute;/g, "Í")
+        .replace(/&Oacute;/g, "Ó").replace(/&Uacute;/g, "Ú").replace(/&Ntilde;/g, "Ñ")
+        .replace(/&iexcl;/g, "¡").replace(/&iquest;/g, "¿")
+        .replace(/&ldquo;|&rdquo;/g, "\u201c")
+        .replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
+        .replace(/&#39;/g, "'").replace(/&quot;/g, '"')
+        .replace(/[ \t]+/g, " ")
+        .replace(/\n{3,}/g, "\n\n")
+        .trim();
     }
 
-    // Limpiar el texto
-    let texto = textoMatch[1]
-      .replace(/<[^>]+>/g, "") // quitar HTML tags
-      .replace(/\n{3,}/g, "\n\n") // normalizar espacios
-      .replace(/R\.\s*\*\*[^*]+\*\*/g, "") // quitar respuestas del salmo
-      .replace(/\*\*/g, "") // quitar markdown bold
-      .trim();
+    const plain = htmlToText(section);
 
-    // Extraer la referencia
-    let referencia = "Evangelio del día";
-    const dateMatch = url.match(/(\d{2})(\d{2})(\d{2})\.cfm/);
-    if (dateMatch) {
-      const [, mm, dd, yy] = dateMatch;
-      const months = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
-      // buscar referencia en el HTML
-      const refSearch = html.match(/Evangelio\s*\n+([A-Za-záéíóú]+\s+\d+[,\s\d-]+)/m);
-      if (refSearch) referencia = `Evangelio según ${refSearch[1].trim()}`;
+    if (!plain) {
+      throw new Error("No se pudo extraer el texto del evangelio");
     }
 
-    // Extraer tiempo litúrgico
+    // 4) La primera línea suele ser la referencia (ej. "Mateo 8, 28-34"),
+    //    el resto es el texto completo del evangelio.
+    const lines = plain.split("\n\n").map(l => l.trim()).filter(Boolean);
+    let referenciaLinea = "";
+    let textoLineas = lines;
+    const refPattern = /^[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(\s+\d+)?[,\s\d\-.]*$/;
+    if (lines.length > 1 && refPattern.test(lines[0]) && lines[0].length < 40) {
+      referenciaLinea = lines[0];
+      textoLineas = lines.slice(1);
+    }
+
+    const texto = textoLineas.join("\n\n").trim();
+    const referencia = referenciaLinea
+      ? `Evangelio según San ${referenciaLinea}`
+      : "Evangelio del día";
+
+    // Extraer tiempo litúrgico del resto de la página (fuera de la sección ya cortada)
     let tiempo = "Tiempo Ordinario";
     const tiempoMatch = html.match(/(Tiempo ordinario|Adviento|Cuaresma|Pascua|Navidad|Tiempo pascual)/i);
     if (tiempoMatch) tiempo = tiempoMatch[1];
