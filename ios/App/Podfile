@@ -1,6 +1,7 @@
 platform :ios, '16.0'
+use_frameworks!
 
 target 'App' do
   pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
-  pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios', :modular_headers => true
+  pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
 end
