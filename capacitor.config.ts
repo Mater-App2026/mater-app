@@ -5,12 +5,12 @@ const config: CapacitorConfig = {
   appName: 'Mater',
   webDir: 'build',
   server: {
-    androidScheme: 'https'
+    url: 'https://materapp.org',
+    cleartext: false
   },
   ios: {
     contentInset: 'automatic',
-    backgroundColor: '#EEF2F7',
-    limitsNavigationsToAppBoundDomains: true
+    backgroundColor: '#EEF2F7'
   }
 };
 
