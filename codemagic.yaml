@@ -10,6 +10,7 @@ workflows:
       vars:
         XCODE_WORKSPACE: "App.xcworkspace"
         XCODE_SCHEME: "App"
+        BUILD_NUMBER: "5"
       node: 22.0.0
     scripts:
       - name: Install npm dependencies
@@ -24,13 +25,16 @@ workflows:
       - name: Copy web assets to iOS
         script: |
           npx cap copy ios
+      - name: Set build number
+        script: |
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" ios/App/App/Info.plist
       - name: Set up code signing
         script: |
           xcode-project use-profiles
       - name: Install CocoaPods dependencies
         script: |
           cd ios/App
-          sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = [0-9.]*/IPHONEOS_DEPLOYMENT_TARGET = 14.0/g' App.xcodeproj/project.pbxproj
+          sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = [0-9.]*/IPHONEOS_DEPLOYMENT_TARGET = 16.0/g' App.xcodeproj/project.pbxproj
           pod install --repo-update
       - name: Build ipa for App Store distribution
         script: |
