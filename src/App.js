@@ -1233,7 +1233,7 @@ function ChatScreen({ user }) {
   }
 
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", background: gradients.chat }}>
+    <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", background: gradients.chat }}>
       <div style={{ padding: "52px 22px 16px", background: C.cream, borderBottom: `1px solid ${C.mist}` }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <div style={{ width: 44, height: 44, borderRadius: 14, overflow: "hidden" }}>
@@ -1736,7 +1736,7 @@ function DiaryScreen({ user }) {
 
 
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", background: gradients.diary }}>
+    <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", background: gradients.diary }}>
       {editingEntry && (
         <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: keyboardOpen ? "flex-start" : (isTablet ? "center" : "flex-end"), justifyContent: "center", padding: isTablet ? 24 : 0, paddingTop: keyboardOpen ? "max(16px, env(safe-area-inset-top))" : undefined }} onClick={() => setEditingEntry(null)}>
           <div onClick={e => e.stopPropagation()} style={{ background: C.white, borderRadius: keyboardOpen ? 20 : (isTablet ? 24 : "24px 24px 0 0"), padding: "24px 22px 48px", width: "100%", maxWidth: isTablet ? 480 : 390, margin: "0 auto", maxHeight: keyboardOpen ? `calc(100vh - ${keyboardHeight}px - 32px)` : "80vh", overflowY: "auto" }}>
