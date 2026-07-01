@@ -30,18 +30,18 @@ workflows:
       - name: Install CocoaPods dependencies
         script: |
           cd ios/App
-          # Update deployment target in project file
           sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = [0-9.]*/IPHONEOS_DEPLOYMENT_TARGET = 14.0/g' App.xcodeproj/project.pbxproj
-          # Generate Podfile from Capacitor
-          cat > Podfile << 'PODEOF'
-platform :ios, '14.0'
+          python3 -c "
+          podfile = \"\"\"platform :ios, '14.0'
 use_frameworks!
 install! 'cocoapods', :disable_input_output_paths => true
 target 'App' do
   pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
   pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
 end
-PODEOF
+\"\"\"
+          open('Podfile', 'w').write(podfile)
+          "
           pod install --repo-update
       - name: Build ipa for App Store distribution
         script: |
