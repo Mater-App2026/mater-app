@@ -43,6 +43,36 @@ const DARK = {
   cream: "#1A2535",
 };
 
+// ─── Viewport responsivo (reactivo a resize / rotación) ────────────────────
+function useViewportInfo() {
+  const [size, setSize] = useState({
+    width: typeof window !== "undefined" ? window.innerWidth : 390,
+    height: typeof window !== "undefined" ? window.innerHeight : 844,
+  });
+
+  useEffect(() => {
+    function handleResize() {
+      setSize({ width: window.innerWidth, height: window.innerHeight });
+    }
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("orientationchange", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("orientationchange", handleResize);
+    };
+  }, []);
+
+  const { width, height } = size;
+  const isTablet = width >= 768;
+  const isDesktop = width >= 1200;
+  // Columna de contenido: en móvil, todo el ancho. En tablet/desktop, una
+  // columna de lectura cómoda — nunca estirada al 100% del ancho.
+  const contentMaxWidth = width < 480 ? width : Math.min(560, width - 64);
+  const columns = width >= 700 ? 2 : 1;
+
+  return { width, height, isTablet, isDesktop, contentMaxWidth, columns };
+}
+
 const gradients = {
   home: "#EEF2F7",
   chat: "#EBF0F7",
@@ -145,7 +175,10 @@ function scheduleNotifications(times) {
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600;700&display=swap');
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body { margin: 0; padding: 0; background: ${C.iceBlue}; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right); }
+  html, body { margin: 0; padding: 0; background: ${C.iceBlue}; overflow-x: hidden; }
+  body { padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right); }
+  #root { min-height: 100vh; }
+  img { max-width: 100%; }
   @keyframes pulse { 0%,100%{opacity:0.3;transform:scale(0.8)} 50%{opacity:1;transform:scale(1.1)} }
   @keyframes spin { to { transform: rotate(360deg); } }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
@@ -387,7 +420,7 @@ function AuthScreen({ onAuth }) {
   );
 }
 
-function NavBar({ active, onChange, darkMode }) {
+function NavBar({ active, onChange, darkMode, maxWidth }) {
   const T = darkMode ? DARK : C;
   const tabs = [
     { id: "home", icon: "home", label: "Inicio" },
@@ -399,7 +432,7 @@ function NavBar({ active, onChange, darkMode }) {
   return (
     <div style={{
       position: "fixed", bottom: 0, left: "50%", transform: "translateX(-50%)",
-      width: "100%", maxWidth: window.innerWidth >= 768 ? "100%" : 390,
+      width: "100%", maxWidth: maxWidth || 390,
       background: T.white, borderTop: `1px solid ${T.mist}`,
       display: "flex", zIndex: 100,
       paddingBottom: "env(safe-area-inset-bottom, 0px)",
@@ -420,6 +453,7 @@ function NavBar({ active, onChange, darkMode }) {
 }
 
 function HomeScreen({ user, profile, onTabChange }) {
+  const { isTablet, columns } = useViewportInfo();
   const days = ["L", "M", "M", "J", "V", "S", "D"];
   const todayIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
   const [openCard, setOpenCard] = useState(null);
@@ -435,6 +469,11 @@ function HomeScreen({ user, profile, onTabChange }) {
   const [practiceAIContent, setPracticeAIContent] = useState({});
   const [loadingPractice, setLoadingPractice] = useState(false);
   const practiceCache = useRef({});
+
+  // Estilo compartido para los bottom-sheets: en móvil se anclan abajo,
+  // en tablet/desktop aparecen como diálogo centrado (no estirado al borde).
+  const sheetOverlay = { position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: isTablet ? "center" : "flex-end", justifyContent: "center", padding: isTablet ? 24 : 0 };
+  const sheetCard = (extra = {}) => ({ background: C.white, borderRadius: isTablet ? 24 : "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: isTablet ? 480 : 390, margin: "0 auto", maxHeight: "85vh", overflowY: "auto", ...extra });
 
   const now = new Date();
   const todayKey = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0");
@@ -892,8 +931,8 @@ function HomeScreen({ user, profile, onTabChange }) {
   return (
     <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90 }}>
       {openCard !== null && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: "flex-end" }} onClick={() => setOpenCard(null)}>
-          <div onClick={e => e.stopPropagation()} style={{ background: C.white, borderRadius: "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: 390, margin: "0 auto", maxHeight: "85vh", overflowY: "auto" }}>
+        <div style={sheetOverlay} onClick={() => setOpenCard(null)}>
+          <div onClick={e => e.stopPropagation()} style={sheetCard()}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <div style={{ width: 40, height: 40, borderRadius: 12, background: practiceContent[openCard].bg, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -975,8 +1014,8 @@ function HomeScreen({ user, profile, onTabChange }) {
 
         {/* Santo del día */}
         {saintOpen && saintOfDay && (
-          <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: "flex-end" }} onClick={() => setSaintOpen(false)}>
-            <div onClick={e => e.stopPropagation()} style={{ background: C.white, borderRadius: "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: 390, margin: "0 auto", maxHeight: "85vh", overflowY: "auto" }}>
+          <div style={sheetOverlay} onClick={() => setSaintOpen(false)}>
+            <div onClick={e => e.stopPropagation()} style={sheetCard()}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
                 <div>
                   <p style={{ fontSize: 10, color: C.gold, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 4px" }}>✨ Santo del día</p>
@@ -1035,7 +1074,7 @@ function HomeScreen({ user, profile, onTabChange }) {
 
       <div style={{ padding: "22px 22px 0" }}>
         <p style={{ fontSize: 13, fontWeight: 700, color: C.ink, margin: "0 0 12px" }}>Prácticas de hoy</p>
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <div style={{ display: "grid", gridTemplateColumns: columns > 1 ? "1fr 1fr" : "1fr", gap: 10 }}>
           {practiceContent.map((c, i) => {
             const isDone = completedPractices[`${i}-${todayKey}`] || false;
             return (
@@ -1059,8 +1098,8 @@ function HomeScreen({ user, profile, onTabChange }) {
       {/* Intención del mundo */}
       <div style={{ padding: "22px 22px 0" }}>
         {intentionOpen && worldIntention && (
-          <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: "flex-end" }} onClick={() => setIntentionOpen(false)}>
-            <div onClick={e => e.stopPropagation()} style={{ background: C.white, borderRadius: "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: 390, margin: "0 auto", maxHeight: "85vh", overflowY: "auto" }}>
+          <div style={sheetOverlay} onClick={() => setIntentionOpen(false)}>
+            <div onClick={e => e.stopPropagation()} style={sheetCard()}>
               <div style={{ borderRadius: 16, background: "linear-gradient(135deg, " + (worldIntention.color1 || "#1a3a5c") + ", " + (worldIntention.color2 || "#2d6a8f") + ")", padding: "20px", marginBottom: 20, textAlign: "center" }}>
                 <p style={{ fontSize: 40, margin: "0 0 8px" }}>{worldIntention.emoji}</p>
                 <p style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 4px" }}>{worldIntention.lugar}</p>
@@ -1116,7 +1155,7 @@ Tu espiritualidad integra varias tradiciones:
 - Carmelita: la oración contemplativa, la interioridad
 - Schoenstattiana: la alianza de amor con María como Madre y Reina, el santuario como hogar espiritual, el Padre José Kentenich como maestro de vida interior, la contribución como ofrenda de amor
 
-Cómo respondes:
+C�mo respondes:
 - Con calidez, profundidad y cercanía — como una amiga sabia
 - Hablas en español latinoamericano, natural y cercano
 - Nunca juzgas ni condenas — acompañas con misericordia
@@ -1239,6 +1278,9 @@ function ChatScreen({ user }) {
 }
 
 function PlanScreen({ user }) {
+  const { isTablet, columns } = useViewportInfo();
+  const sheetOverlay = { position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: isTablet ? "center" : "flex-end", justifyContent: "center", padding: isTablet ? 24 : 0 };
+  const sheetCard = (extra = {}) => ({ background: C.white, borderRadius: isTablet ? 24 : "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: isTablet ? 480 : 390, margin: "0 auto", maxHeight: "85vh", overflowY: "auto", ...extra });
   const [activeWeek, setActiveWeek] = useState(0);
   const [progress, setProgress] = useState({});
   const [saving, setSaving] = useState(null);
@@ -1439,8 +1481,8 @@ function PlanScreen({ user }) {
   return (
     <div style={{ flex: 1, overflowY: "auto", background: gradients.plan, paddingBottom: 90 }}>
       {openDay !== null && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: "flex-end" }} onClick={() => { setOpenDay(null); setDayContent(null); }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: C.white, borderRadius: "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: 390, margin: "0 auto", maxHeight: "85vh", overflowY: "auto" }}>
+        <div style={sheetOverlay} onClick={() => { setOpenDay(null); setDayContent(null); }}>
+          <div onClick={e => e.stopPropagation()} style={sheetCard()}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <div>
                 <p style={{ fontSize: 15, fontWeight: 800, color: C.ink, margin: 0 }}>{weeks[activeWeek].days[openDay]?.title}</p>
@@ -1531,7 +1573,7 @@ function PlanScreen({ user }) {
         </div>
       </div>
 
-      <div style={{ padding: "0 22px", display: "flex", flexDirection: "column", gap: 10 }}>
+      <div style={{ padding: "0 22px", display: "grid", gridTemplateColumns: columns > 1 ? "1fr 1fr" : "1fr", gap: 10 }}>
         {w.days.map((d, i) => {
           const key = `${activeWeek}-${i}`;
           const done = progress[key] || false;
@@ -1555,9 +1597,8 @@ function PlanScreen({ user }) {
 }
 
 
-
-
 function DiaryScreen({ user }) {
+  const { isTablet, columns } = useViewportInfo();
   const [entries, setEntries] = useState([]);
   const [writing, setWriting] = useState(false);
   const [draft, setDraft] = useState({ mood: "", title: "", text: "", tag: "Consolación" });
@@ -1666,8 +1707,8 @@ function DiaryScreen({ user }) {
   return (
     <div style={{ flex: 1, display: "flex", flexDirection: "column", background: gradients.diary }}>
       {editingEntry && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: "flex-end" }} onClick={() => setEditingEntry(null)}>
-          <div onClick={e => e.stopPropagation()} style={{ background: C.white, borderRadius: "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: 390, margin: "0 auto", maxHeight: "80vh", overflowY: "auto" }}>
+        <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: isTablet ? "center" : "flex-end", justifyContent: "center", padding: isTablet ? 24 : 0 }} onClick={() => setEditingEntry(null)}>
+          <div onClick={e => e.stopPropagation()} style={{ background: C.white, borderRadius: isTablet ? 24 : "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: isTablet ? 480 : 390, margin: "0 auto", maxHeight: "80vh", overflowY: "auto" }}>
             <EntryForm data={editDraft} onChange={setEditDraft} onSave={saveEdit} onCancel={() => setEditingEntry(null)} saving={savingEdit} title="Editar entrada" />
           </div>
         </div>
@@ -1696,8 +1737,9 @@ function DiaryScreen({ user }) {
             <p style={{ fontSize: 12, color: C.slateLight }}>Toca + para escribir tu primera reflexión.</p>
           </div>
         ) : (
-          entries.map((e, i) => (
-            <div key={e.id || i} style={{ background: C.cream, borderRadius: 12, padding: "16px 18px", marginBottom: 10, border: "1px solid " + C.mist, borderLeft: `3px solid ${tagColor[e.tag] || C.sky}`, opacity: deletingId === e.id ? 0.5 : 1, transition: "opacity 0.2s" }}>
+          <div style={{ display: "grid", gridTemplateColumns: columns > 1 ? "1fr 1fr" : "1fr", gap: 10 }}>
+          {entries.map((e, i) => (
+            <div key={e.id || i} style={{ background: C.cream, borderRadius: 12, padding: "16px 18px", border: "1px solid " + C.mist, borderLeft: `3px solid ${tagColor[e.tag] || C.sky}`, opacity: deletingId === e.id ? 0.5 : 1, transition: "opacity 0.2s" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <span style={{ fontSize: 20 }}>{e.mood}</span>
@@ -1718,7 +1760,8 @@ function DiaryScreen({ user }) {
               </div>
               <p style={{ fontSize: 12.5, color: C.inkMid, lineHeight: 1.65, margin: 0 }}>{e.text}</p>
             </div>
-          ))
+          ))}
+          </div>
         )}
       </div>
     </div>
@@ -1726,6 +1769,9 @@ function DiaryScreen({ user }) {
 }
 
 function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDarkMode }) {
+  const { isTablet } = useViewportInfo();
+  const sheetOverlay = { position: "fixed", inset: 0, zIndex: 300, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: isTablet ? "center" : "flex-end", justifyContent: "center", padding: isTablet ? 24 : 0 };
+  const sheetCard = (extra = {}) => ({ background: C.white, borderRadius: isTablet ? 24 : "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: isTablet ? 480 : 390, margin: "0 auto", maxHeight: "80vh", overflowY: "auto", ...extra });
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(profile?.name || "");
   const [saving, setSaving] = useState(false);
@@ -1799,8 +1845,8 @@ function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDa
   return (
     <div style={{ flex: 1, overflowY: "auto", background: gradients.profile, paddingBottom: 90 }}>
       {activeModal === "about" && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 300, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: "flex-end" }} onClick={() => setActiveModal(null)}>
-          <div onClick={e => e.stopPropagation()} style={{ background: C.white, borderRadius: "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: 390, margin: "0 auto", maxHeight: "80vh", overflowY: "auto" }}>
+        <div style={sheetOverlay} onClick={() => setActiveModal(null)}>
+          <div onClick={e => e.stopPropagation()} style={sheetCard()}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <h2 style={{ fontSize: 18, fontWeight: 800, color: C.ink, margin: 0 }}>🌿 Acerca de Mater</h2>
               <button onClick={() => setActiveModal(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
@@ -1885,8 +1931,8 @@ function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDa
 
       {/* Notifications modal */}
       {activeModal === "notifications" && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 300, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: "flex-end" }} onClick={() => setActiveModal(null)}>
-          <div onClick={e => e.stopPropagation()} style={{ background: C.white, borderRadius: "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: 390, margin: "0 auto", maxHeight: "80vh", overflowY: "auto" }}>
+        <div style={sheetOverlay} onClick={() => setActiveModal(null)}>
+          <div onClick={e => e.stopPropagation()} style={sheetCard()}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <h2 style={{ fontSize: 18, fontWeight: 800, color: C.ink, margin: 0 }}>🔔 Recordatorios diarios</h2>
               <button onClick={() => setActiveModal(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
@@ -1959,6 +2005,7 @@ export default function App() {
   const [profile, setProfile] = useState(null);
   const [loadingAuth, setLoadingAuth] = useState(true);
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem("mater_dark_mode") === "true");
+  const { isTablet, contentMaxWidth } = useViewportInfo();
 
   function toggleDarkMode() {
     setDarkMode(prev => {
@@ -2032,23 +2079,29 @@ export default function App() {
           <div style={{ width: 60, height: 60, borderRadius: 16, overflow: "hidden", margin: "0 auto 16px" }}>
             <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
-          <div style={{ width: 24, height: 24, border: "3px solid " + C.navy + ",", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.8s linear infinite", margin: "0 auto" }} />
+          <div style={{ width: 24, height: 24, border: "3px solid " + C.navy, borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.8s linear infinite", margin: "0 auto" }} />
         </div>
       </div>
     );
   }
 
-  const isTablet = window.innerWidth >= 768;
+  const outerWrap = {
+    minHeight: "100vh",
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    background: isTablet ? (darkMode ? "#0B121C" : "#D8E1EE") : (darkMode ? DARK.iceBlue : C.iceBlue),
+  };
 
   const phone = {
     width: "100%",
-    maxWidth: isTablet ? "100%" : 390,
+    maxWidth: contentMaxWidth,
     minHeight: "100vh",
-    margin: "0 auto",
     fontFamily: "'DM Sans', system-ui, sans-serif",
     position: "relative",
     display: "flex", flexDirection: "column",
-    background: C.iceBlue,
+    background: darkMode ? DARK.iceBlue : C.iceBlue,
+    boxShadow: isTablet ? "0 0 60px rgba(15,30,50,0.18)" : "none",
     filter: darkMode ? "invert(1) hue-rotate(180deg)" : "none",
   };
 
@@ -2060,6 +2113,7 @@ export default function App() {
     <>
       <style>{globalStyles}</style>
       <style>{imgFix}</style>
+      <div style={outerWrap}>
       <div style={phone} className={darkMode ? "phone-dark" : ""}>
         {screen === "landing" && <LandingScreen onEnter={() => setScreen("onboarding")} />}
         {screen === "onboarding" && <OnboardingScreen onComplete={handleOnboardingComplete} />}
@@ -2071,9 +2125,10 @@ export default function App() {
             {activeTab === "plan" && <PlanScreen user={user} darkMode={darkMode} />}
             {activeTab === "diary" && <DiaryScreen user={user} darkMode={darkMode} />}
             {activeTab === "profile" && <ProfileScreen user={user} profile={profile} setProfile={setProfile} onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
-            <NavBar active={activeTab} onChange={setActiveTab} darkMode={darkMode} />
+            <NavBar active={activeTab} onChange={setActiveTab} darkMode={darkMode} maxWidth={contentMaxWidth} />
           </>
         )}
+      </div>
       </div>
     </>
   );
