@@ -10,7 +10,7 @@ workflows:
       vars:
         XCODE_WORKSPACE: "App.xcworkspace"
         XCODE_SCHEME: "App"
-        BUILD_NUMBER: "5"
+        BUILD_NUMBER: "6"
       node: 22.0.0
     scripts:
       - name: Install npm dependencies
