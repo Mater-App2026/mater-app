@@ -145,7 +145,7 @@ function scheduleNotifications(times) {
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600;700&display=swap');
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body { margin: 0; padding: 0; background: ${C.iceBlue}; }
+  body { margin: 0; padding: 0; background: ${C.iceBlue}; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right); }
   @keyframes pulse { 0%,100%{opacity:0.3;transform:scale(0.8)} 50%{opacity:1;transform:scale(1.1)} }
   @keyframes spin { to { transform: rotate(360deg); } }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
@@ -361,7 +361,7 @@ function NavBar({ active, onChange, darkMode }) {
   return (
     <div style={{
       position: "fixed", bottom: 0, left: "50%", transform: "translateX(-50%)",
-      width: "100%", maxWidth: 390,
+      width: "100%", maxWidth: window.innerWidth >= 768 ? "100%" : 390,
       background: T.white, borderTop: `1px solid ${T.mist}`,
       display: "flex", zIndex: 100,
       paddingBottom: "env(safe-area-inset-bottom, 0px)",
@@ -676,7 +676,7 @@ function HomeScreen({ user, profile, onTabChange }) {
     // Array: 0=Lun, 1=Mar, 2=Mié, 3=Jue, 4=Vie, 5=Sáb, 6=Dom
     const weekDay = new Date().getDay(); // 0=Dom...6=Sáb
     const laudesIdx = weekDay === 0 ? 6 : weekDay - 1; // convertir a índice del array
-    const rotationIdx = (index === 0 || index === 2) ? laudesIdx : dayOfYear % arr.length;
+    const rotationIdx = index === 0 ? laudesIdx : dayOfYear % arr.length;
     return arr[rotationIdx % arr.length];
   }
 
@@ -2000,8 +2000,12 @@ export default function App() {
     );
   }
 
+  const isTablet = window.innerWidth >= 768;
+
   const phone = {
-    width: "100%", maxWidth: 390, minHeight: "100vh",
+    width: "100%",
+    maxWidth: isTablet ? "100%" : 390,
+    minHeight: "100vh",
     margin: "0 auto",
     fontFamily: "'DM Sans', system-ui, sans-serif",
     position: "relative",
