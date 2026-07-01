@@ -9,14 +9,8 @@ const config: CapacitorConfig = {
   },
   ios: {
     contentInset: 'automatic',
-    backgroundColor: '#EEF2F7'
-  },
-  plugins: {
-    SplashScreen: {
-      launchShowDuration: 1500,
-      backgroundColor: '#EEF2F7',
-      showSpinner: false
-    }
+    backgroundColor: '#EEF2F7',
+    limitsNavigationsToAppBoundDomains: true
   }
 };
 
