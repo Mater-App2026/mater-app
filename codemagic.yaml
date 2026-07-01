@@ -8,7 +8,7 @@ workflows:
         distribution_type: app_store
         bundle_identifier: org.materapp.app
       vars:
-        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
+        XCODE_WORKSPACE: "App.xcworkspace"
         XCODE_SCHEME: "App"
       node: 22.0.0
     scripts:
@@ -21,19 +21,19 @@ workflows:
       - name: Build React app
         script: |
           npm run build
-      - name: Sync Capacitor
+      - name: Copy web assets to iOS
         script: |
-          npx cap sync ios
+          npx cap copy ios
       - name: Set up code signing
         script: |
           xcode-project use-profiles
       - name: Install CocoaPods dependencies
         script: |
-          find . -name "Podfile" -execdir pod install \;
+          cd ios/App && pod install
       - name: Build ipa for App Store distribution
         script: |
           xcode-project build-ipa \
-            --workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
+            --workspace "ios/App/$XCODE_WORKSPACE" \
             --scheme "$XCODE_SCHEME"
     artifacts:
       - build/ios/ipa/*.ipa
