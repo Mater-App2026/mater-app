@@ -21,9 +21,13 @@ workflows:
       - name: Build React app
         script: |
           npm run build
-      - name: Copy web assets to iOS
+      - name: Add and sync iOS platform
         script: |
+          if [ ! -d "ios" ]; then
+            npx cap add ios
+          fi
           npx cap copy ios
+          npx cap sync ios
       - name: Set up code signing
         script: |
           xcode-project use-profiles
