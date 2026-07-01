@@ -7,8 +7,6 @@ workflows:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: org.materapp.app
-        signing_certificate: mater2026
-        provisioning_profile: Mater App Store
       vars:
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
@@ -42,6 +40,6 @@ workflows:
       - /tmp/xcodebuild_logs/*.log
     publishing:
       app_store_connect:
-        apple_id: jorgerubido@gmail.com
+        auth: integration
         submit_to_testflight: true
         submit_to_app_store: false
