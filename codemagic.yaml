@@ -29,7 +29,7 @@ workflows:
           xcode-project use-profiles
       - name: Install CocoaPods dependencies
         script: |
-          cd ios/App && pod install
+          cd ios/App && pod install --repo-update
       - name: Build ipa for App Store distribution
         script: |
           xcode-project build-ipa \
