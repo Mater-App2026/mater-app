@@ -49,6 +49,13 @@ function useViewportInfo() {
     width: typeof window !== "undefined" ? window.innerWidth : 390,
     height: typeof window !== "undefined" ? window.innerHeight : 844,
   });
+  // Alto visible real (descuenta el teclado). Solo lo usamos para detectar
+  // el teclado — NO para dimensionar el contenedor general, porque
+  // visualViewport también cambia con la barra de Safari y eso es
+  // precisamente lo que causaba el vaivén vertical.
+  const [visualHeight, setVisualHeight] = useState(
+    typeof window !== "undefined" && window.visualViewport ? window.visualViewport.height : (typeof window !== "undefined" ? window.innerHeight : 844)
+  );
 
   useEffect(() => {
     function handleResize() {
@@ -56,9 +63,20 @@ function useViewportInfo() {
     }
     window.addEventListener("resize", handleResize);
     window.addEventListener("orientationchange", handleResize);
+
+    function handleVisualViewportResize() {
+      if (window.visualViewport) setVisualHeight(window.visualViewport.height);
+    }
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", handleVisualViewportResize);
+    }
+
     return () => {
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("orientationchange", handleResize);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener("resize", handleVisualViewportResize);
+      }
     };
   }, []);
 
@@ -69,8 +87,12 @@ function useViewportInfo() {
   // columna de lectura cómoda — nunca estirada al 100% del ancho.
   const contentMaxWidth = width < 480 ? width : Math.min(560, width - 64);
   const columns = width >= 700 ? 2 : 1;
+  // Umbral de 150px: el teclado resta 250-350px, la barra de Safari solo ~50px.
+  // Así distinguimos "se abrió el teclado" de "se movió la barra de direcciones".
+  const keyboardOpen = height - visualHeight > 150;
+  const keyboardHeight = keyboardOpen ? Math.round(height - visualHeight) : 0;
 
-  return { width, height, isTablet, isDesktop, contentMaxWidth, columns };
+  return { width, height, isTablet, isDesktop, contentMaxWidth, columns, keyboardOpen, keyboardHeight, visualHeight };
 }
 
 const gradients = {
@@ -2005,7 +2027,8 @@ export default function App() {
   const [profile, setProfile] = useState(null);
   const [loadingAuth, setLoadingAuth] = useState(true);
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem("mater_dark_mode") === "true");
-  const { isTablet, contentMaxWidth } = useViewportInfo();
+  const { isTablet, contentMaxWidth, keyboardOpen, visualHeight } = useViewportInfo();
+  const visualViewportHeightPx = visualHeight ? visualHeight + "px" : "100%";
 
   function toggleDarkMode() {
     setDarkMode(prev => {
@@ -2098,12 +2121,19 @@ export default function App() {
   const phone = {
     width: "100%",
     maxWidth: contentMaxWidth,
-    height: "100%",
+    // Con el teclado abierto usamos el alto visual real (visualViewport),
+    // así el layout se recalcula de verdad y el contenido nunca queda
+    // detrás del teclado. Sin teclado, 100% del outerWrap (100dvh estable).
+    height: keyboardOpen ? visualViewportHeightPx : "100%",
     fontFamily: "'DM Sans', system-ui, sans-serif",
     position: "relative",
     overflow: "hidden",
     display: "flex", flexDirection: "column",
-    background: darkMode ? DARK.iceBlue : C.iceBlue,
+    // El fondo SIEMPRE en colores claros: el modo oscuro se logra invirtiendo
+    // toda la caja con CSS filter (más abajo). Si aquí se pusiera el color
+    // oscuro también, el filtro lo invertiría dos veces y desentonaría con
+    // el resto del árbol (ese era el origen de la franja de color rara).
+    background: C.iceBlue,
     boxShadow: isTablet ? "0 0 60px rgba(15,30,50,0.18)" : "none",
     filter: darkMode ? "invert(1) hue-rotate(180deg)" : "none",
   };
@@ -2128,7 +2158,7 @@ export default function App() {
             {activeTab === "plan" && <PlanScreen user={user} darkMode={darkMode} />}
             {activeTab === "diary" && <DiaryScreen user={user} darkMode={darkMode} />}
             {activeTab === "profile" && <ProfileScreen user={user} profile={profile} setProfile={setProfile} onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
-            <NavBar active={activeTab} onChange={setActiveTab} darkMode={darkMode} />
+            {!keyboardOpen && <NavBar active={activeTab} onChange={setActiveTab} darkMode={darkMode} />}
           </>
         )}
       </div>
