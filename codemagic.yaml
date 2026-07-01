@@ -3,12 +3,12 @@ workflows:
     name: Mater iOS Build
     max_build_duration: 60
     instance_type: mac_mini_m2
-    integrations:
-      app_store_connect: codemagic_ios_signing
     environment:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: org.materapp.app
+        signing_certificate: mater2026
+        provisioning_profile: Mater App Store
       vars:
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
@@ -42,6 +42,6 @@ workflows:
       - /tmp/xcodebuild_logs/*.log
     publishing:
       app_store_connect:
-        auth: integration
+        apple_id: jorgerubido@gmail.com
         submit_to_testflight: true
         submit_to_app_store: false
