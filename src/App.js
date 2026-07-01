@@ -262,6 +262,25 @@ function AuthScreen({ onAuth }) {
   const [error, setError] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [success, setSuccess] = useState("");
+  const [resetMode, setResetMode] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
+
+  async function handleReset() {
+    if (!email) { setError("Ingresa tu correo electrónico."); return; }
+    setLoading(true);
+    try {
+      const { error: err } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: "https://materapp.org",
+      });
+      if (err) throw err;
+      setResetSent(true);
+      setError("");
+    } catch(err) {
+      setError("No pudimos enviar el correo. Verifica tu email.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function handleSubmit() {
     setError(""); setSuccess("");
@@ -340,9 +359,28 @@ function AuthScreen({ onAuth }) {
         </div>
         {error && <p style={{ color: "#C0392B", fontSize: 12, margin: 0, textAlign: "center" }}>{error}</p>}
         {success && <p style={{ color: C.blue, fontSize: 12, margin: 0, textAlign: "center" }}>{success}</p>}
-        <button onClick={handleSubmit} disabled={loading} style={{ background: C.navy, border: "none", borderRadius: 12, padding: "14px", color: C.cream, fontWeight: 600, fontSize: 14, cursor: loading ? "default" : "pointer", opacity: loading ? 0.7 : 1, fontFamily: "'DM Sans', system-ui, sans-serif", marginTop: 8 }}>
-          {loading ? "..." : mode === "login" ? "Entrar" : "Crear cuenta"}
-        </button>
+        {resetMode ? (
+          <>
+            <button onClick={handleReset} disabled={loading} style={{ background: C.navy, border: "none", borderRadius: 12, padding: "14px", color: C.cream, fontWeight: 600, fontSize: 14, cursor: loading ? "default" : "pointer", opacity: loading ? 0.7 : 1, fontFamily: "'DM Sans', system-ui, sans-serif", marginTop: 8 }}>
+              {loading ? "..." : "Enviar correo de recuperación"}
+            </button>
+            {resetSent && <p style={{ color: C.blue, fontSize: 12, margin: "8px 0 0", textAlign: "center" }}>✓ Revisa tu correo — te enviamos un enlace para restablecer tu contraseña.</p>}
+            <button onClick={() => { setResetMode(false); setResetSent(false); setError(""); }} style={{ background: "transparent", border: "none", color: C.slateLight, fontSize: 12, cursor: "pointer", marginTop: 8, width: "100%" }}>
+              Volver al inicio de sesión
+            </button>
+          </>
+        ) : (
+          <>
+            <button onClick={handleSubmit} disabled={loading} style={{ background: C.navy, border: "none", borderRadius: 12, padding: "14px", color: C.cream, fontWeight: 600, fontSize: 14, cursor: loading ? "default" : "pointer", opacity: loading ? 0.7 : 1, fontFamily: "'DM Sans', system-ui, sans-serif", marginTop: 8 }}>
+              {loading ? "..." : mode === "login" ? "Entrar" : "Crear cuenta"}
+            </button>
+            {mode === "login" && (
+              <button onClick={() => { setResetMode(true); setError(""); }} style={{ background: "transparent", border: "none", color: C.slateLight, fontSize: 12, cursor: "pointer", marginTop: 8, width: "100%", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+                ¿Olvidaste tu contraseña?
+              </button>
+            )}
+          </>
+        )}
       </div>
       <p style={{ textAlign: "center", fontSize: 11, color: C.slateLight, marginTop: "2rem", lineHeight: 1.6 }}>Al usar Mater aceptas acompañar tu fe con honestidad y apertura. 🙏</p>
     </div>
