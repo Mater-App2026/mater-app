@@ -372,7 +372,7 @@ function AuthScreen({ onAuth }) {
   const inputStyle = {
     width: "100%", border: "none", outline: "none",
     background: "transparent", borderBottom: `1px solid ${C.mist}`,
-    padding: "12px 4px", fontSize: 14, color: C.ink,
+    padding: "12px 4px", fontSize: 16, color: C.ink,
     fontFamily: "'DM Sans', system-ui, sans-serif", boxSizing: "border-box",
   };
 
@@ -1289,7 +1289,7 @@ function ChatScreen({ user }) {
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === "Enter" && sendMessage()}
           placeholder="Escribe lo que llevas en el corazón..."
-          style={{ flex: 1, border: "1px solid " + C.mist, outline: "none", background: C.fog, borderRadius: 12, padding: "11px 14px", fontSize: 13.5, color: C.ink, fontFamily: "'DM Sans', system-ui, sans-serif" }}
+          style={{ flex: 1, border: "1px solid " + C.mist, outline: "none", background: C.fog, borderRadius: 12, padding: "11px 14px", fontSize: 16, color: C.ink, fontFamily: "'DM Sans', system-ui, sans-serif" }}
         />
         <button onClick={sendMessage} disabled={loading || !input.trim()} style={{ width: 40, height: 40, borderRadius: 12, border: "none", background: input.trim() ? C.navy : C.mist, display: "flex", alignItems: "center", justifyContent: "center", cursor: input.trim() ? "pointer" : "default", flexShrink: 0 }}>
           <Icon name="send" size={16} color={C.cream} />
@@ -1707,14 +1707,14 @@ function DiaryScreen({ user }) {
           ref={titleRef}
           defaultValue={data.title}
           placeholder="Título..."
-          style={{ width: "100%", border: "none", outline: "none", borderBottom: "1.5px solid " + C.mist, padding: "8px 0", fontSize: 15, fontWeight: 700, color: C.ink, background: "transparent", fontFamily: "'DM Sans', system-ui, sans-serif", marginBottom: 10, boxSizing: "border-box" }}
+          style={{ width: "100%", border: "none", outline: "none", borderBottom: "1.5px solid " + C.mist, padding: "8px 0", fontSize: 16, fontWeight: 700, color: C.ink, background: "transparent", fontFamily: "'DM Sans', system-ui, sans-serif", marginBottom: 10, boxSizing: "border-box" }}
         />
         <textarea
           ref={textRef}
           defaultValue={data.text}
           placeholder="¿Qué movimientos espirituales notaste hoy?"
           rows={4}
-          style={{ width: "100%", border: "none", outline: "none", padding: "0", fontSize: 13.5, color: C.inkMid, background: "transparent", fontFamily: "'DM Sans', system-ui, sans-serif", lineHeight: 1.65, resize: "none", boxSizing: "border-box" }}
+          style={{ width: "100%", border: "none", outline: "none", padding: "0", fontSize: 16, color: C.inkMid, background: "transparent", fontFamily: "'DM Sans', system-ui, sans-serif", lineHeight: 1.65, resize: "none", boxSizing: "border-box" }}
         />
         <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 14, gap: 10 }}>
           <button onClick={onCancel} style={{ background: "transparent", border: "1px solid " + C.mist, borderRadius: 10, padding: "8px 16px", fontSize: 12, color: C.slateLight, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>Cancelar</button>
@@ -1984,7 +1984,7 @@ function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDa
                   type="time"
                   value={notifTimes[i]}
                   onChange={e => updateNotifTime(i, e.target.value)}
-                  style={{ border: "1px solid " + C.mist, borderRadius: 8, padding: "6px 10px", fontSize: 13, color: C.ink, background: C.fog, fontFamily: "'DM Sans', system-ui, sans-serif" }}
+                  style={{ border: "1px solid " + C.mist, borderRadius: 8, padding: "6px 10px", fontSize: 16, color: C.ink, background: C.fog, fontFamily: "'DM Sans', system-ui, sans-serif" }}
                 />
               </div>
             ))}
@@ -2027,8 +2027,7 @@ export default function App() {
   const [profile, setProfile] = useState(null);
   const [loadingAuth, setLoadingAuth] = useState(true);
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem("mater_dark_mode") === "true");
-  const { isTablet, contentMaxWidth, keyboardOpen, visualHeight } = useViewportInfo();
-  const visualViewportHeightPx = visualHeight ? visualHeight + "px" : "100%";
+  const { isTablet, contentMaxWidth, keyboardOpen } = useViewportInfo();
 
   function toggleDarkMode() {
     setDarkMode(prev => {
@@ -2121,10 +2120,7 @@ export default function App() {
   const phone = {
     width: "100%",
     maxWidth: contentMaxWidth,
-    // Con el teclado abierto usamos el alto visual real (visualViewport),
-    // así el layout se recalcula de verdad y el contenido nunca queda
-    // detrás del teclado. Sin teclado, 100% del outerWrap (100dvh estable).
-    height: keyboardOpen ? visualViewportHeightPx : "100%",
+    height: "100%",
     fontFamily: "'DM Sans', system-ui, sans-serif",
     position: "relative",
     overflow: "hidden",
