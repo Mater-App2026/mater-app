@@ -1,3 +1,6 @@
+// VERSION-ROBUSTA-2 — si ves este comentario en el archivo desplegado, la
+// extracción robusta está activa. Si no aparece, alguien pisó este archivo
+// con una versión vieja.
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -20,53 +23,23 @@ export default async function handler(req, res) {
 
     const html = await response.text();
 
-    // Extraer el evangelio del HTML de la USCCB
-    // El evangelio está en una sección <h3> con "Evangelio" seguido del texto
-    const evangelioMatch = html.match(/### Evangelio[\s\S]*?(?=###|$)/) ||
-      html.match(/<h3[^>]*>Evangelio<\/h3>([\s\S]*?)(?=<h3|<\/main|$)/i);
-
-    // Extraer la referencia del evangelio (ej: Mateo 8, 1-4)
-    const refMatch = html.match(/Evangelio\s*\n\n([A-Za-záéíóúÁÉÍÓÚñÑ]+\s+\d+[,\s\d-]+)/m) ||
-      html.match(/<h3[^>]*>Evangelio<\/h3>\s*<p[^>]*>([^<]+)/i);
-
-    // Extraer el texto del evangelio — buscar "En aquel tiempo" o el inicio típico
-    const textoMatch = html.match(/(En aquel tiempo[\s\S]*?)(?=\n\n###|\n\n## |<\/div|Aclamación|Salmo|oración|R\.|Dijo el Señor)/im);
-
-    if (!textoMatch) {
-      throw new Error("No se pudo extraer el evangelio");
+    // 1) Localizar el encabezado real "Evangelio" (h1-h6), sin depender de
+    //    markdown ni de que la palabra "Evangelio" no aparezca antes en otro
+    //    lugar (p. ej. en la Aclamación, que también menciona "Evangelio").
+    const headingRegex = /<h[1-6][^>]*>\s*Evangelio\s*<\/h[1-6]>/i;
+    const headingMatch = html.match(headingRegex);
+    if (!headingMatch) {
+      throw new Error("No se encontró la sección Evangelio en la página");
     }
+    const startIdx = headingMatch.index + headingMatch[0].length;
 
-    // Limpiar el texto
-    let texto = textoMatch[1]
-      .replace(/<[^>]+>/g, "") // quitar HTML tags
-      .replace(/\n{3,}/g, "\n\n") // normalizar espacios
-      .replace(/R\.\s*\*\*[^*]+\*\*/g, "") // quitar respuestas del salmo
-      .replace(/\*\*/g, "") // quitar markdown bold
-      .trim();
+    // 2) Cortar hasta el siguiente encabezado h1-h6, o hasta marcadores de
+    //    pie de página conocidos que siempre aparecen después del texto.
+    const rest = html.slice(startIdx);
+    const endMarkers = [
+      /<h[1-6][^>]*>/i,
+      /Los textos de la Sagrada Escritura/i,
+      /In English/i,
+      /Ver Calendario/i,
+      /Suscribase/i,
 
-    // Extraer la referencia
-    let referencia = "Evangelio del día";
-    const dateMatch = url.match(/(\d{2})(\d{2})(\d{2})\.cfm/);
-    if (dateMatch) {
-      const [, mm, dd, yy] = dateMatch;
-      const months = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
-      // buscar referencia en el HTML
-      const refSearch = html.match(/Evangelio\s*\n+([A-Za-záéíóú]+\s+\d+[,\s\d-]+)/m);
-      if (refSearch) referencia = `Evangelio según ${refSearch[1].trim()}`;
-    }
-
-    // Extraer tiempo litúrgico
-    let tiempo = "Tiempo Ordinario";
-    const tiempoMatch = html.match(/(Tiempo ordinario|Adviento|Cuaresma|Pascua|Navidad|Tiempo pascual)/i);
-    if (tiempoMatch) tiempo = tiempoMatch[1];
-
-    return res.status(200).json({
-      referencia,
-      tiempo,
-      textoCompleto: texto,
-    });
-
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-}
