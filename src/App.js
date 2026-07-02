@@ -221,7 +221,7 @@ function LandingScreen({ onEnter }) {
         <div style={{ display: "flex", flexDirection: "column", gap: 10, width: "100%", marginBottom: 32 }}>
           {[
             ["🕊️", "Chat con Mater", "Tu guía espiritual personal con IA"],
-            ["📖", "Evangelio del día", "Lecturas diarias según la USCCB"],
+            ["📖", "Lectio Divina diaria", "Lectura orante guiada por IA"],
             ["📋", "Plan de 30 días", "Formación espiritual estructurada"],
             ["📓", "Diario espiritual", "Registra tus movimientos interiores"],
           ].map(([icon, title, sub], i) => (
@@ -807,26 +807,8 @@ function HomeScreen({ user, profile, onTabChange }) {
     if (index === 1) {
       setLoadingPractice(true);
       try {
-        const now = new Date();
-        const mm = String(now.getMonth() + 1).padStart(2, "0");
-        const dd = String(now.getDate()).padStart(2, "0");
-        const yy = String(now.getFullYear()).slice(-2);
-        const usccbUrl = "https://bible.usccb.org/es/bible/lecturas/" + mm + dd + yy + ".cfm";
-
         let textoEvangelio = "";
         let referenciaEvangelio = "Evangelio del día";
-        try {
-          const gospelRes = await fetch("/api/gospel", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ url: usccbUrl }),
-          });
-          const gospelData = await gospelRes.json();
-          if (gospelData && gospelData.textoCompleto) {
-            textoEvangelio = gospelData.textoCompleto;
-            referenciaEvangelio = gospelData.referencia || "Evangelio del día";
-          }
-        } catch(e) { console.log("Gospel fetch failed", e); }
 
         const todayStr = new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" });
         const userMsg = textoEvangelio
@@ -1308,102 +1290,7 @@ function PlanScreen({ user }) {
   const [openDay, setOpenDay] = useState(null);
   const [dayContent, setDayContent] = useState(null);
   const [loadingContent, setLoadingContent] = useState(false);
-  const [gospelOfDay, setGospelOfDay] = useState(null);
-  const [loadingGospel, setLoadingGospel] = useState(false);
   const contentCache = useRef({});
-
-  async function callAI(systemPrompt, userMessage) {
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-6",
-        max_tokens: 1500,
-        system: systemPrompt,
-        messages: [{ role: "user", content: userMessage }],
-      }),
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error.message);
-    const text = data.content?.map(b => b.text || "").join("") || "{}";
-    return text.replace(/```json|```/g, "").trim();
-  }
-
-  async function fetchGospelOfDay() {
-    if (gospelOfDay) return;
-
-    // Si ya lo conseguimos bien hoy, usar eso y no volver a arriesgarnos
-    // con la red (evita que una falla de conexión aislada se note).
-    const cacheKey = "gospel-" + new Date().toDateString();
-    const cached = sessionStorage.getItem(cacheKey);
-    if (cached) {
-      try {
-        setGospelOfDay(JSON.parse(cached));
-        return;
-      } catch { /* si el caché está corrupto, seguimos y lo pedimos de nuevo */ }
-    }
-
-    setLoadingGospel(true);
-    try {
-      // Construir URL de USCCB para hoy — formato MMDDYY Ciclo A
-      const now = new Date();
-      const mm = String(now.getMonth() + 1).padStart(2, "0");
-      const dd = String(now.getDate()).padStart(2, "0");
-      const yy = String(now.getFullYear()).slice(-2);
-      const usccbUrl = `https://bible.usccb.org/es/bible/lecturas/${mm}${dd}${yy}.cfm`;
-
-      // Pasar por nuestro proxy para evitar CORS — con reintentos, por si
-      // hay una falla de red puntual (comunes al hacer scraping externo).
-      let data = null;
-      let lastError = null;
-      for (let attempt = 0; attempt < 3 && !data; attempt++) {
-        try {
-          if (attempt > 0) await new Promise(r => setTimeout(r, 600));
-          const res = await fetch("/api/gospel", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ url: usccbUrl }),
-          });
-          const parsed = await res.json();
-          if (parsed && parsed.referencia && parsed.textoCompleto) {
-            data = parsed;
-          } else {
-            lastError = new Error("Sin datos");
-          }
-        } catch (e) {
-          lastError = e;
-        }
-      }
-      if (!data) throw lastError || new Error("Sin datos");
-
-      setGospelOfDay(data);
-      sessionStorage.setItem(cacheKey, JSON.stringify(data));
-    } catch {
-      // Fallback IA
-      try {
-        const today = new Date().toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
-        const text = await callAI(
-          "Eres un experto en liturgia catolica con acceso preciso al Leccionario Romano oficial. Tu prioridad absoluta es la EXACTITUD: el texto biblico debe ser textual, tal como aparece en una traduccion catolica aprobada. NUNCA parafraseas ni alteras el texto biblico. Respondes SOLO en JSON valido sin bloques de codigo.",
-          "Hoy es " + today + ". Estamos en el Ciclo A del leccionario. Dame el TEXTO BIBLICO TEXTUAL Y COMPLETO del evangelio que corresponde exactamente a hoy. No resumas ni parafrasees. SOLO el texto del evangelio, no otras lecturas. Responde SOLO con: {referencia: 'Evangelio segun San X, X:X-X', tiempo: 'Tiempo liturgico', textoCompleto: 'Texto biblico textual completo en español'}"
-        );
-        const parsed = JSON.parse(text.replace(/```json|```/g, "").trim());
-        setGospelOfDay(parsed);
-        // No lo guardamos en caché: si la IA acertó por suerte, mejor
-        // reintentar la fuente real la próxima vez en lugar de fijarlo.
-      } catch {
-        setGospelOfDay({
-          referencia: "Juan 15:1-8",
-          tiempo: "Tiempo Ordinario",
-          textoCompleto: "En aquel tiempo, dijo Jesús a sus discípulos:\n\n«Yo soy la vid verdadera y mi Padre es el viñador. Todo sarmiento que en mí no da fruto, lo arranca, y todo el que da fruto, lo poda para que dé más fruto.\n\nVosotros ya estáis limpios gracias a la palabra que os he hablado. Permaneced en mí y yo en vosotros. Como el sarmiento no puede dar fruto por sí mismo si no permanece en la vid, así tampoco vosotros si no permanecéis en mí.\n\nYo soy la vid; vosotros los sarmientos. El que permanece en mí y yo en él, ese da mucho fruto; porque sin mí no podéis hacer nada.\n\nSi permanecéis en mí y mis palabras permanecen en vosotros, pedid lo que queráis y se os dará.»",
-        });
-      }
-    } finally {
-      setLoadingGospel(false);
-    }
-  }
-
 
   function getStaticDayContent(weekIdx, dayIdx) {
     const allContent = [
@@ -1581,28 +1468,6 @@ function PlanScreen({ user }) {
       <div style={{ padding: "52px 22px 20px" }}>
         <p style={{ fontSize: 12, color: C.slateLight, margin: "0 0 4px", letterSpacing: "0.08em", textTransform: "uppercase" }}>Plan de formación</p>
         <h2 style={{ fontSize: 22, fontWeight: 600, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>30 días hacia Dios</h2>
-      </div>
-
-      <div style={{ padding: "0 22px 20px" }}>
-        <button onClick={fetchGospelOfDay} style={{ width: "100%", borderRadius: 16, border: `1.5px solid ${C.mist}`, background: gospelOfDay ? C.white : C.iceBlue, padding: "16px 18px", cursor: "pointer", textAlign: "left" }}>
-          {loadingGospel ? (
-            <p style={{ color: C.slateLight, fontSize: 13, margin: 0 }}>✨ Buscando el evangelio de hoy...</p>
-          ) : gospelOfDay ? (
-            <>
-              <p style={{ fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: C.gold, margin: "0 0 6px", fontWeight: 700 }}>📖 Evangelio del día · {gospelOfDay.tiempo}</p>
-              <p style={{ fontSize: 14, fontWeight: 700, color: C.navy, margin: "0 0 12px" }}>{gospelOfDay.referencia}</p>
-              <p style={{ fontSize: 13, color: C.ink, lineHeight: 1.85, margin: 0, whiteSpace: "pre-line", fontStyle: "italic", borderLeft: `3px solid ${C.gold}`, paddingLeft: 14 }}>{gospelOfDay.textoCompleto}</p>
-            </>
-          ) : (
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <span style={{ fontSize: 24 }}>📖</span>
-              <div>
-                <p style={{ fontSize: 13, fontWeight: 700, color: C.navy, margin: 0 }}>Evangelio del día</p>
-                <p style={{ fontSize: 11, color: C.slateLight, margin: 0 }}>Toca para ver el evangelio de hoy</p>
-              </div>
-            </div>
-          )}
-        </button>
       </div>
 
       <div style={{ padding: "0 22px 20px", display: "flex", gap: 10 }}>
