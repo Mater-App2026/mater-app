@@ -1703,6 +1703,9 @@ function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDa
   const [activeModal, setActiveModal] = useState(null);
   const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url || null);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
+  const [deletingAccount, setDeletingAccount] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
   const fileInputRef = useRef(null);
   const [notifTimes, setNotifTimes] = useState(() => {
     const saved = localStorage.getItem("mater_notif_times");
@@ -1764,6 +1767,30 @@ function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDa
     setProfile(prev => ({ ...prev, name: name.trim() }));
     setSaving(false); setSaved(true); setEditing(false);
     setTimeout(() => setSaved(false), 2000);
+  }
+
+  async function handleDeleteAccount() {
+    setDeleteError("");
+    setDeletingAccount(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const accessToken = session?.access_token;
+      if (!accessToken) throw new Error("Sesión no válida. Vuelve a iniciar sesión e inténtalo de nuevo.");
+
+      const res = await fetch("/api/delete-account", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user.id, accessToken }),
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) throw new Error(data.error || "No se pudo eliminar la cuenta.");
+
+      await supabase.auth.signOut();
+      onLogout();
+    } catch (e) {
+      setDeleteError(e.message || "Ocurrió un error. Intenta de nuevo o escribe a soporte@materapp.org.");
+      setDeletingAccount(false);
+    }
   }
 
   return (
@@ -1917,6 +1944,58 @@ function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDa
           Cerrar sesión
         </button>
       </div>
+
+      <div style={{ padding: "12px 22px 0" }}>
+        <button onClick={() => { setDeleteConfirmText(""); setDeleteError(""); setActiveModal("delete"); }} style={{ width: "100%", padding: "14px", border: "none", background: "transparent", color: C.slateLight, fontSize: 12, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif", textDecoration: "underline" }}>
+          Eliminar cuenta
+        </button>
+      </div>
+
+      {activeModal === "delete" && (
+        <div style={sheetOverlay} onClick={() => !deletingAccount && setActiveModal(null)}>
+          <div onClick={e => e.stopPropagation()} style={sheetCard()}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+              <h2 style={{ fontSize: 18, fontWeight: 800, color: "#C0392B", margin: 0 }}>Eliminar cuenta</h2>
+              {!deletingAccount && (
+                <button onClick={() => setActiveModal(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+              )}
+            </div>
+            <p style={{ fontSize: 13.5, color: C.inkMid, lineHeight: 1.7, marginBottom: 14 }}>
+              Esta acción es <strong>permanente</strong> y no se puede deshacer. Se eliminarán para siempre:
+            </p>
+            <ul style={{ fontSize: 13, color: C.inkMid, lineHeight: 1.9, marginBottom: 20, paddingLeft: 20 }}>
+              <li>Tu perfil y foto</li>
+              <li>Todas tus entradas del diario espiritual</li>
+              <li>Tu progreso en el plan de 30 días</li>
+              <li>Tu racha y prácticas completadas</li>
+            </ul>
+            <p style={{ fontSize: 13, color: C.inkMid, marginBottom: 8 }}>
+              Escribe <strong>ELIMINAR</strong> para confirmar:
+            </p>
+            <input
+              value={deleteConfirmText}
+              onChange={e => setDeleteConfirmText(e.target.value)}
+              disabled={deletingAccount}
+              placeholder="ELIMINAR"
+              style={{ width: "100%", border: "1.5px solid " + C.mist, outline: "none", borderRadius: 10, padding: "12px 14px", fontSize: 16, color: C.ink, background: C.fog, fontFamily: "'DM Sans', system-ui, sans-serif", marginBottom: 14, boxSizing: "border-box" }}
+            />
+            {deleteError && <p style={{ color: "#C0392B", fontSize: 12, marginBottom: 14 }}>{deleteError}</p>}
+            <div style={{ display: "flex", gap: 10 }}>
+              <button onClick={() => setActiveModal(null)} disabled={deletingAccount} style={{ flex: 1, padding: "14px", background: C.iceBlue, border: "none", borderRadius: 12, color: C.inkMid, fontSize: 13.5, fontWeight: 600, cursor: deletingAccount ? "default" : "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+                Cancelar
+              </button>
+              <button
+                onClick={handleDeleteAccount}
+                disabled={deleteConfirmText.trim().toUpperCase() !== "ELIMINAR" || deletingAccount}
+                style={{ flex: 1, padding: "14px", background: "#C0392B", border: "none", borderRadius: 12, color: "#fff", fontSize: 13.5, fontWeight: 700, cursor: (deleteConfirmText.trim().toUpperCase() !== "ELIMINAR" || deletingAccount) ? "default" : "pointer", opacity: (deleteConfirmText.trim().toUpperCase() !== "ELIMINAR" || deletingAccount) ? 0.5 : 1, fontFamily: "'DM Sans', system-ui, sans-serif" }}
+              >
+                {deletingAccount ? "Eliminando..." : "Eliminar para siempre"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <p style={{ textAlign: "center", fontSize: 11, color: C.slateLight, margin: "20px 0 0" }}>Mater v1.0 · materapp.org</p>
     </div>
   );
