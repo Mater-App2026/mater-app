@@ -2181,32 +2181,32 @@ function MiraclesScreen({ onBack }) {
 }
 
 const MISTERIOS_GOZOSOS = [
-  { titulo: "La Anunciación del Ángel a María", texto: "El ángel Gabriel anuncia a María que será Madre del Hijo de Dios. Ella responde con humildad: «Hágase en mí según tu palabra.»", fruto: "Humildad" },
-  { titulo: "La Visitación de María a su prima Isabel", texto: "María, apenas conoce la noticia, sale de prisa a servir a su prima anciana y embarazada. El amor la mueve antes que la reflexión.", fruto: "Caridad con el prójimo" },
-  { titulo: "El Nacimiento de Jesús en Belén", texto: "El Hijo de Dios nace pobre, en un pesebre, entre el frío y la sencillez de una familia sin lugar en la posada.", fruto: "Pobreza y desprendimiento" },
-  { titulo: "La Presentación de Jesús en el Templo", texto: "María y José presentan al Niño en el Templo, cumpliendo la Ley, y el anciano Simeón lo reconoce como la salvación esperada.", fruto: "Obediencia y pureza" },
-  { titulo: "El Niño Jesús perdido y hallado en el Templo", texto: "Después de tres días de angustiosa búsqueda, José y María encuentran a Jesús enseñando entre los doctores del Templo.", fruto: "Buscar a Dios ante todo" },
+  { titulo: "La Anunciación del Ángel a María", texto: "María dice sí sin condiciones, y ese sí la convierte en instrumento dócil en las manos de Dios. Pido hoy esa misma disponibilidad: que mi voluntad no ponga condiciones a lo que Dios quiera hacer conmigo.", fruto: "Disponibilidad" },
+  { titulo: "La Visitación de María a su prima Isabel", texto: "María no se guarda para sí el don recibido — corre a servir. Un instrumento fiel no retiene la gracia: la lleva a quien la necesita, con manos y tiempo concretos.", fruto: "Servicio generoso" },
+  { titulo: "El Nacimiento de Jesús en Belén", texto: "Dios elige nacer en la pobreza de un pesebre, sin exigir condiciones dignas. Pido la sencillez de quien no necesita brillar para ser útil, sino solo estar disponible.", fruto: "Sencillez" },
+  { titulo: "La Presentación de Jesús en el Templo", texto: "María entrega al Niño en el Templo sin retenerlo para sí. Ofrezco hoy lo que más me cuesta soltar, confiando en que Dios lo recibe y lo hace fecundo.", fruto: "Entrega confiada" },
+  { titulo: "El Niño Jesús perdido y hallado en el Templo", texto: "Cuando el instrumento se distrae o se aleja, la respuesta no es la culpa sino la búsqueda perseverante. Vuelvo hoy, sin miedo, a buscar a Dios en lo que se me haya extraviado.", fruto: "Perseverancia" },
 ];
 const MISTERIOS_DOLOROSOS = [
-  { titulo: "La Oración de Jesús en el Huerto", texto: "Jesús suda sangre en Getsemaní, angustiado ante la pasión que se acerca, y se abandona por completo a la voluntad del Padre.", fruto: "Dolor por el pecado" },
-  { titulo: "La Flagelación del Señor", texto: "Jesús es atado a la columna y azotado brutalmente, cargando en su cuerpo el peso de nuestras faltas.", fruto: "Pureza y mortificación" },
-  { titulo: "La Coronación de espinas", texto: "Los soldados se burlan de Jesús, lo visten de púrpura y le clavan una corona de espinas, llamándolo rey en son de mofa.", fruto: "Valentía para enfrentar la humillación" },
-  { titulo: "Jesús con la cruz a cuestas camino al Calvario", texto: "Jesús carga la cruz por las calles de Jerusalén, cae varias veces, y es ayudado por Simón de Cirene.", fruto: "Paciencia en las pruebas" },
-  { titulo: "La Crucifixión y muerte de Jesús", texto: "Jesús muere en la cruz entre dos ladrones, entregando su vida por amor a toda la humanidad.", fruto: "Perdón de las ofensas" },
+  { titulo: "La Oración de Jesús en el Huerto", texto: "Jesús no huye del sufrimiento que su misión exige. Pido la fortaleza de quien no se retira cuando el precio de servir se vuelve alto.", fruto: "Fortaleza" },
+  { titulo: "La Flagelación del Señor", texto: "El cuerpo de Cristo se entrega sin resistencia por amor a otros. Uno mis pequeños sacrificios e incomodidades de hoy a ese mismo amor que redime.", fruto: "Sacrificio con amor" },
+  { titulo: "La Coronación de espinas", texto: "Jesús es humillado y no responde con desprecio. Pido la humildad de servir aunque no se me reconozca, aunque se burlen de lo que hago por amor.", fruto: "Humildad ante la burla" },
+  { titulo: "Jesús con la cruz a cuestas camino al Calvario", texto: "Cristo carga la cruz con la ayuda de Simón — no la lleva completamente solo. Aprendo a dejarme ayudar y a ayudar a quien carga su propia cruz junto a mí.", fruto: "Aceptar y dar ayuda" },
+  { titulo: "La Crucifixión y muerte de Jesús", texto: "En la cruz, Jesús se entrega hasta el final sin condiciones. Pido la valentía de no guardarme nada para mí cuando llega el momento de la entrega total.", fruto: "Entrega total" },
 ];
 const MISTERIOS_GLORIOSOS = [
-  { titulo: "La Resurrección del Señor", texto: "Al tercer día, Jesús resucita glorioso, venciendo a la muerte para siempre.", fruto: "Fe" },
-  { titulo: "La Ascensión del Señor a los cielos", texto: "Jesús asciende al cielo ante sus discípulos, prometiéndoles el envío del Espíritu Santo.", fruto: "Esperanza" },
-  { titulo: "La Venida del Espíritu Santo", texto: "El Espíritu Santo desciende sobre los apóstoles y María reunidos en el Cenáculo, dando inicio a la misión de la Iglesia.", fruto: "Amor de Dios" },
-  { titulo: "La Asunción de María a los cielos", texto: "María es llevada en cuerpo y alma a la gloria del cielo, anticipo de la resurrección que espera a todos los creyentes.", fruto: "Devoción a María" },
-  { titulo: "La Coronación de María como Reina", texto: "María es coronada Reina del cielo y de la tierra, Madre de la Iglesia y de toda la humanidad.", fruto: "Perseverancia final" },
+  { titulo: "La Resurrección del Señor", texto: "La muerte no tiene la última palabra sobre quien se entrega con amor. Confío en que lo que hoy ofrezco, por pequeño que parezca, no se pierde sino que da fruto.", fruto: "Confianza" },
+  { titulo: "La Ascensión del Señor a los cielos", texto: "Jesús asciende, pero no abandona su misión: la confía a manos humanas. Pido la paz de saber que puedo continuar su obra aunque no vea todos los resultados.", fruto: "Paz en la misión" },
+  { titulo: "La Venida del Espíritu Santo", texto: "El Espíritu transforma el miedo de los discípulos en valentía para salir. Pido ese mismo impulso para no quedarme encerrado en mi propia comodidad.", fruto: "Valentía apostólica" },
+  { titulo: "La Asunción de María a los cielos", texto: "María, entregada por entero, es llevada por entero a la gloria. Su vida muestra que nada de lo ofrecido con amor queda sin fruto duradero.", fruto: "Esperanza en el fruto" },
+  { titulo: "La Coronación de María como Reina", texto: "María reina sirviendo, no dominando. Pido aprender que la verdadera grandeza está en cuánto se ama, no en cuánto se hace notar.", fruto: "Grandeza en el servicio" },
 ];
 const MISTERIOS_LUMINOSOS = [
-  { titulo: "El Bautismo de Jesús en el Jordán", texto: "Jesús se bautiza en el Jordán y el Padre lo proclama «Hijo amado», mientras el Espíritu desciende como paloma.", fruto: "Apertura al Espíritu Santo" },
-  { titulo: "Las Bodas de Caná", texto: "A petición de María, Jesús realiza su primer signo convirtiendo el agua en vino, manifestando su gloria.", fruto: "Confianza en la intercesión de María" },
-  { titulo: "El anuncio del Reino de Dios", texto: "Jesús predica la conversión y el perdón, invitando a todos a entrar en el Reino de Dios.", fruto: "Conversión y confianza en Dios" },
-  { titulo: "La Transfiguración", texto: "Jesús se transfigura ante Pedro, Santiago y Juan en el monte Tabor, mostrando un anticipo de su gloria.", fruto: "Deseo de santidad" },
-  { titulo: "La Institución de la Eucaristía", texto: "En la Última Cena, Jesús instituye la Eucaristía, entregándose bajo las especies de pan y vino.", fruto: "Adoración" },
+  { titulo: "El Bautismo de Jesús en el Jordán", texto: "Jesús se coloca entre los pecadores antes de comenzar su misión pública. Pido la humildad de servir desde la cercanía y no desde la distancia.", fruto: "Cercanía humilde" },
+  { titulo: "Las Bodas de Caná", texto: "María nota la necesidad antes que nadie y actúa sin protagonismo: «Hagan lo que Él les diga.» Pido esa misma atención discreta a las necesidades que tengo alrededor hoy.", fruto: "Atención discreta" },
+  { titulo: "El anuncio del Reino de Dios", texto: "Jesús anuncia el Reino con hechos y palabras sencillas, no con grandes espectáculos. Pido comunicar mi fe con esa misma sencillez y coherencia.", fruto: "Coherencia sencilla" },
+  { titulo: "La Transfiguración", texto: "Por un instante, los discípulos ven la gloria escondida en lo cotidiano de Jesús. Pido ojos para reconocer la presencia de Dios en lo ordinario de mi día.", fruto: "Ojos contemplativos" },
+  { titulo: "La Institución de la Eucaristía", texto: "Jesús se entrega como alimento, sin reservarse nada. Pido aprender de ese gesto: existir para ser entregado, no para ser guardado.", fruto: "Vida entregada" },
 ];
 
 function misterioDelDia() {
@@ -2227,6 +2227,7 @@ const ORACION_SALVE = "Dios te salve, Reina y Madre de misericordia,\nvida, dulz
 function construirPasosRosario(misterios) {
   const pasos = [
     { tipo: "intro", titulo: "Señal de la Cruz", texto: "Por la señal de la Santa Cruz, de nuestros enemigos líbranos, Señor, Dios nuestro.\nEn el nombre del Padre, y del Hijo, y del Espíritu Santo.\nAmén." },
+    { tipo: "preparacion", titulo: "Oración preparatoria", texto: "Antes de comenzar, hago silencio.\n\nCierro los ruidos de fuera y los de dentro, y te pido, Señor, que tu luz entre en lo que voy a meditar.\n\nQuiero rezar este Rosario dejándome moldear como un instrumento disponible en tus manos y en las de María, sin condiciones ni reservas.\n\nToma este tiempo de oración y hazlo fecundo." },
     { tipo: "credo", titulo: "Credo de los Apóstoles", texto: ORACION_CREDO },
     { tipo: "padrenuestro", titulo: "Padre Nuestro", texto: ORACION_PADRENUESTRO },
     { tipo: "avemaria", titulo: "Ave María (1 de 3 — por la fe)", texto: ORACION_AVEMARIA },
@@ -2244,6 +2245,7 @@ function construirPasosRosario(misterios) {
     pasos.push({ tipo: "fatima", titulo: "Oración de Fátima", texto: ORACION_FATIMA });
   });
   pasos.push({ tipo: "salve", titulo: "Salve — Dios te salve, Reina y Madre", texto: ORACION_SALVE });
+  pasos.push({ tipo: "ofrenda", titulo: "Ofrenda final", texto: "Recibe, Señor, este tiempo de oración.\n\nToma lo que soy y lo que tengo, y sigue formándome como un instrumento disponible en tus manos y en las de María, para el bien de quienes hoy pongas en mi camino.\n\nAmén." });
   pasos.push({ tipo: "final", titulo: "Amén 🙏", texto: "Has terminado tu Santo Rosario. Que María interceda por todas tus intenciones de hoy." });
   return pasos;
 }
@@ -2264,8 +2266,8 @@ function RosaryScreen({ onBack }) {
   function reiniciar() { setIdx(0); setIniciado(false); }
 
   const tipoColor = {
-    intro: C.slate, credo: C.blue, padrenuestro: C.navy, avemaria: C.periwinkle,
-    gloria: C.gold, misterio: C.teal, fatima: C.sky, salve: C.gold, final: C.gold,
+    intro: C.slate, preparacion: C.slate, credo: C.blue, padrenuestro: C.navy, avemaria: C.periwinkle,
+    gloria: C.gold, misterio: C.teal, fatima: C.sky, salve: C.gold, ofrenda: C.gold, final: C.gold,
   };
   const color = tipoColor[paso.tipo] || C.navy;
 
