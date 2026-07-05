@@ -49,10 +49,6 @@ function useViewportInfo() {
     width: typeof window !== "undefined" ? window.innerWidth : 390,
     height: typeof window !== "undefined" ? window.innerHeight : 844,
   });
-  // Alto visible real (descuenta el teclado). Solo lo usamos para detectar
-  // el teclado — NO para dimensionar el contenedor general, porque
-  // visualViewport también cambia con la barra de Safari y eso es
-  // precisamente lo que causaba el vaivén vertical.
   const [visualHeight, setVisualHeight] = useState(
     typeof window !== "undefined" && window.visualViewport ? window.visualViewport.height : (typeof window !== "undefined" ? window.innerHeight : 844)
   );
@@ -83,12 +79,8 @@ function useViewportInfo() {
   const { width, height } = size;
   const isTablet = width >= 768;
   const isDesktop = width >= 1200;
-  // Columna de contenido: en móvil, todo el ancho. En tablet/desktop, una
-  // columna de lectura cómoda — nunca estirada al 100% del ancho.
   const contentMaxWidth = width < 480 ? width : Math.min(560, width - 64);
   const columns = width >= 700 ? 2 : 1;
-  // Umbral de 150px: el teclado resta 250-350px, la barra de Safari solo ~50px.
-  // Así distinguimos "se abrió el teclado" de "se movió la barra de direcciones".
   const keyboardOpen = height - visualHeight > 150;
   const keyboardHeight = keyboardOpen ? Math.round(height - visualHeight) : 0;
 
@@ -130,6 +122,9 @@ const Icon = ({ name, size = 22, color = "currentColor" }) => {
     user: <><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" /><circle cx="12" cy="7" r="4" stroke={color} strokeWidth="1.8" fill="none" /></>,
     logout: <><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" /><polyline points="16,17 21,12 16,7" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" /><line x1="21" y1="12" x2="9" y2="12" stroke={color} strokeWidth="1.8" strokeLinecap="round" /></>,
     eye: <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke={color} strokeWidth="1.8" fill="none" /><circle cx="12" cy="12" r="3" stroke={color} strokeWidth="1.8" fill="none" /></>,
+    grid: <><rect x="3" y="3" width="7" height="7" rx="1.5" stroke={color} strokeWidth="1.8" fill="none" /><rect x="14" y="3" width="7" height="7" rx="1.5" stroke={color} strokeWidth="1.8" fill="none" /><rect x="3" y="14" width="7" height="7" rx="1.5" stroke={color} strokeWidth="1.8" fill="none" /><rect x="14" y="14" width="7" height="7" rx="1.5" stroke={color} strokeWidth="1.8" fill="none" /></>,
+    rosary: <><circle cx="12" cy="4" r="1.6" stroke={color} strokeWidth="1.6" fill="none" /><circle cx="18" cy="8" r="1.6" stroke={color} strokeWidth="1.6" fill="none" /><circle cx="19" cy="15" r="1.6" stroke={color} strokeWidth="1.6" fill="none" /><circle cx="14" cy="20" r="1.6" stroke={color} strokeWidth="1.6" fill="none" /><circle cx="7" cy="19" r="1.6" stroke={color} strokeWidth="1.6" fill="none" /><circle cx="4" cy="13" r="1.6" stroke={color} strokeWidth="1.6" fill="none" /><circle cx="6" cy="6" r="1.6" stroke={color} strokeWidth="1.6" fill="none" /><path d="M12 12v9" stroke={color} strokeWidth="1.8" strokeLinecap="round" /></>,
+    host: <><circle cx="12" cy="12" r="8.5" stroke={color} strokeWidth="1.8" fill="none" /><path d="M12 7.5v9M8 12h8" stroke={color} strokeWidth="1.6" strokeLinecap="round" /></>,
   };
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" style={{ display: "block", flexShrink: 0 }}>
@@ -164,7 +159,6 @@ async function requestNotificationPermission() {
 }
 
 function scheduleNotifications(times) {
-  // Limpiar timers anteriores
   if (window._materNotifTimers) {
     window._materNotifTimers.forEach(t => clearTimeout(t));
   }
@@ -187,7 +181,6 @@ function scheduleNotifications(times) {
         icon: "/logo.jpeg",
         badge: "/logo.jpeg",
       });
-      // Reprogramar para el día siguiente
       scheduleNotifications(times);
     }, delay);
     window._materNotifTimers.push(timer);
@@ -251,7 +244,6 @@ function OnboardingScreen({ onComplete }) {
 
   const steps = [
     { title: "Bienvenido a Mater", subtitle: "Tu guía de coaching espiritual católico", body: "Mater te acompaña en tu camino de fe con reflexiones diarias, el evangelio de cada día, un diario espiritual y Mater, tu guía con IA.", cta: "Comenzar" },
-
     { title: "Las 3 prácticas del día", subtitle: "Tu rutina espiritual diaria", body: "Cada día encontrarás 3 prácticas — Oración de la mañana, Lectio Divina y Examen de conciencia. Al completarlas construyes tu ritmo semanal.", cta: "Siguiente" },
     { title: "Habla con Mater", subtitle: "Tu guía espiritual personal", body: "Mater está disponible para acompañarte en momentos de duda, discernimiento o simplemente para rezar juntos.", cta: "Entrar a Mater", last: true },
   ];
@@ -448,6 +440,7 @@ function NavBar({ active, onChange, darkMode }) {
     { id: "chat", icon: "chat", label: "Mater" },
     { id: "plan", icon: "plan", label: "Plan" },
     { id: "diary", icon: "diary", label: "Diario" },
+    { id: "more", icon: "grid", label: "Más" },
     { id: "profile", icon: "user", label: "Perfil" },
   ];
   return (
@@ -491,8 +484,6 @@ function HomeScreen({ user, profile, onTabChange }) {
   const [loadingPractice, setLoadingPractice] = useState(false);
   const practiceCache = useRef({});
 
-  // Estilo compartido para los bottom-sheets: en móvil se anclan abajo,
-  // en tablet/desktop aparecen como diálogo centrado (no estirado al borde).
   const sheetOverlay = { position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: isTablet ? "center" : "flex-end", justifyContent: "center", padding: isTablet ? 24 : 0 };
   const sheetCard = (extra = {}) => ({ background: C.white, borderRadius: isTablet ? 24 : "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: isTablet ? 480 : 390, margin: "0 auto", maxHeight: "85vh", overflowY: "auto", ...extra });
 
@@ -557,7 +548,6 @@ function HomeScreen({ user, profile, onTabChange }) {
       }
       const weekStreak = days.map((_, i) => dateSet.has(localDate(i - todayIdx)));
       setStreakDays(weekStreak);
-      // Contar solo los días completados en la semana actual (Lun-Dom)
       let count = 0;
       for (let i = 0; i < 7; i++) {
         if (weekStreak[i]) count++;
@@ -637,7 +627,6 @@ function HomeScreen({ user, profile, onTabChange }) {
     const month = new Date().getMonth();
     const day = new Date().getDate();
 
-    // Contenido para Oración de la mañana (index 0) — 30 variaciones
     const laudesContent = [
       {
         santo: "Lunes · Oración de fortaleza",
@@ -683,7 +672,6 @@ function HomeScreen({ user, profile, onTabChange }) {
       },
     ];
 
-    // Contenido para Lectio Divina (index 1) — 30 variaciones
     const lectioContent = [
       { santo: "San Bernardo de Claraval", cita: "«El río que no regresa a su manantial se seca.»", reflexion: "La escena de Betania es una de las más cargadas de tensión y de gracia en todo el Evangelio. Marta entra apresurada, con las manos llenas y el corazón ocupado. María está sentada a los pies de Jesús.\n\nJesús dice algo que ha desconcertado a los cristianos activos durante dos milenios: 'María ha elegido la parte mejor.' No se trata de una condena al trabajo. Lo que Jesús señala es una prioridad: primero escuchar, luego actuar. Primero ser, luego hacer.\n\nSan Bernardo entendía la Lectio Divina como el acto de volver al manantial. La vida activa nos seca — la contemplación nos repone. No como escape de la realidad sino como la fuente que hace posible volver a ella con más amor.\n\nHoy, siéntate con María mientras el mundo grita con Marta. Lee un pasaje del Evangelio despacio — no para entenderlo sino para dejarte hablar por él.", preguntas: ["¿Me identifico más con Marta o con María en este momento de mi vida?", "¿Hay alguna Palabra que Dios ha estado queriendo decirme y yo no he tenido tiempo de escuchar?", "¿Qué pasaría si dedicara 15 minutos diarios a escuchar a Dios en su Palabra?"] },
       { santo: "San Gregorio Magno", cita: "«La Sagrada Escritura crece con quien la lee.»", reflexion: "San Gregorio Magno fue el papa que sistematizó la Lectio Divina como práctica espiritual. Para él, la Escritura no era un texto del pasado sino una Palabra viva que habla al presente de quien la lee con fe.\n\n'La Escritura crece con quien la lee' — esta frase paradójica señala algo profundo: el mismo texto que leíste hace diez años te dirá algo diferente hoy, porque tú eres diferente. La Palabra de Dios se adapta al estado de tu alma.\n\nLa Lectio Divina tiene cuatro momentos clásicos: lectio (leer), meditatio (rumiar), oratio (responder), contemplatio (descansar). No son pasos mecánicos — son movimientos naturales del alma que encuentra a Dios en el texto.\n\nHoy, lee un pasaje tres veces. La primera para entender. La segunda para sentir. La tercera para recibir lo que Dios quiere decirte a ti, hoy, en este momento de tu vida.", preguntas: ["¿Hay una palabra o frase del Evangelio que te persigue últimamente — y por qué?", "¿Cómo ha cambiado tu lectura de la Escritura a lo largo de los años?", "¿Qué te impide hacer de la Lectio Divina una práctica más regular?"] },
@@ -694,7 +682,6 @@ function HomeScreen({ user, profile, onTabChange }) {
       { santo: "San Agustín de Hipona", cita: "«Nuestro corazón está inquieto hasta que descanse en Ti — y la Escritura es el camino hacia ese descanso.»", reflexion: "San Agustín encontró en la Escritura el espejo que le mostró su propio alma. En las Confesiones, narra cómo una frase de la carta a los Romanos cambió su vida: 'Revestíos del Señor Jesucristo y no os preocupéis de satisfacer los deseos de la carne.'\n\nUna sola frase. Leída en el momento justo. Con el corazón dispuesto. Eso fue suficiente para que treinta y tres años de búsqueda llegaran a su destino.\n\nLa Lectio Divina nos prepara para ese tipo de encuentro. No podemos forzarlo — pero sí podemos disponernos. Podemos crear las condiciones — el silencio, la atención, la apertura — para que cuando Dios hable, lo escuchemos.\n\nHoy, lee con la expectativa de que Dios puede decirte algo que cambie algo en ti. Esa expectativa ya es una forma de fe.", preguntas: ["¿Hay alguna frase de la Escritura que haya cambiado algo en ti — un momento de gracia a través de la Palabra?", "¿Lees la Biblia con expectativa de que Dios te hable, o más como un hábito automático?", "¿Qué actitud interior necesitas cultivar para que la Lectio Divina sea más fructífera?"] },
     ];
 
-    // Contenido para Examen de conciencia (index 2) — 30 variaciones
     const examenContent = [
       {
         santo: "Padre José Kentenich",
@@ -769,17 +756,13 @@ function HomeScreen({ user, profile, onTabChange }) {
     ];
         const practiceArrays = [laudesContent, lectioContent, examenContent];
     const arr = practiceArrays[index] || laudesContent;
-    // Laudes rota por día de la semana
-    // getDay(): 0=Dom, 1=Lun, 2=Mar, 3=Mié, 4=Jue, 5=Vie, 6=Sáb
-    // Array: 0=Lun, 1=Mar, 2=Mié, 3=Jue, 4=Vie, 5=Sáb, 6=Dom
-    const weekDay = new Date().getDay(); // 0=Dom...6=Sáb
-    const laudesIdx = weekDay === 0 ? 6 : weekDay - 1; // convertir a índice del array
+    const weekDay = new Date().getDay();
+    const laudesIdx = weekDay === 0 ? 6 : weekDay - 1;
     const rotationIdx = index === 0 ? laudesIdx : dayOfYear % arr.length;
     return arr[rotationIdx % arr.length];
   }
 
   function fetchWorldIntention() {
-    // Las intenciones duran una semana — se actualiza manualmente cada semana
     const weeklyIntentions = [
       {
         titulo: "Terremoto en Venezuela",
@@ -791,8 +774,6 @@ function HomeScreen({ user, profile, onTabChange }) {
         color2: "#8f4a2d"
       },
     ];
-
-    // Usar la primera intención de la lista (se actualiza manualmente cada semana)
     setWorldIntention(weeklyIntentions[0]);
   }
 
@@ -830,7 +811,7 @@ function HomeScreen({ user, profile, onTabChange }) {
         const cleaned = aiText.replace(/```[\s\S]*?```/g, "").replace(/```/g, "").trim();
         const parsed = JSON.parse(cleaned);
 
-        const lectioContent = {
+        const lectioContentAI = {
           santo: "Lectio Divina - " + (parsed.referencia || referenciaEvangelio),
           cita: "«" + (parsed.palabra_clave || "Permaneced en mi") + "» — Palabra para llevar hoy",
           reflexion: ["📖 LECTIO — Leer", (parsed.lectio || "Lee el evangelio de hoy despacio, dos veces."), "🤔 MEDITATIO — Rumiar", (parsed.meditatio || "¿Que palabra resuena en tu corazon?"), "🙏 ORATIO — Responder", (parsed.oratio || "Señor, habla que tu siervo escucha."), "✨ CONTEMPLATIO — Descansar", (parsed.contemplatio || "Quedate en silencio con la Palabra recibida.")].join("\n\n"),
@@ -840,8 +821,8 @@ function HomeScreen({ user, profile, onTabChange }) {
             "¿Como puedes llevar la palabra «" + (parsed.palabra_clave || "amor") + "» a tu vida concreta hoy?"
           ]
         };
-        practiceCache.current[cacheKey] = lectioContent;
-        setPracticeAIContent(prev => ({ ...prev, [index]: lectioContent }));
+        practiceCache.current[cacheKey] = lectioContentAI;
+        setPracticeAIContent(prev => ({ ...prev, [index]: lectioContentAI }));
       } catch(e) {
         const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
         const fallbacks = [
@@ -1015,7 +996,6 @@ function HomeScreen({ user, profile, onTabChange }) {
           <p style={{ fontSize: 10, opacity: 0.6, margin: 0, letterSpacing: "0.06em" }}>{dailyVerse?.ref}</p>
         </div>
 
-        {/* Santo del día */}
         {saintOpen && saintOfDay && (
           <div style={sheetOverlay} onClick={() => setSaintOpen(false)}>
             <div onClick={e => e.stopPropagation()} style={sheetCard()}>
@@ -1098,7 +1078,6 @@ function HomeScreen({ user, profile, onTabChange }) {
         </div>
       </div>
 
-      {/* Intención del mundo */}
       <div style={{ padding: "22px 22px 0" }}>
         {intentionOpen && worldIntention && (
           <div style={sheetOverlay} onClick={() => setIntentionOpen(false)}>
@@ -1293,7 +1272,7 @@ function PlanScreen({ user }) {
   const contentCache = useRef({});
 
   function getStaticDayContent(weekIdx, dayIdx) {
-    const allContent = [
+    const allContentWeeks12 = [
       [
         { santo: "San Agustín de Hipona", cita: "«Nos hiciste para Ti, Señor, y nuestro corazón está inquieto hasta que descanse en Ti.»", reflexion: "¿Quién es Dios para ti hoy — no el Dios de tu infancia ni el de los libros, sino el Dios que te busca en este momento preciso de tu vida?\n\nSan Agustín pasó décadas buscando en los lugares equivocados: en la filosofía, en el placer, en el poder intelectual. Y cuando finalmente se rindió, descubrió que Dios no era el final de un camino largo sino el suelo mismo que siempre había pisado.\n\nEsta pregunta no tiene respuesta fácil, y eso es precisamente su valor. La vida espiritual comienza cuando dejamos de describir a Dios y empezamos a escucharle.\n\nNo necesitas tener todo claro. Necesitas estar dispuesto a ser sorprendido por un Dios que es siempre más grande, más cercano y más amoroso de lo que imaginas.", preguntas: ["¿Qué imagen de Dios llevas contigo hoy — y de dónde viene esa imagen?", "¿En qué área de tu vida sientes que Dios está llamando a la puerta?", "¿Qué necesitarías soltar para encontrarte con Dios de una manera más real?"] },
         { santo: "Santa Teresa de Ávila", cita: "«Que nada te turbe, que nada te espante. Todo se pasa. Dios no se muda.»", reflexion: "El Salmo 139 es una de las oraciones más íntimas de toda la Escritura. No es un himno de alabanza distante — es el asombro de alguien que descubre que ha sido conocido antes de conocerse a sí mismo.\n\n'Me sondeas y me conoces... Conoces mis pensamientos desde lejos.' Hay algo que puede asustar en estas palabras: no hay dónde esconderse. Pero hay también algo profundamente liberador: no necesitas fingir ante Dios.\n\nSanta Teresa de Ávila pasó años rezando con miedo de que Dios viera su interior. Hasta que un día comprendió que Dios ya lo había visto todo — y la amaba exactamente así.\n\nHoy, el Salmo 139 te invita a dejar de presentarle a Dios la versión editada de ti mismo. Él ya conoce los borradores. Y los ama todos.", preguntas: ["¿Hay alguna parte de ti que sientes que no puedes mostrarle a Dios?", "¿Cómo cambia tu oración cuando sabes que Dios ya te conoce completamente?", "¿Qué significa para ti ser conocido y amado al mismo tiempo?"] },
@@ -1312,6 +1291,8 @@ function PlanScreen({ user }) {
         { santo: "San Ignacio de Loyola", cita: "«Pocas personas sospechan cuánto Dios haría por ellas si se abandonaran completamente a Él.»", reflexion: "La segunda semana ha sido una inmersión en la vida interior. Has contemplado el pozo de la samaritana, has explorado el castillo de Teresa, has aprendido el idioma de las mociones espirituales.\n\nEl Examen semanal de hoy no busca evaluar tu 'rendimiento' espiritual. Busca algo más delicado: reconocer el movimiento de Dios en los detalles de la semana.\n\n¿Hubo un momento en que sentiste que algo se abría dentro de ti? ¿Una conversación, una pausa inesperada? ¿Hubo un momento en que sentiste resistencia a algo que Dios te pedía?\n\nLa vida interior no se mide en experiencias extraordinarias. Se mide en la calidad de la atención que le prestas a lo ordinario.", preguntas: ["¿Qué práctica de esta semana tocó más profundamente tu vida interior?", "¿Qué resistencia espiritual encontraste esta semana — y qué te dice eso?", "¿Qué quiere Dios que lleves de esta semana a la siguiente?"] },
         { santo: "San Juan Pablo II", cita: "«No tengan miedo de ser santos. Tengan la ambición de ser grandes santos.»", reflexion: "La Misa de hoy cierra una semana de interioridad. Y hay algo profundamente bello en eso: la vida interior no termina en sí misma — desemboca en la comunidad, en la Eucaristía, en el Cuerpo de Cristo reunido.\n\nSan Juan Pablo II celebraba la Misa con una concentración que asombraba a quienes lo conocían. Era el fruto de décadas de vida interior llevadas al altar.\n\nHoy, lleva a la Misa todo lo que has explorado esta semana. Lleva las preguntas sin respuesta, las consolaciones que recibiste, las resistencias que encontraste. Pon todo eso en el ofertorio.\n\nLa Eucaristía no es el final de la vida interior — es su corazón. Aquí, en este pan partido, está el mismo Dios que encontraste en el silencio de tu semana.", preguntas: ["¿Qué llevas hoy al altar como ofrenda personal?", "¿Cómo ha cambiado tu manera de participar en la Misa después de esta semana?", "¿Qué gracia específica quieres pedirle a Dios en la comunión de hoy?"] },
       ],
+    ];
+    const allContentWeeks34 = [
       [
         { santo: "Padre José Kentenich", cita: "«Dios quiere que seamos instrumentos en manos de María para la renovación del mundo.»", reflexion: "El 18 de octubre de 1914, un grupo de jóvenes seminaristas se reunió en una pequeña capilla en Schoenstatt, Alemania. El Padre José Kentenich los invitó a hacer algo audaz: ofrecerse a María como instrumentos para la renovación de la Iglesia y del mundo.\n\nNadie imaginaba ese día que aquel gesto pequeño daría origen a un movimiento que llegaría a todos los continentes. Pero Kentenich entendía algo que los grandes estrategas espirituales han sabido siempre: Dios trabaja desde lo pequeño.\n\nEl carisma schoenstattiano no es una devoción mariana más — es una pedagogía de vida. Kentenich quería formar 'hombres y mujeres nuevos para un mundo nuevo': personas con una personalidad tan enraizada en Dios que pudieran transformar su entorno desde adentro.\n\nHoy, conoce los orígenes de Schoenstatt no como historia sino como invitación. ¿Qué significa para ti ser instrumento de María en tu propio tiempo y lugar?", preguntas: ["¿Qué te atrae del carisma de Schoenstatt — qué resuena en ti?", "¿En qué 'capilla pequeña' de tu vida está Dios haciendo algo grande?", "¿Cómo entiendes la idea de ser 'instrumento' — no herramienta sino colaborador libre?"] },
         { santo: "Padre José Kentenich", cita: "«La alianza de amor es un sí total dado con toda libertad, no una vez sino cada día.»", reflexion: "La alianza de amor con María es el corazón del carisma de Schoenstatt. No es una consagración que se hace una vez y se olvida — es una relación viva que se renueva cada día.\n\nKentenich entendía la relación con María como una verdadera relación de amor filial. María no es un canal de gracias ni una máquina de milagros — es una Madre real que se involucra personalmente en la vida de sus hijos.\n\nLa alianza tiene dos movimientos: la contribución — lo que tú llevas al santuario, tus luchas, tus talentos, tu amor — y el capital de gracias — lo que María aporta desde su plenitud.\n\nHoy, renueva tu alianza de amor con María. Un corazón que dice 'sí' con libertad y amor es toda la oración que María necesita.", preguntas: ["¿Qué significa para ti tener a María como Madre en tu vida espiritual?", "¿Qué llevas tú a la alianza — qué es tu 'contribución' hoy?", "¿En qué área de tu vida necesitas especialmente la maternidad de María?"] },
@@ -1331,7 +1312,7 @@ function PlanScreen({ user }) {
         { santo: "San Francisco de Asís", cita: "«Comienza haciendo lo que es necesario, después lo que es posible, y de repente te encontrarás haciendo lo imposible.»", reflexion: "La Misa de cierre de este mes no es el final — es un umbral. Todo lo que has vivido, rezado, contemplado y ofrecido en estas cuatro semanas desemboca aquí, en este altar, en este pan y este vino.\n\nLa acción de gracias es el gesto más honesto que un ser humano puede hacer ante Dios. No porque todo haya salido bien — sino porque en todo, lo bueno y lo difícil, la mano de Dios estuvo presente.\n\nSan Francisco, al final de su vida, cuando estaba ciego y sufriendo, compuso el Cántico de las Creaturas — un himno de gratitud total. No porque no sufriera, sino porque había aprendido a ver la bondad de Dios incluso en el sufrimiento.\n\nHoy, entra a esta Misa con la gratitud de alguien que ha recorrido un camino. Y sal de ella listo para el próximo tramo — que será nuevo, diferente y lleno de gracia también.", preguntas: ["¿Por qué tres cosas concretas de este mes quieres darle gracias a Dios hoy?", "¿Qué llevas de este mes al siguiente — qué fruto quieres conservar?", "¿Cómo quieres comenzar el próximo ciclo de treinta días?"] },
       ],
     ];
-
+    const allContent = [...allContentWeeks12, ...allContentWeeks34];
     const weekContent = allContent[weekIdx] || allContent[0];
     return weekContent[dayIdx] || weekContent[0];
   }
@@ -1510,15 +1491,10 @@ function PlanScreen({ user }) {
   );
 }
 
-
 const DIARY_MOODS = ["😊", "🙏", "😔", "😌", "🥹", "😤", "🤔", "❤️"];
 const DIARY_TAGS = ["Consolación", "Discernimiento", "Acción de gracias", "Desolación"];
 const DIARY_TAG_COLOR = { "Consolación": C.sky, "Discernimiento": C.blue, "Acción de gracias": C.gold, "Desolación": C.periwinkle };
 
-// Componente estable a nivel de módulo: si se definiera dentro de DiaryScreen,
-// cada re-render de DiaryScreen crearía una función "nueva", y React
-// desmontaría y volvería a montar el <input> en cada render — perdiendo el
-// foco y cerrando el teclado apenas aparecía. Por eso vive aquí afuera.
 function EntryForm({ data, onChange, onSave, onCancel, saving: isSaving, title }) {
   const titleRef = useRef(null);
   const textRef = useRef(null);
@@ -1626,7 +1602,6 @@ function DiaryScreen({ user }) {
   function formatDate(iso) {
     return new Date(iso).toLocaleDateString("es-ES", { day: "numeric", month: "short" });
   }
-
 
   return (
     <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", background: gradients.diary }}>
@@ -1880,7 +1855,6 @@ function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDa
         </div>
       </div>
 
-      {/* Notifications modal */}
       {activeModal === "notifications" && (
         <div style={sheetOverlay} onClick={() => setActiveModal(null)}>
           <div onClick={e => e.stopPropagation()} style={sheetCard()}>
@@ -2001,9 +1975,394 @@ function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDa
   );
 }
 
+// ═══════════════════════════════════════════════════════════════════════
+// SECCIONES NUEVAS: MILAGROS EUCARÍSTICOS + SANTO ROSARIO (menú "Más")
+// ═══════════════════════════════════════════════════════════════════════
+
+const EUCHARISTIC_MIRACLES = [
+  {
+    id: "lanciano",
+    titulo: "El Milagro de Lanciano",
+    lugar: "Lanciano, Italia",
+    anio: "Siglo VIII (según la tradición, hacia el año 750)",
+    resumen: "Según la tradición, un monje basiliano que dudaba de la presencia real de Cristo en la Eucaristía celebraba la Misa cuando, en el momento de la consagración, la hostia se transformó visiblemente en carne y el vino en sangre.\n\nLos restos se conservan hasta hoy en Lanciano. En 1970-71, con autorización del Vaticano, fueron analizados científicamente por el profesor Odoardo Linoli, quien concluyó que se trataba de tejido cardíaco humano. Estudios posteriores han señalado también objeciones metodológicas a ese análisis, que conviene mencionar con honestidad.\n\nEl papa Pablo VI reconoció el milagro con ocasión del Año Santo de 1975. Es, junto al de Santarém, uno de los más citados por la Iglesia como testimonio de la fe en la Presencia Real.",
+    dato: "Las reliquias llevan más de 1.200 años expuestas sin el uso de conservantes, lo que los custodios franciscanos señalan como parte de lo inexplicado del caso.",
+    estado: "Reconocido por la Iglesia; venerado desde la Edad Media. Confirmado por Pablo VI en 1975.",
+  },
+  {
+    id: "bolsena",
+    titulo: "El Milagro de Bolsena-Orvieto",
+    lugar: "Bolsena, Italia",
+    anio: "1263",
+    resumen: "Un sacerdote bohemio, de nombre tradicional Pedro de Praga, dudaba de la transubstanciación. Durante una peregrinación a Roma, se detuvo a celebrar Misa junto a la tumba de Santa Cristina en Bolsena. Al pronunciar las palabras de la consagración, la hostia comenzó a sangrar sobre el corporal.\n\nEl sacerdote llevó el corporal manchado a Orvieto, donde se encontraba el papa Urbano IV. El Papa ordenó una investigación y, al confirmarla, instituyó al año siguiente (1264) la fiesta del Corpus Christi para toda la Iglesia, encargando a Santo Tomás de Aquino la composición de los himnos litúrgicos.\n\nEl corporal se conserva hoy en la Catedral de Orvieto, y el episodio fue inmortalizado por Rafael en su fresco 'La Misa de Bolsena' en el Vaticano.",
+    dato: "De este milagro nació directamente la fiesta universal del Corpus Christi, que la Iglesia sigue celebrando cada año.",
+    estado: "Reconocido oficialmente; dio origen a una fiesta litúrgica universal.",
+  },
+  {
+    id: "santarem",
+    titulo: "El Milagro de Santarém",
+    lugar: "Santarém, Portugal",
+    anio: "Siglo XIII (hacia 1247)",
+    resumen: "Según la tradición local, una mujer angustiada por problemas en su matrimonio acudió a una hechicera, quien le pidió, a cambio de ayuda, una hostia consagrada. La mujer la tomó durante la Misa y la guardó en un paño; camino a casa, la hostia comenzó a sangrar de forma visible.\n\nAsustada, escondió el paño en un arca. Esa noche, según el relato, una luz brillante salía del arca. Al abrirla se encontró la hostia convertida en carne sangrante. El hecho fue comunicado al párroco y, tras la investigación correspondiente, la reliquia fue trasladada a la iglesia, donde se venera hasta hoy.\n\nLa Iglesia reconoce este milagro, junto al de Lanciano, como uno de los más significativos por su antigüedad y continuidad de culto.",
+    dato: "La reliquia se conserva en la Iglesia de San Esteban de Santarém, en un relicario que se abre solo en ocasiones especiales.",
+    estado: "Reconocido oficialmente por la Iglesia; venerado desde el siglo XIII.",
+  },
+  {
+    id: "amsterdam",
+    titulo: "El Milagro de Ámsterdam",
+    lugar: "Ámsterdam, Países Bajos",
+    anio: "1345",
+    resumen: "Según la tradición, un enfermo recibió la comunión y, poco después, la vomitó. La sirvienta de la casa arrojó los restos al fuego de la chimenea, como era costumbre, para tratarlos con respeto. Al día siguiente, la hostia fue hallada intacta entre las cenizas, sin haberse quemado.\n\nEl hecho se comunicó al párroco, y la hostia fue llevada en procesión a la iglesia. El culto que nació de este episodio convirtió a Ámsterdam, durante siglos, en un importante centro de peregrinación conocido como la 'Stille Omgang' (procesión silenciosa), que algunos grupos católicos siguen realizando cada año.\n\nEs uno de los pocos milagros eucarísticos documentados en el norte de Europa antes de la Reforma protestante.",
+    dato: "La procesión silenciosa en memoria de este milagro se sigue celebrando cada año en marzo, más de 675 años después.",
+    estado: "De devoción popular sostenida durante siglos; su reconocimiento canónico formal es menos documentado que el de Lanciano o Bolsena.",
+  },
+  {
+    id: "siena",
+    titulo: "Las Hostias Incorruptas de Siena",
+    lugar: "Siena, Italia",
+    anio: "1730",
+    resumen: "En la noche del 14 de agosto de 1730, ladrones robaron un copón con cientos de hostias consagradas de la Basílica de San Francisco en Siena. Tres días después, las hostias fueron halladas en una caja de limosnas de otra iglesia, sucias pero intactas.\n\nLos frailes las lavaron con reverencia y las conservaron para consumo normal, pero notaron que no se corrompían con el paso del tiempo, algo inusual para hostias de trigo y agua expuestas al ambiente. Casi tres siglos después continúan conservándose sin signos de descomposición.\n\nAnálisis químicos realizados en 1922 y nuevamente en 1980 no encontraron agentes conservantes, lo que la comunidad franciscana y numerosos peregrinos consideran parte del prodigio.",
+    dato: "Las hostias se conservan hoy, casi 300 años después, en la Basílica de San Francisco de Siena, sin signos de descomposición.",
+    estado: "De devoción reconocida por la Iglesia local; estudiada científicamente en dos ocasiones documentadas.",
+  },
+  {
+    id: "ocebreiro",
+    titulo: "El Milagro de O Cebreiro",
+    lugar: "O Cebreiro, España (Galicia)",
+    anio: "Hacia 1300",
+    resumen: "Según la tradición ligada al Camino de Santiago, un monje de este pequeño santuario de montaña celebraba Misa en un día de fuerte tormenta. Un campesino local, Juan Santín, subió con gran esfuerzo desde su pueblo pese al mal tiempo para no faltar a la Eucaristía.\n\nEl monje, que dudaba de que valiera la pena tanto sacrificio por 'un poco de pan y vino', vio cómo, en el momento de la consagración, el pan y el vino se transformaban visiblemente en carne y sangre ante el campesino y ante él mismo.\n\nEl cáliz y la patena de este episodio, de origen medieval, se conservan en el santuario de O Cebreiro y, según la tradición, habrían inspirado más tarde el diseño del Grial en algunas representaciones del Camino de Santiago.",
+    dato: "El cáliz y la patena del milagro se conservan hoy en el mismo santuario de O Cebreiro, punto de paso del Camino de Santiago.",
+    estado: "De arraigada tradición local y peregrina desde la Edad Media.",
+  },
+  {
+    id: "betania",
+    titulo: "El fenómeno eucarístico de Betania",
+    lugar: "Betania (Los Teques), Venezuela",
+    anio: "1991",
+    resumen: "Betania es reconocido principalmente como lugar de apariciones marianas aprobadas por el obispo local Mons. Pío Bello Ricardo en 1987. En 1991, durante una Misa multitudinaria, numerosos testigos afirmaron haber presenciado un fenómeno relacionado con una hostia consagrada de tamaño y apariencia inusual.\n\nA diferencia de Lanciano o Bolsena, este caso no cuenta con el mismo nivel de análisis científico ni de reconocimiento formal específico como 'milagro eucarístico' independiente; se sitúa dentro del reconocimiento más amplio del santuario mariano de Betania.\n\nSe incluye aquí con esa distinción clara, para no presentarlo con el mismo grado de certeza histórica que los casos medievales documentados por siglos de estudio.",
+    dato: "Betania es uno de los pocos santuarios marianos con apariciones aprobadas oficialmente por un obispo en América Latina.",
+    estado: "Vinculado a apariciones marianas aprobadas localmente (1987); el fenómeno eucarístico específico tiene un reconocimiento más limitado.",
+  },
+  {
+    id: "buenosaires",
+    titulo: "El Milagro de Buenos Aires",
+    lugar: "Buenos Aires, Argentina",
+    anio: "1996",
+    resumen: "El 15 de agosto de 1996, en la parroquia Santa María de Almagro, el sacerdote Alejandro Pezet encontró una hostia consagrada descartada en un candelabro. Siguiendo la práctica habitual, la colocó en un recipiente con agua para que se disolviera.\n\nDías después, al revisar el recipiente, encontró que la hostia se había transformado en un fragmento de tejido de aspecto sanguinolento, en lugar de disolverse. El entonces arzobispo de Buenos Aires, Mons. Jorge Mario Bergoglio —más tarde el papa Francisco— pidió que se conservara y, años después, autorizó un análisis científico.\n\nEl cardiólogo estadounidense Frederick Zugibe concluyó, sin conocer el origen de la muestra, que se trataba de tejido de miocardio humano vivo, inflamado, similar en tipo al hallado en Lanciano. El grupo sanguíneo reportado fue AB, coincidente con otros casos similares.",
+    dato: "El arzobispo que autorizó la investigación de este caso, Jorge Mario Bergoglio, sería elegido papa Francisco en 2013.",
+    estado: "Estudiado científicamente; ampliamente difundido por la Iglesia como testimonio contemporáneo.",
+  },
+  {
+    id: "tixtla",
+    titulo: "El Milagro de Tixtla",
+    lugar: "Tixtla, México",
+    anio: "2006",
+    resumen: "Durante una Misa en octubre de 2006, una hostia consagrada comenzó a mostrar manchas de aspecto sanguinolento poco después de la comunión. El caso fue puesto en conocimiento del obispo local, quien autorizó su conservación y posterior estudio.\n\nEl investigador boliviano Ricardo Castañón Gómez reportó hallazgos de tejido con actividad biológica reciente, incluyendo glóbulos blancos, lo que a su juicio indicaría un origen distinto al de una simple contaminación.\n\nComo en otros casos modernos, conviene señalar que estos análisis han sido cuestionados por científicos independientes, que apuntan a posibles contaminaciones bacterianas como explicación natural alternativa.",
+    dato: "Es uno de los pocos casos de milagro eucarístico documentados en México en tiempos recientes.",
+    estado: "De devoción y estudio local; sin declaración canónica formal ampliamente publicitada.",
+  },
+  {
+    id: "sokolka",
+    titulo: "El Milagro de Sokółka",
+    lugar: "Sokółka, Polonia",
+    anio: "2008",
+    resumen: "En octubre de 2008, una hostia consagrada cayó al suelo durante la comunión en la parroquia de San Antonio. Siguiendo la norma litúrgica, un sacerdote la colocó en un recipiente con agua (el 'vasculum') para que se disolviera.\n\nUna semana después, una religiosa que revisaba el recipiente encontró que, en lugar de disolverse, había aparecido una mancha de color rojo en el centro del fragmento de hostia. El caso fue comunicado al arzobispo de Białystok, quien nombró una comisión de investigación.\n\nEl análisis histopatológico, realizado por especialistas de la Universidad Médica de Bialystok, identificó tejido muscular cardíaco humano, con características de tejido en agonía. La diócesis reconoció el hecho como un signo digno de veneración.",
+    dato: "El fragmento de hostia se conserva hoy en la iglesia de Sokółka, junto a documentación del análisis científico realizado.",
+    estado: "Reconocido por la diócesis de Białystok como signo extraordinario digno de veneración (2011).",
+  },
+  {
+    id: "legnica",
+    titulo: "El Milagro de Legnica",
+    lugar: "Legnica, Polonia",
+    anio: "2013",
+    resumen: "El día de Navidad de 2013, durante la comunión en la parroquia del Espíritu Santo, una hostia consagrada cayó al suelo. Siguiendo el procedimiento habitual, fue colocada en agua para su disolución.\n\nSemanas después se observó que, al igual que en Sokółka, había aparecido una mancha rojiza dentro del fragmento. El obispo de Legnica encargó un estudio independiente a especialistas forenses de la Universidad de Breslavia.\n\nEl informe, hecho público por la diócesis, señaló la presencia de tejido de miocardio humano con signos compatibles con sufrimiento agónico, en un patrón muy similar al reportado en Sokółka y Buenos Aires.",
+    dato: "Es el caso más reciente entre los que cuentan con un estudio forense universitario público y con reconocimiento episcopal formal.",
+    estado: "Reconocido oficialmente por el obispo de Legnica en 2016, tras el estudio de la Universidad de Wrocław.",
+  },
+];
+
+function MoreScreen({ onOpenSection }) {
+  const items = [
+    { id: "miracles", icon: "host", color: C.gold, bg: "#F5EDD8", title: "Milagros Eucarísticos", sub: "12 casos documentados a través de la historia" },
+    { id: "rosary", icon: "rosary", color: C.periwinkle, bg: "#E4EDF7", title: "Santo Rosario", sub: "Guía interactiva cuenta por cuenta" },
+  ];
+  return (
+    <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90 }}>
+      <div style={{ padding: "52px 22px 20px" }}>
+        <p style={{ fontSize: 12, color: C.slateLight, margin: "0 0 4px", letterSpacing: "0.08em", textTransform: "uppercase" }}>Explorar</p>
+        <h2 style={{ fontSize: 22, fontWeight: 600, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>Más de Mater</h2>
+      </div>
+      <div style={{ padding: "0 22px", display: "flex", flexDirection: "column", gap: 12 }}>
+        {items.map(it => (
+          <button key={it.id} onClick={() => onOpenSection(it.id)} style={{ display: "flex", alignItems: "center", gap: 14, background: C.cream, border: "1px solid " + C.mist, borderLeft: `3px solid ${it.color}`, borderRadius: 14, padding: "16px 16px", cursor: "pointer", textAlign: "left", width: "100%" }}>
+            <div style={{ width: 46, height: 46, borderRadius: 14, background: it.bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <Icon name={it.icon} size={22} color={it.color} />
+            </div>
+            <div style={{ flex: 1 }}>
+              <p style={{ fontSize: 14, fontWeight: 700, color: C.ink, margin: 0 }}>{it.title}</p>
+              <p style={{ fontSize: 11, color: C.inkLight, margin: "2px 0 0" }}>{it.sub}</p>
+            </div>
+            <Icon name="chevron" size={18} color={it.color} />
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MiraclesScreen({ onBack }) {
+  const { isTablet, columns } = useViewportInfo();
+  const [openId, setOpenId] = useState(null);
+  const sheetOverlay = { position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: isTablet ? "center" : "flex-end", justifyContent: "center", padding: isTablet ? 24 : 0 };
+  const sheetCard = (extra = {}) => ({ background: C.white, borderRadius: isTablet ? 24 : "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: isTablet ? 480 : 390, margin: "0 auto", maxHeight: "85vh", overflowY: "auto", ...extra });
+  const active = EUCHARISTIC_MIRACLES.find(m => m.id === openId);
+
+  return (
+    <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90 }}>
+      {active && (
+        <div style={sheetOverlay} onClick={() => setOpenId(null)}>
+          <div onClick={e => e.stopPropagation()} style={sheetCard()}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
+              <div>
+                <p style={{ fontSize: 10, color: C.gold, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 4px" }}>✨ {active.lugar}</p>
+                <p style={{ fontSize: 18, fontWeight: 800, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>{active.titulo}</p>
+                <p style={{ fontSize: 11, color: C.slateLight, margin: "2px 0 0" }}>{active.anio}</p>
+              </div>
+              <button onClick={() => setOpenId(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+            </div>
+            <p style={{ fontSize: 13, color: C.inkMid, lineHeight: 1.8, margin: "0 0 20px", whiteSpace: "pre-line" }}>{active.resumen}</p>
+            <div style={{ background: C.iceBlue, borderRadius: 14, padding: "14px 16px", marginBottom: 16, borderLeft: `3px solid ${C.gold}` }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: C.gold, margin: "0 0 8px", letterSpacing: "0.08em", textTransform: "uppercase" }}>💡 ¿Sabías que...?</p>
+              <p style={{ fontSize: 13, fontStyle: "italic", color: C.inkMid, lineHeight: 1.7, margin: 0 }}>{active.dato}</p>
+            </div>
+            <div style={{ background: C.fog, borderRadius: 12, padding: "12px 14px", marginBottom: 20 }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: C.blue, margin: "0 0 6px", letterSpacing: "0.08em", textTransform: "uppercase" }}>📜 Reconocimiento</p>
+              <p style={{ fontSize: 12, color: C.inkMid, lineHeight: 1.65, margin: 0 }}>{active.estado}</p>
+            </div>
+            <button
+              onClick={() => shareContent(active.titulo + " (" + active.lugar + ", " + active.anio + ")\n\n" + active.dato + "\n\nCompartido desde Mater 🙏", "Milagro Eucarístico — Mater")}
+              style={{ width: "100%", padding: "14px", background: C.iceBlue, border: "none", borderRadius: 14, color: C.navy, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}
+            >
+              📤 Compartir
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div style={{ padding: "52px 22px 8px", display: "flex", alignItems: "center", gap: 10 }}>
+        <button onClick={onBack} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", padding: 4 }}>
+          <Icon name="chevron" size={20} color={C.inkLight} />
+        </button>
+        <div>
+          <p style={{ fontSize: 12, color: C.slateLight, margin: "0 0 2px", letterSpacing: "0.08em", textTransform: "uppercase" }}>Más</p>
+          <h2 style={{ fontSize: 20, fontWeight: 600, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>Milagros Eucarísticos</h2>
+        </div>
+      </div>
+      <p style={{ fontSize: 12, color: C.inkLight, lineHeight: 1.6, margin: "8px 22px 20px" }}>
+        Casos documentados a lo largo de la historia de la Iglesia. Cada uno señala con distinto grado de reconocimiento oficial — lo indicamos en cada ficha.
+      </p>
+
+      <div style={{ padding: "0 22px", display: "grid", gridTemplateColumns: columns > 1 ? "1fr 1fr" : "1fr", gap: 10 }}>
+        {EUCHARISTIC_MIRACLES.map(m => (
+          <button key={m.id} onClick={() => setOpenId(m.id)} style={{ background: C.cream, borderRadius: 12, padding: "14px 16px", display: "flex", alignItems: "center", gap: 14, border: "1px solid " + C.mist, borderLeft: `3px solid ${C.gold}`, cursor: "pointer", textAlign: "left", width: "100%" }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: C.iceBlue, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, border: "1px solid " + C.mist }}>
+              <Icon name="host" size={18} color={C.gold} />
+            </div>
+            <div style={{ flex: 1 }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: C.ink, margin: 0 }}>{m.titulo}</p>
+              <p style={{ fontSize: 11, color: C.inkLight, margin: "2px 0 0" }}>{m.lugar} · {m.anio}</p>
+            </div>
+            <Icon name="chevron" size={16} color={C.gold} />
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const MISTERIOS_GOZOSOS = [
+  { titulo: "La Anunciación del Ángel a María", texto: "El ángel Gabriel anuncia a María que será Madre del Hijo de Dios. Ella responde con humildad: «Hágase en mí según tu palabra.»", fruto: "Humildad" },
+  { titulo: "La Visitación de María a su prima Isabel", texto: "María, apenas conoce la noticia, sale de prisa a servir a su prima anciana y embarazada. El amor la mueve antes que la reflexión.", fruto: "Caridad con el prójimo" },
+  { titulo: "El Nacimiento de Jesús en Belén", texto: "El Hijo de Dios nace pobre, en un pesebre, entre el frío y la sencillez de una familia sin lugar en la posada.", fruto: "Pobreza y desprendimiento" },
+  { titulo: "La Presentación de Jesús en el Templo", texto: "María y José presentan al Niño en el Templo, cumpliendo la Ley, y el anciano Simeón lo reconoce como la salvación esperada.", fruto: "Obediencia y pureza" },
+  { titulo: "El Niño Jesús perdido y hallado en el Templo", texto: "Después de tres días de angustiosa búsqueda, José y María encuentran a Jesús enseñando entre los doctores del Templo.", fruto: "Buscar a Dios ante todo" },
+];
+const MISTERIOS_DOLOROSOS = [
+  { titulo: "La Oración de Jesús en el Huerto", texto: "Jesús suda sangre en Getsemaní, angustiado ante la pasión que se acerca, y se abandona por completo a la voluntad del Padre.", fruto: "Dolor por el pecado" },
+  { titulo: "La Flagelación del Señor", texto: "Jesús es atado a la columna y azotado brutalmente, cargando en su cuerpo el peso de nuestras faltas.", fruto: "Pureza y mortificación" },
+  { titulo: "La Coronación de espinas", texto: "Los soldados se burlan de Jesús, lo visten de púrpura y le clavan una corona de espinas, llamándolo rey en son de mofa.", fruto: "Valentía para enfrentar la humillación" },
+  { titulo: "Jesús con la cruz a cuestas camino al Calvario", texto: "Jesús carga la cruz por las calles de Jerusalén, cae varias veces, y es ayudado por Simón de Cirene.", fruto: "Paciencia en las pruebas" },
+  { titulo: "La Crucifixión y muerte de Jesús", texto: "Jesús muere en la cruz entre dos ladrones, entregando su vida por amor a toda la humanidad.", fruto: "Perdón de las ofensas" },
+];
+const MISTERIOS_GLORIOSOS = [
+  { titulo: "La Resurrección del Señor", texto: "Al tercer día, Jesús resucita glorioso, venciendo a la muerte para siempre.", fruto: "Fe" },
+  { titulo: "La Ascensión del Señor a los cielos", texto: "Jesús asciende al cielo ante sus discípulos, prometiéndoles el envío del Espíritu Santo.", fruto: "Esperanza" },
+  { titulo: "La Venida del Espíritu Santo", texto: "El Espíritu Santo desciende sobre los apóstoles y María reunidos en el Cenáculo, dando inicio a la misión de la Iglesia.", fruto: "Amor de Dios" },
+  { titulo: "La Asunción de María a los cielos", texto: "María es llevada en cuerpo y alma a la gloria del cielo, anticipo de la resurrección que espera a todos los creyentes.", fruto: "Devoción a María" },
+  { titulo: "La Coronación de María como Reina", texto: "María es coronada Reina del cielo y de la tierra, Madre de la Iglesia y de toda la humanidad.", fruto: "Perseverancia final" },
+];
+const MISTERIOS_LUMINOSOS = [
+  { titulo: "El Bautismo de Jesús en el Jordán", texto: "Jesús se bautiza en el Jordán y el Padre lo proclama «Hijo amado», mientras el Espíritu desciende como paloma.", fruto: "Apertura al Espíritu Santo" },
+  { titulo: "Las Bodas de Caná", texto: "A petición de María, Jesús realiza su primer signo convirtiendo el agua en vino, manifestando su gloria.", fruto: "Confianza en la intercesión de María" },
+  { titulo: "El anuncio del Reino de Dios", texto: "Jesús predica la conversión y el perdón, invitando a todos a entrar en el Reino de Dios.", fruto: "Conversión y confianza en Dios" },
+  { titulo: "La Transfiguración", texto: "Jesús se transfigura ante Pedro, Santiago y Juan en el monte Tabor, mostrando un anticipo de su gloria.", fruto: "Deseo de santidad" },
+  { titulo: "La Institución de la Eucaristía", texto: "En la Última Cena, Jesús instituye la Eucaristía, entregándose bajo las especies de pan y vino.", fruto: "Adoración" },
+];
+
+function misterioDelDia() {
+  const day = new Date().getDay();
+  if (day === 1 || day === 6) return { nombre: "Misterios Gozosos", items: MISTERIOS_GOZOSOS };
+  if (day === 2 || day === 5) return { nombre: "Misterios Dolorosos", items: MISTERIOS_DOLOROSOS };
+  if (day === 4) return { nombre: "Misterios Luminosos", items: MISTERIOS_LUMINOSOS };
+  return { nombre: "Misterios Gloriosos", items: MISTERIOS_GLORIOSOS };
+}
+
+const ORACION_PADRENUESTRO = "Padre nuestro, que estás en el cielo,\nsantificado sea tu Nombre;\nvenga a nosotros tu reino;\nhágase tu voluntad en la tierra como en el cielo.\nDanos hoy nuestro pan de cada día;\nperdona nuestras ofensas,\ncomo también nosotros perdonamos a los que nos ofenden;\nno nos dejes caer en la tentación,\ny líbranos del mal.\nAmén.";
+const ORACION_AVEMARIA = "Dios te salve, María, llena eres de gracia, el Señor es contigo.\nBendita tú eres entre todas las mujeres,\ny bendito es el fruto de tu vientre, Jesús.\nSanta María, Madre de Dios,\nruega por nosotros, pecadores,\nahora y en la hora de nuestra muerte.\nAmén.";
+const ORACION_GLORIA = "Gloria al Padre, y al Hijo, y al Espíritu Santo.\nComo era en el principio, ahora y siempre,\npor los siglos de los siglos.\nAmén.";
+const ORACION_FATIMA = "Oh Jesús mío, perdona nuestros pecados,\nlíbranos del fuego del infierno,\nlleva al cielo a todas las almas,\nespecialmente a las más necesitadas de tu misericordia.";
+const ORACION_CREDO = "Creo en Dios, Padre todopoderoso, creador del cielo y de la tierra.\nCreo en Jesucristo, su único Hijo, nuestro Señor,\nque fue concebido por obra y gracia del Espíritu Santo,\nnació de Santa María Virgen,\npadeció bajo el poder de Poncio Pilato,\nfue crucificado, muerto y sepultado,\ndescendió a los infiernos,\nal tercer día resucitó de entre los muertos,\nsubió a los cielos\ny está sentado a la derecha de Dios, Padre todopoderoso.\nDesde allí ha de venir a juzgar a vivos y muertos.\nCreo en el Espíritu Santo,\nla santa Iglesia católica,\nla comunión de los santos,\nel perdón de los pecados,\nla resurrección de la carne\ny la vida eterna.\nAmén.";
+const ORACION_SALVE = "Dios te salve, Reina y Madre de misericordia,\nvida, dulzura y esperanza nuestra; Dios te salve.\nA ti llamamos los desterrados hijos de Eva;\na ti suspiramos, gimiendo y llorando,\nen este valle de lágrimas.\nEa, pues, Señora, abogada nuestra,\nvuelve a nosotros esos tus ojos misericordiosos;\ny después de este destierro muéstranos a Jesús,\nfruto bendito de tu vientre.\n¡Oh clementísima, oh piadosa, oh dulce siempre Virgen María!\nRuega por nosotros, Santa Madre de Dios,\npara que seamos dignos de alcanzar las promesas de Cristo.\nAmén.";
+
+function construirPasosRosario(misterios) {
+  const pasos = [
+    { tipo: "intro", titulo: "Señal de la Cruz", texto: "Por la señal de la Santa Cruz, de nuestros enemigos líbranos, Señor, Dios nuestro.\nEn el nombre del Padre, y del Hijo, y del Espíritu Santo.\nAmén." },
+    { tipo: "credo", titulo: "Credo de los Apóstoles", texto: ORACION_CREDO },
+    { tipo: "padrenuestro", titulo: "Padre Nuestro", texto: ORACION_PADRENUESTRO },
+    { tipo: "avemaria", titulo: "Ave María (1 de 3 — por la fe)", texto: ORACION_AVEMARIA },
+    { tipo: "avemaria", titulo: "Ave María (2 de 3 — por la esperanza)", texto: ORACION_AVEMARIA },
+    { tipo: "avemaria", titulo: "Ave María (3 de 3 — por la caridad)", texto: ORACION_AVEMARIA },
+    { tipo: "gloria", titulo: "Gloria", texto: ORACION_GLORIA },
+  ];
+  misterios.items.forEach((m, i) => {
+    pasos.push({ tipo: "misterio", titulo: `Misterio ${i + 1}: ${m.titulo}`, texto: m.texto, fruto: m.fruto });
+    pasos.push({ tipo: "padrenuestro", titulo: "Padre Nuestro", texto: ORACION_PADRENUESTRO });
+    for (let j = 0; j < 10; j++) {
+      pasos.push({ tipo: "avemaria", titulo: `Ave María (${j + 1} de 10)`, texto: ORACION_AVEMARIA, decada: i, cuenta: j + 1 });
+    }
+    pasos.push({ tipo: "gloria", titulo: "Gloria", texto: ORACION_GLORIA });
+    pasos.push({ tipo: "fatima", titulo: "Oración de Fátima", texto: ORACION_FATIMA });
+  });
+  pasos.push({ tipo: "salve", titulo: "Salve — Dios te salve, Reina y Madre", texto: ORACION_SALVE });
+  pasos.push({ tipo: "final", titulo: "Amén 🙏", texto: "Has terminado tu Santo Rosario. Que María interceda por todas tus intenciones de hoy." });
+  return pasos;
+}
+
+function RosaryScreen({ onBack }) {
+  const { isTablet } = useViewportInfo();
+  const misterios = useRef(misterioDelDia()).current;
+  const pasos = useRef(construirPasosRosario(misterios)).current;
+  const [iniciado, setIniciado] = useState(false);
+  const [idx, setIdx] = useState(0);
+
+  const paso = pasos[idx];
+  const totalPasos = pasos.length;
+  const esUltimo = idx === totalPasos - 1;
+
+  function siguiente() { if (idx < totalPasos - 1) setIdx(idx + 1); }
+  function anterior() { if (idx > 0) setIdx(idx - 1); }
+  function reiniciar() { setIdx(0); setIniciado(false); }
+
+  const tipoColor = {
+    intro: C.slate, credo: C.blue, padrenuestro: C.navy, avemaria: C.periwinkle,
+    gloria: C.gold, misterio: C.teal, fatima: C.sky, salve: C.gold, final: C.gold,
+  };
+  const color = tipoColor[paso.tipo] || C.navy;
+
+  if (!iniciado) {
+    return (
+      <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90 }}>
+        <div style={{ padding: "52px 22px 8px", display: "flex", alignItems: "center", gap: 10 }}>
+          <button onClick={onBack} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", padding: 4 }}>
+            <Icon name="chevron" size={20} color={C.inkLight} />
+          </button>
+          <div>
+            <p style={{ fontSize: 12, color: C.slateLight, margin: "0 0 2px", letterSpacing: "0.08em", textTransform: "uppercase" }}>Más</p>
+            <h2 style={{ fontSize: 20, fontWeight: 600, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>Santo Rosario</h2>
+          </div>
+        </div>
+
+        <div style={{ padding: "16px 22px 0" }}>
+          <div style={{ borderRadius: 18, background: `linear-gradient(135deg, ${C.periwinkle}, ${C.blue})`, padding: "22px 20px", color: "#fff", marginBottom: 20 }}>
+            <p style={{ fontSize: 10, opacity: 0.8, margin: "0 0 4px", letterSpacing: "0.12em", textTransform: "uppercase" }}>Misterios de hoy</p>
+            <p style={{ fontSize: 20, fontWeight: 800, margin: "0 0 4px", fontFamily: "'Cormorant Garamond', serif" }}>{misterios.nombre}</p>
+            <p style={{ fontSize: 11, opacity: 0.85, margin: 0 }}>{new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" })}</p>
+          </div>
+
+          <p style={{ fontSize: 12, fontWeight: 700, color: C.inkLight, letterSpacing: "0.08em", textTransform: "uppercase", margin: "0 0 12px" }}>Los 5 misterios</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 24 }}>
+            {misterios.items.map((m, i) => (
+              <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start", background: C.cream, border: "1px solid " + C.mist, borderRadius: 12, padding: "12px 14px" }}>
+                <div style={{ width: 24, height: 24, borderRadius: "50%", background: `${C.periwinkle}25`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: C.periwinkle, fontSize: 11, fontWeight: 700 }}>{i + 1}</div>
+                <div>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: C.ink, margin: 0 }}>{m.titulo}</p>
+                  <p style={{ fontSize: 11, color: C.inkLight, margin: "2px 0 0" }}>Fruto: {m.fruto}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <button onClick={() => setIniciado(true)} style={{ width: "100%", padding: "16px", border: "none", borderRadius: 14, background: `linear-gradient(135deg, ${C.navy}, ${C.blue})`, color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+            Comenzar el Rosario 🙏
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", background: gradients.home }}>
+      <div style={{ padding: "52px 22px 12px" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+          <button onClick={reiniciar} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 6, color: C.inkLight, fontSize: 12 }}>
+            <Icon name="chevron" size={16} color={C.inkLight} /> Salir
+          </button>
+          <p style={{ fontSize: 11, color: C.inkLight, margin: 0 }}>{idx + 1} / {totalPasos}</p>
+        </div>
+        <div style={{ background: C.mist, borderRadius: 100, height: 5, overflow: "hidden" }}>
+          <div style={{ width: `${((idx + 1) / totalPasos) * 100}%`, height: "100%", background: color, borderRadius: 100, transition: "width 0.3s" }} />
+        </div>
+      </div>
+
+      <div style={{ flex: 1, overflowY: "auto", padding: "8px 22px 20px", display: "flex", flexDirection: "column" }}>
+        <div style={{ background: C.cream, borderRadius: 18, padding: "22px 20px", border: "1px solid " + C.mist, borderLeft: `4px solid ${color}`, flex: 1 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, color, letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 10px" }}>
+            {paso.tipo === "misterio" ? misterios.nombre : paso.decada !== undefined ? `Decena ${paso.decada + 1} de 5` : ""}
+          </p>
+          <p style={{ fontSize: 17, fontWeight: 700, color: C.ink, margin: "0 0 14px", fontFamily: "'Cormorant Garamond', serif", lineHeight: 1.3 }}>{paso.titulo}</p>
+          <p style={{ fontSize: 14, color: C.inkMid, lineHeight: 1.85, margin: 0, whiteSpace: "pre-line" }}>{paso.texto}</p>
+          {paso.fruto && (
+            <div style={{ marginTop: 16, background: C.iceBlue, borderRadius: 10, padding: "10px 14px" }}>
+              <p style={{ fontSize: 11, color: C.blue, fontWeight: 700, margin: 0 }}>Fruto del misterio: {paso.fruto}</p>
+            </div>
+          )}
+        </div>
+
+        {paso.decada !== undefined && (
+          <div style={{ display: "flex", gap: 5, justifyContent: "center", marginTop: 14, flexWrap: "wrap" }}>
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div key={i} style={{ width: 12, height: 12, borderRadius: "50%", background: i < paso.cuenta ? color : C.mist }} />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div style={{ padding: "0 22px 90px", display: "flex", gap: 10 }}>
+        <button onClick={anterior} disabled={idx === 0} style={{ flex: 1, padding: "15px", border: "1px solid " + C.mist, borderRadius: 14, background: C.white, color: C.inkMid, fontSize: 13, fontWeight: 600, cursor: idx === 0 ? "default" : "pointer", opacity: idx === 0 ? 0.4 : 1, fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+          ‹ Anterior
+        </button>
+        <button onClick={esUltimo ? reiniciar : siguiente} style={{ flex: 2, padding: "15px", border: "none", borderRadius: 14, background: `linear-gradient(135deg, ${C.navy}, ${C.blue})`, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+          {esUltimo ? "Terminar 🙏" : "Siguiente ›"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [screen, setScreen] = useState("auth");
   const [activeTab, setActiveTab] = useState("home");
+  const [moreSection, setMoreSection] = useState(null); // null | "miracles" | "rosary"
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loadingAuth, setLoadingAuth] = useState(true);
@@ -2025,7 +2384,6 @@ export default function App() {
         loadProfile(session.user.id);
         setScreen("app");
       } else {
-        // Siempre ir directo al login si no hay sesión activa
         setScreen("auth");
       }
       setLoadingAuth(false);
@@ -2046,7 +2404,6 @@ export default function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Reprogramar notificaciones si ya estaban activadas
   useEffect(() => {
     if (localStorage.getItem("mater_notif_enabled") === "true" && Notification.permission === "granted") {
       const times = JSON.parse(localStorage.getItem("mater_notif_times") || '["07:00","12:00","21:00"]');
@@ -2060,7 +2417,6 @@ export default function App() {
   }
 
   async function handleOnboardingComplete(name) {
-    // Marcar que el onboarding ya fue completado
     localStorage.setItem("mater_onboarding_done", "true");
     if (user) {
       await supabase.from("profiles").upsert({ id: user.id, name });
@@ -2106,10 +2462,6 @@ export default function App() {
     position: "relative",
     overflow: "hidden",
     display: "flex", flexDirection: "column",
-    // El fondo SIEMPRE en colores claros: el modo oscuro se logra invirtiendo
-    // toda la caja con CSS filter (más abajo). Si aquí se pusiera el color
-    // oscuro también, el filtro lo invertiría dos veces y desentonaría con
-    // el resto del árbol (ese era el origen de la franja de color rara).
     background: C.iceBlue,
     boxShadow: isTablet ? "0 0 60px rgba(15,30,50,0.18)" : "none",
     filter: darkMode ? "invert(1) hue-rotate(180deg)" : "none",
@@ -2134,8 +2486,17 @@ export default function App() {
             {activeTab === "chat" && <ChatScreen user={user} darkMode={darkMode} />}
             {activeTab === "plan" && <PlanScreen user={user} darkMode={darkMode} />}
             {activeTab === "diary" && <DiaryScreen user={user} darkMode={darkMode} />}
+            {activeTab === "more" && moreSection === null && <MoreScreen onOpenSection={setMoreSection} />}
+            {activeTab === "more" && moreSection === "miracles" && <MiraclesScreen onBack={() => setMoreSection(null)} />}
+            {activeTab === "more" && moreSection === "rosary" && <RosaryScreen onBack={() => setMoreSection(null)} />}
             {activeTab === "profile" && <ProfileScreen user={user} profile={profile} setProfile={setProfile} onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
-            {!keyboardOpen && <NavBar active={activeTab} onChange={setActiveTab} darkMode={darkMode} />}
+            {!keyboardOpen && (
+              <NavBar
+                active={activeTab}
+                onChange={(id) => { if (id !== "more") setMoreSection(null); setActiveTab(id); }}
+                darkMode={darkMode}
+              />
+            )}
           </>
         )}
       </div>
