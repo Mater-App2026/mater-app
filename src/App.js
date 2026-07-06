@@ -2368,6 +2368,7 @@ function RosaryScreen({ onBack }) {
 const DEFAULT_MONTHLY_ITEMS = ["Visita al Santuario", "Visita al Santísimo", "Confesión", "Acompañamiento espiritual", "Eucaristía"];
 const MONTHLY_SLOTS = 6;
 const BLANK_PURPOSE_SLOTS = 5; // "Propósitos" en blanco para llenar
+const ROW_CELL_SIZE = 30;
 
 function pad2(n) { return String(n).padStart(2, "0"); }
 function daysInMonth(year, month) { return new Date(year, month + 1, 0).getDate(); }
@@ -2388,6 +2389,64 @@ function scheduleHorarioReminder(time) {
     });
     scheduleHorarioReminder(time);
   }, delay);
+}
+
+// Componente Row extraído a nivel de módulo — NUNCA definir componentes
+// dentro de otros componentes, o React los remonta en cada re-render.
+function HorarioRow({
+  item, isMonthly, isGeneral, placeholder,
+  totalDays, monthKey, checks,
+  editingId, editValue, setEditingId, setEditValue,
+  saveItemName, deleteItem, toggleDaily, toggleMonthly,
+}) {
+  const isEditing = editingId === item.id;
+  const isBlank = item.name === "" && !isEditing;
+  return (
+    <div style={{ display: "flex", alignItems: "center", borderBottom: "1px solid " + C.mist }}>
+      <div style={{ width: 132, flexShrink: 0, padding: "8px 10px", position: "sticky", left: 0, background: C.white, zIndex: 2, borderRight: "1px solid " + C.mist, display: "flex", alignItems: "center", gap: 4 }}>
+        {isEditing ? (
+          <input
+            autoFocus
+            defaultValue={item.name}
+            onChange={e => setEditValue(e.target.value)}
+            onBlur={() => saveItemName(item.id, isGeneral)}
+            onKeyDown={e => e.key === "Enter" && saveItemName(item.id, isGeneral)}
+            placeholder={placeholder}
+            style={{ flex: 1, border: "none", outline: "none", borderBottom: "1px solid " + C.mist, fontSize: 11.5, color: C.ink, background: "transparent", fontFamily: "'DM Sans', system-ui, sans-serif", padding: "2px 0" }}
+          />
+        ) : (
+          <button onClick={() => { setEditingId(item.id); setEditValue(item.name); }} style={{ flex: 1, background: "none", border: "none", textAlign: "left", padding: 0, cursor: "pointer" }}>
+            <p style={{ fontSize: 11.5, color: isBlank ? C.inkLight : C.ink, fontWeight: isBlank ? 400 : 600, margin: 0, fontStyle: isBlank ? "italic" : "normal", lineHeight: 1.3 }}>
+              {isBlank ? placeholder : item.name}
+            </p>
+          </button>
+        )}
+        {!isMonthly && !isGeneral && (
+          <button onClick={() => deleteItem(item.id)} style={{ background: "none", border: "none", cursor: "pointer", padding: 2, flexShrink: 0 }}>
+            <Icon name="trash" size={12} color={C.inkLight} />
+          </button>
+        )}
+      </div>
+      <div style={{ display: "flex" }}>
+        {Array.from({ length: isMonthly ? MONTHLY_SLOTS : totalDays }).map((_, i) => {
+          const slotIdx = i + 1;
+          const checkKey = isMonthly ? `${monthKey}-slot${slotIdx}` : `${monthKey}-${pad2(slotIdx)}`;
+          const done = !!checks[`${item.id}:${checkKey}`];
+          return (
+            <button
+              key={i}
+              onClick={() => isMonthly ? toggleMonthly(item.id, slotIdx) : toggleDaily(item.id, slotIdx)}
+              style={{ width: ROW_CELL_SIZE, height: ROW_CELL_SIZE, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "none", border: "none", cursor: "pointer" }}
+            >
+              <div style={{ width: 18, height: 18, borderRadius: "50%", border: `1.5px solid ${done ? C.gold : C.mist}`, background: done ? C.gold : "transparent", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {done && <svg width={9} height={9} viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" /></svg>}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 function HorarioEspiritualScreen({ user, onBack }) {
@@ -2487,11 +2546,11 @@ function HorarioEspiritualScreen({ user, onBack }) {
     if (data) setItems(prev => [...prev, data]);
   }
 
-async function deleteItem(itemId) {
-  await supabase.from("spiritual_schedule_items").delete().eq("id", itemId).eq("user_id", user.id);
-  await supabase.from("spiritual_schedule_checks").delete().eq("user_id", user.id).eq("item_id", itemId);
-  setItems(prev => prev.filter(it => it.id !== itemId));
-}
+  async function deleteItem(itemId) {
+    await supabase.from("spiritual_schedule_items").delete().eq("id", itemId).eq("user_id", user.id);
+    await supabase.from("spiritual_schedule_checks").delete().eq("user_id", user.id).eq("item_id", itemId);
+    setItems(prev => prev.filter(it => it.id !== itemId));
+  }
 
   async function toggleReminder() {
     if (!reminderEnabled) {
@@ -2528,58 +2587,7 @@ async function deleteItem(itemId) {
   const sheetOverlay = { position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: isTablet ? "center" : "flex-end", justifyContent: "center", padding: isTablet ? 24 : 0 };
   const sheetCard = (extra = {}) => ({ background: C.white, borderRadius: isTablet ? 24 : "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: isTablet ? 480 : 390, margin: "0 auto", maxHeight: "85vh", overflowY: "auto", ...extra });
 
-  const cell = 30;
-
-  function Row({ item, isMonthly, isGeneral, placeholder }) {
-    const isEditing = editingId === item.id;
-    const isBlank = item.name === "" && !isEditing;
-    return (
-      <div style={{ display: "flex", alignItems: "center", borderBottom: "1px solid " + C.mist }}>
-        <div style={{ width: 132, flexShrink: 0, padding: "8px 10px", position: "sticky", left: 0, background: C.white, zIndex: 2, borderRight: "1px solid " + C.mist, display: "flex", alignItems: "center", gap: 4 }}>
-          {isEditing ? (
-            <input
-              autoFocus
-              defaultValue={item.name}
-              onChange={e => setEditValue(e.target.value)}
-              onBlur={() => saveItemName(item.id, isGeneral)}
-              onKeyDown={e => e.key === "Enter" && saveItemName(item.id, isGeneral)}
-              placeholder={placeholder}
-              style={{ flex: 1, border: "none", outline: "none", borderBottom: "1px solid " + C.mist, fontSize: 11.5, color: C.ink, background: "transparent", fontFamily: "'DM Sans', system-ui, sans-serif", padding: "2px 0" }}
-            />
-          ) : (
-            <button onClick={() => { setEditingId(item.id); setEditValue(item.name); }} style={{ flex: 1, background: "none", border: "none", textAlign: "left", padding: 0, cursor: "pointer" }}>
-              <p style={{ fontSize: 11.5, color: isBlank ? C.inkLight : C.ink, fontWeight: isBlank ? 400 : 600, margin: 0, fontStyle: isBlank ? "italic" : "normal", lineHeight: 1.3 }}>
-                {isBlank ? placeholder : item.name}
-              </p>
-            </button>
-          )}
-          {!isMonthly && !isGeneral && (
-            <button onClick={() => deleteItem(item.id)} style={{ background: "none", border: "none", cursor: "pointer", padding: 2, flexShrink: 0 }}>
-              <Icon name="trash" size={12} color={C.inkLight} />
-            </button>
-          )}
-        </div>
-        <div style={{ display: "flex" }}>
-          {Array.from({ length: isMonthly ? MONTHLY_SLOTS : totalDays }).map((_, i) => {
-            const slotIdx = i + 1;
-            const checkKey = isMonthly ? `${monthKey}-slot${slotIdx}` : `${monthKey}-${pad2(slotIdx)}`;
-            const done = !!checks[`${item.id}:${checkKey}`];
-            return (
-              <button
-                key={i}
-                onClick={() => isMonthly ? toggleMonthly(item.id, slotIdx) : toggleDaily(item.id, slotIdx)}
-                style={{ width: cell, height: cell, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "none", border: "none", cursor: "pointer" }}
-              >
-                <div style={{ width: 18, height: 18, borderRadius: "50%", border: `1.5px solid ${done ? C.gold : C.mist}`, background: done ? C.gold : "transparent", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  {done && <svg width={9} height={9} viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" /></svg>}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    );
-  }
+  const horizontalScrollStyle = { margin: "0 22px", border: "1px solid " + C.mist, borderRadius: 12, overflowX: "auto", overflowY: "hidden", background: C.white };
 
   return (
     <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90 }}>
@@ -2635,27 +2643,64 @@ async function deleteItem(itemId) {
           <div style={{ padding: "0 22px 6px" }}>
             <p style={{ fontSize: 11, fontWeight: 700, color: C.inkLight, letterSpacing: "0.08em", textTransform: "uppercase", margin: 0 }}>Propósito particular</p>
           </div>
-          <div style={{ margin: "0 22px", border: "1px solid " + C.mist, borderRadius: 12, overflowX: "auto", background: C.white }}>
+          <div style={horizontalScrollStyle}>
             <div style={{ display: "flex", borderBottom: "2px solid " + C.mist }}>
               <div style={{ width: 132, flexShrink: 0, padding: "6px 10px", position: "sticky", left: 0, background: C.white, borderRight: "1px solid " + C.mist }} />
               {Array.from({ length: totalDays }).map((_, i) => (
-                <div key={i} style={{ width: cell, flexShrink: 0, textAlign: "center", fontSize: 9, color: C.inkLight, fontWeight: 600, padding: "6px 0" }}>{i + 1}</div>
+                <div key={i} style={{ width: ROW_CELL_SIZE, flexShrink: 0, textAlign: "center", fontSize: 9, color: C.inkLight, fontWeight: 600, padding: "6px 0" }}>{i + 1}</div>
               ))}
             </div>
-            {generalItem && <Row item={generalItem} isMonthly={false} isGeneral={true} placeholder="Escribe tu propósito particular..." />}
+            {generalItem && (
+              <HorarioRow
+                item={generalItem}
+                isMonthly={false}
+                isGeneral={true}
+                placeholder="Escribe tu propósito particular..."
+                totalDays={totalDays}
+                monthKey={monthKey}
+                checks={checks}
+                editingId={editingId}
+                editValue={editValue}
+                setEditingId={setEditingId}
+                setEditValue={setEditValue}
+                saveItemName={saveItemName}
+                deleteItem={deleteItem}
+                toggleDaily={toggleDaily}
+                toggleMonthly={toggleMonthly}
+              />
+            )}
           </div>
 
           <div style={{ padding: "20px 22px 6px" }}>
             <p style={{ fontSize: 11, fontWeight: 700, color: C.inkLight, letterSpacing: "0.08em", textTransform: "uppercase", margin: 0 }}>Propósitos</p>
           </div>
-          <div ref={scrollRef} style={{ margin: "0 22px", border: "1px solid " + C.mist, borderRadius: 12, overflowX: "auto", background: C.white }}>
+          <div ref={scrollRef} style={horizontalScrollStyle}>
             <div style={{ display: "flex", borderBottom: "2px solid " + C.mist, position: "sticky", top: 0, background: C.white, zIndex: 3 }}>
               <div style={{ width: 132, flexShrink: 0, padding: "6px 10px", position: "sticky", left: 0, background: C.white, borderRight: "1px solid " + C.mist }} />
               {Array.from({ length: totalDays }).map((_, i) => (
-                <div key={i} style={{ width: cell, flexShrink: 0, textAlign: "center", fontSize: 9, color: C.inkLight, fontWeight: 600, padding: "6px 0" }}>{i + 1}</div>
+                <div key={i} style={{ width: ROW_CELL_SIZE, flexShrink: 0, textAlign: "center", fontSize: 9, color: C.inkLight, fontWeight: 600, padding: "6px 0" }}>{i + 1}</div>
               ))}
             </div>
-            {items.map(it => <Row key={it.id} item={it} isMonthly={false} isGeneral={false} placeholder="Escribe tu propósito..." />)}
+            {items.map(it => (
+              <HorarioRow
+                key={it.id}
+                item={it}
+                isMonthly={false}
+                isGeneral={false}
+                placeholder="Escribe tu propósito..."
+                totalDays={totalDays}
+                monthKey={monthKey}
+                checks={checks}
+                editingId={editingId}
+                editValue={editValue}
+                setEditingId={setEditingId}
+                setEditValue={setEditValue}
+                saveItemName={saveItemName}
+                deleteItem={deleteItem}
+                toggleDaily={toggleDaily}
+                toggleMonthly={toggleMonthly}
+              />
+            ))}
           </div>
           <div style={{ padding: "10px 22px 0" }}>
             <button onClick={addPurposeItem} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", color: C.blue, fontSize: 12, fontWeight: 600, cursor: "pointer", padding: "6px 0" }}>
@@ -2666,8 +2711,27 @@ async function deleteItem(itemId) {
           <div style={{ padding: "20px 22px 6px" }}>
             <p style={{ fontSize: 11, fontWeight: 700, color: C.inkLight, letterSpacing: "0.08em", textTransform: "uppercase", margin: 0 }}>Metas mensuales</p>
           </div>
-          <div style={{ margin: "0 22px", border: "1px solid " + C.mist, borderRadius: 12, overflowX: "auto", background: C.white }}>
-            {monthlyItems.map(it => <Row key={it.id} item={it} isMonthly={true} isGeneral={false} placeholder={it.name} />)}
+          <div style={horizontalScrollStyle}>
+            {monthlyItems.map(it => (
+              <HorarioRow
+                key={it.id}
+                item={it}
+                isMonthly={true}
+                isGeneral={false}
+                placeholder={it.name}
+                totalDays={totalDays}
+                monthKey={monthKey}
+                checks={checks}
+                editingId={editingId}
+                editValue={editValue}
+                setEditingId={setEditingId}
+                setEditValue={setEditValue}
+                saveItemName={saveItemName}
+                deleteItem={deleteItem}
+                toggleDaily={toggleDaily}
+                toggleMonthly={toggleMonthly}
+              />
+            ))}
           </div>
         </>
       )}
