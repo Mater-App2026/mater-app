@@ -2085,6 +2085,7 @@ function MoreScreen({ onOpenSection }) {
   const items = [
     { id: "miracles", icon: "host", color: C.gold, bg: "#F5EDD8", title: "Milagros Eucarísticos", sub: "12 casos documentados a través de la historia" },
     { id: "rosary", icon: "rosary", color: C.periwinkle, bg: "#E4EDF7", title: "Santo Rosario", sub: "Guía interactiva cuenta por cuenta" },
+    { id: "horario", icon: "grid", color: C.blue, bg: "#DDE8F4", title: "Horario Espiritual", sub: "Lleva el control de tus prácticas del mes" },
   ];
   return (
     <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90 }}>
