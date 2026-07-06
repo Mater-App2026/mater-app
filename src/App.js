@@ -2492,6 +2492,7 @@ export default function App() {
             {activeTab === "more" && moreSection === null && <MoreScreen onOpenSection={setMoreSection} />}
             {activeTab === "more" && moreSection === "miracles" && <MiraclesScreen onBack={() => setMoreSection(null)} />}
             {activeTab === "more" && moreSection === "rosary" && <RosaryScreen onBack={() => setMoreSection(null)} />}
+            {activeTab === "more" && moreSection === "horario" && <HorarioEspiritualScreen user={user} onBack={() => setMoreSection(null)} />}
             {activeTab === "profile" && <ProfileScreen user={user} profile={profile} setProfile={setProfile} onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
             {!keyboardOpen && (
               <NavBar
