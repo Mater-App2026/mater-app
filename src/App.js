@@ -1,6 +1,8 @@
 /* eslint-disable */
 import { useState, useRef, useEffect } from "react";
 import { supabase } from "./supabaseClient";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 // ─── Design tokens ───────────────────────────────────────────────────────────
 const C = {
@@ -2669,7 +2671,84 @@ function HorarioEspiritualScreen({ user, onBack }) {
     if (m > 11) { m = 0; y += 1; }
     setMonth(m); setYear(y);
   }
+function exportarInformePDF() {
+    const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+    const navy = [44, 62, 107];
+    const gold = [168, 134, 74];
+    const ink = [28, 43, 58];
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
 
+    doc.setFillColor(...navy);
+    doc.rect(0, 0, pageWidth, 26, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(19);
+    doc.text("Informe de mi Horario Espiritual", 14, 13);
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(11);
+    doc.setTextColor(212, 184, 122);
+    doc.text("Mi aporte al Capital de Gracias", 14, 20);
+
+    doc.setTextColor(...ink);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    const mesTexto = monthLabel.charAt(0).toUpperCase() + monthLabel.slice(1);
+    doc.text(mesTexto, 14, 34);
+
+    let cursorY = 40;
+
+    function tablaSeccion(titulo, rows, headers) {
+      if (rows.length === 0) return;
+      if (cursorY > pageHeight - 40) { doc.addPage(); cursorY = 16; }
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9);
+      doc.setTextColor(...gold);
+      doc.text(titulo, 14, cursorY);
+      cursorY += 3;
+      doc.autoTable({
+        startY: cursorY,
+        head: [["", ...headers]],
+        body: rows,
+        styles: { fontSize: 7, halign: "center", cellPadding: 1.3, textColor: ink },
+        columnStyles: { 0: { halign: "left", cellWidth: 55, fontStyle: "bold" } },
+        headStyles: { fillColor: navy, textColor: 255, fontSize: 6.5 },
+        theme: "grid",
+        margin: { left: 14, right: 14 },
+      });
+      cursorY = doc.lastAutoTable.finalY + 8;
+    }
+
+    const dayHeaders = Array.from({ length: totalDays }, (_, i) => String(i + 1));
+
+    if (generalItem) {
+      tablaSeccion("PROPÓSITO PARTICULAR", [[
+        generalItem.name || "—",
+        ...Array.from({ length: totalDays }, (_, i) => checks[`${generalItem.id}:${monthKey}-${pad2(i + 1)}`] ? "✓" : "")
+      ]], dayHeaders);
+    }
+
+    tablaSeccion("PROPÓSITOS", items.map(it => [
+      it.name || "—",
+      ...Array.from({ length: totalDays }, (_, i) => checks[`${it.id}:${monthKey}-${pad2(i + 1)}`] ? "✓" : "")
+    ]), dayHeaders);
+
+    const slotHeaders = Array.from({ length: MONTHLY_SLOTS }, (_, i) => String(i + 1));
+    tablaSeccion("METAS MENSUALES", monthlyItems.map(it => [
+      it.name,
+      ...Array.from({ length: MONTHLY_SLOTS }, (_, i) => checks[`${it.id}:${monthKey}-slot${i + 1}`] ? "✓" : "")
+    ]), slotHeaders);
+
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(8.5);
+    doc.setTextColor(...gold);
+    doc.text(
+      "«Todo lo que se ofrece a María con intención de amor, es recibido por ella y transformado en gracia para el mundo.» — P. José Kentenich",
+      14, pageHeight - 8, { maxWidth: pageWidth - 28 }
+    );
+
+    doc.save(`Horario-Espiritual-${monthKey}.pdf`);
+  }
   const sheetOverlay = { position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: isTablet ? "center" : "flex-end", justifyContent: "center", padding: isTablet ? 24 : 0 };
   const sheetCard = (extra = {}) => ({ background: C.white, borderRadius: isTablet ? 24 : "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: isTablet ? 480 : 390, margin: "0 auto", maxHeight: "85vh", overflowY: "auto", ...extra });
 
@@ -2711,6 +2790,9 @@ function HorarioEspiritualScreen({ user, onBack }) {
         </div>
         <button onClick={() => setRemindOpen(true)} style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
           <Icon name="bell" size={19} color={C.inkLight} />
+        </button>
+        <button onClick={exportarInformePDF} style={{ background: "none", border: "none", cursor: "pointer", padding: 4, fontSize: 19 }}>
+          ⬇️
         </button>
       </div>
 
