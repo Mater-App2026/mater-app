@@ -3,6 +3,9 @@ import { useState, useRef, useEffect } from "react";
 import { supabase } from "./supabaseClient";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import { Capacitor } from "@capacitor/core";
+import { Filesystem, Directory } from "@capacitor/filesystem";
+import { Share } from "@capacitor/share";
 
 // ─── Design tokens ───────────────────────────────────────────────────────────
 const C = {
@@ -2671,7 +2674,7 @@ function HorarioEspiritualScreen({ user, onBack }) {
     if (m > 11) { m = 0; y += 1; }
     setMonth(m); setYear(y);
   }
-function exportarInformePDF() {
+async function exportarInformePDF() {
     const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
     const navy = [44, 62, 107];
     const gold = [168, 134, 74];
@@ -2747,7 +2750,29 @@ function exportarInformePDF() {
       14, pageHeight - 8, { maxWidth: pageWidth - 28 }
     );
 
-    doc.save(`Horario-Espiritual-${monthKey}.pdf`);
+    const fileName = `Horario-Espiritual-${monthKey}.pdf`;
+
+    if (Capacitor.isNativePlatform()) {
+      try {
+        const dataUri = doc.output("datauristring");
+        const pdfBase64 = dataUri.substring(dataUri.indexOf(",") + 1);
+        const saved = await Filesystem.writeFile({
+          path: fileName,
+          data: pdfBase64,
+          directory: Directory.Cache,
+        });
+        await Share.share({
+          title: "Informe de mi Horario Espiritual",
+          url: saved.uri,
+          dialogTitle: "Guardar o compartir tu informe",
+        });
+      } catch (err) {
+        console.error("Error al compartir el PDF:", err);
+      }
+    } else {
+      doc.save(fileName);
+    }
+  }
   }
   const sheetOverlay = { position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: isTablet ? "center" : "flex-end", justifyContent: "center", padding: isTablet ? 24 : 0 };
   const sheetCard = (extra = {}) => ({ background: C.white, borderRadius: isTablet ? 24 : "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: isTablet ? 480 : 390, margin: "0 auto", maxHeight: "85vh", overflowY: "auto", ...extra });
