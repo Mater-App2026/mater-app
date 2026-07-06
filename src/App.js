@@ -2488,9 +2488,10 @@ function HorarioEspiritualScreen({ user, onBack }) {
   }
 
   async function deleteItem(itemId) {
-    await supabase.from("spiritual_schedule_items").delete().eq("id", itemId).eq("user_id", user.id);
-    setItems(prev => prev.filter(it => it.id !== itemId));
-  }
+  await supabase.from("spiritual_schedule_items").delete().eq("id", itemId).eq("user_id", user.id);
+  await supabase.from("spiritual_schedule_checks").delete().eq("user_id", user.id).eq("item_id", itemId);
+  setItems(prev => prev.filter(it => it.id !== itemId));
+}
 
   async function toggleReminder() {
     if (!reminderEnabled) {
