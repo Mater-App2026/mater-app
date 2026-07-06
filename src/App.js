@@ -2369,8 +2369,8 @@ const DEFAULT_MONTHLY_ITEMS = ["Visita al Santuario", "Visita al Santísimo", "C
 const MONTHLY_SLOTS = 6;
 const BLANK_PURPOSE_SLOTS = 5; // "Propósitos" en blanco para llenar
 const DAY_CELL_SIZE = 30;
-const HORARIO_LABEL_WIDTH = 132;
-const HORARIO_ROW_HEIGHT = 44;
+const HORARIO_LABEL_WIDTH = 172;
+const HORARIO_ROW_HEIGHT = 52;
 const HORARIO_HEADER_HEIGHT = 28;
 
 function pad2(n) { return String(n).padStart(2, "0"); }
@@ -2403,26 +2403,32 @@ function HorarioLabelCell({
   const isEditing = editingId === item.id;
   const isBlank = item.name === "" && !isEditing;
   return (
-    <div style={{ height: HORARIO_ROW_HEIGHT, display: "flex", alignItems: "center", gap: 4, padding: "0 10px", borderBottom: "1px solid " + C.mist, background: C.white }}>
+    <div style={{ minHeight: HORARIO_ROW_HEIGHT, display: "flex", alignItems: "center", gap: 4, padding: "6px 10px", borderBottom: "1px solid " + C.mist, background: C.white }}>
       {isEditing ? (
-        <input
+        <textarea
           autoFocus
           defaultValue={item.name}
           onChange={e => setEditValue(e.target.value)}
           onBlur={() => saveItemName(item.id, isGeneral)}
-          onKeyDown={e => e.key === "Enter" && saveItemName(item.id, isGeneral)}
+          onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); saveItemName(item.id, isGeneral); } }}
           placeholder={placeholder}
-          style={{ flex: 1, minWidth: 0, border: "none", outline: "none", borderBottom: "1px solid " + C.mist, fontSize: 11.5, color: C.ink, background: "transparent", fontFamily: "'DM Sans', system-ui, sans-serif", padding: "2px 0" }}
+          rows={2}
+          style={{ flex: 1, minWidth: 0, border: "none", outline: "none", borderBottom: "1px solid " + C.mist, fontSize: 11.5, color: C.ink, background: "transparent", fontFamily: "'DM Sans', system-ui, sans-serif", padding: "2px 0", resize: "none", lineHeight: 1.3 }}
         />
       ) : (
         <button onClick={() => { setEditingId(item.id); setEditValue(item.name); }} style={{ flex: 1, minWidth: 0, background: "none", border: "none", textAlign: "left", padding: 0, cursor: "pointer" }}>
-          <p style={{ fontSize: 11.5, color: isBlank ? C.inkLight : C.ink, fontWeight: isBlank ? 400 : 600, margin: 0, fontStyle: isBlank ? "italic" : "normal", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+          <p style={{
+            fontSize: 11.5, color: isBlank ? C.inkLight : C.ink, fontWeight: isBlank ? 400 : 600,
+            margin: 0, fontStyle: isBlank ? "italic" : "normal", lineHeight: 1.3,
+            display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical",
+            overflow: "hidden", wordBreak: "break-word",
+          }}>
             {isBlank ? placeholder : item.name}
           </p>
         </button>
       )}
       {!isMonthly && !isGeneral && (
-        <button onClick={() => deleteItem(item.id)} style={{ background: "none", border: "none", cursor: "pointer", padding: 2, flexShrink: 0 }}>
+        <button onClick={() => deleteItem(item.id)} style={{ background: "none", border: "none", cursor: "pointer", padding: 2, flexShrink: 0, alignSelf: "flex-start" }}>
           <Icon name="trash" size={12} color={C.inkLight} />
         </button>
       )}
@@ -2433,7 +2439,7 @@ function HorarioLabelCell({
 // Fila de CÍRCULOS de días — vive en la columna que SÍ hace scroll horizontal.
 function HorarioDaysRow({ item, isMonthly, totalDays, monthKey, checks, toggleDaily, toggleMonthly }) {
   return (
-    <div style={{ height: HORARIO_ROW_HEIGHT, display: "flex", alignItems: "center", borderBottom: "1px solid " + C.mist }}>
+    <div style={{ minHeight: HORARIO_ROW_HEIGHT, display: "flex", alignItems: "center", borderBottom: "1px solid " + C.mist }}>
       {Array.from({ length: isMonthly ? MONTHLY_SLOTS : totalDays }).map((_, i) => {
         const slotIdx = i + 1;
         const checkKey = isMonthly ? `${monthKey}-slot${slotIdx}` : `${monthKey}-${pad2(slotIdx)}`;
@@ -2455,7 +2461,6 @@ function HorarioDaysRow({ item, isMonthly, totalDays, monthKey, checks, toggleDa
 }
 
 // Tabla completa: columna de nombres fija (izquierda) + columna de días con scroll (derecha).
-// NO usa position:sticky en ningún lado — evita bugs de WebViews que no lo soportan bien.
 function HorarioTable({
   rows, isMonthly, totalDays, monthKey, checks,
   editingId, editValue, setEditingId, setEditValue,
@@ -2484,8 +2489,10 @@ function HorarioTable({
           />
         ))}
       </div>
-      {/* Columna con scroll horizontal — solo los días */}
-      <div ref={scrollRef} style={{ overflowX: "auto", flex: 1 }}>
+      {/* Columna con scroll horizontal — solo los días.
+          minWidth:0 es OBLIGATORIO: sin esto, un hijo flex con overflow-x:auto
+          no se reduce y empuja a sus hermanos fuera de pantalla. */}
+      <div ref={scrollRef} style={{ overflowX: "auto", flex: "1 1 0%", minWidth: 0 }}>
         <div style={{ display: "flex", height: HORARIO_HEADER_HEIGHT, borderBottom: "2px solid " + C.mist }}>
           {Array.from({ length: slotCount }).map((_, i) => (
             <div key={i} style={{ width: DAY_CELL_SIZE, flexShrink: 0, textAlign: "center", fontSize: 9, color: C.inkLight, fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center" }}>
