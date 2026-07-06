@@ -23,7 +23,7 @@ workflows:
           npm run build
       - name: Copy web assets to iOS
         script: |
-          npx cap copy ios
+          npx cap sync ios
       - name: Set build number
         script: |
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $PROJECT_BUILD_NUMBER" ios/App/App/Info.plist
