@@ -571,20 +571,39 @@ function HomeScreen({ user, profile, onTabChange }) {
   }, [user]);
 
   async function fetchSaintOfDay() {
-    const today = new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" });
     const cacheKey = "saint-" + new Date().toDateString();
     const cached = sessionStorage.getItem(cacheKey);
     if (cached) { setSaintOfDay(JSON.parse(cached)); return; }
     setLoadingSaint(true);
     try {
+      // 1. Obtenemos el nombre VERIFICADO del santo de hoy (fuente real, no memoria del modelo)
+      const calRes = await fetch("/api/santo-del-dia");
+      const calData = await calRes.json();
+
+      if (!calData.titulo_en) {
+        // Día ferial sin santo fijo — no inventamos ninguno
+        setSaintOfDay({
+          nombre: "Feria del tiempo ordinario",
+          historia: "Hoy la Iglesia no celebra la memoria fija de ningún santo particular; es un día ferial dentro del calendario litúrgico. Es una oportunidad para la oración libre y la devoción personal.",
+          oracion: "Señor, en este día ordinario, ayúdame a encontrarte en lo cotidiano. Amén.",
+          dato: "Los días 'feriales' —sin memoria obligatoria— dejan espacio para devociones libres, como memorias opcionales locales."
+        });
+        setLoadingSaint(false);
+        return;
+      }
+
+      // 2. Le pedimos a Claude SOLO que redacte, dándole el nombre exacto ya verificado
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-sonnet-4-6",
           max_tokens: 1200,
-          system: "Eres un experto en hagiografia catolica con rigor academico. Tu fuente de referencia es el Martirologio Romano y el calendario oficial de la Conferencia Episcopal, asi como sitios catolicos reconocidos como vatican.va, catholic.org, aciprensa.com y franciscanmedia.org. SOLO incluyes datos historicos verificables y ampliamente documentados sobre la vida de los santos. Si no estas completamente seguro de un dato especifico (fechas exactas, citas textuales, detalles menores), omites ese dato en lugar de inventarlo. Nunca inventas citas textuales que no esten bien documentadas. Respondes SOLO en JSON valido sin bloques de codigo.",
-          messages: [{ role: "user", content: "Hoy es " + today + " segun el calendario gregoriano. Dame el santo o beato principal que la Iglesia Catolica celebra hoy segun el Martirologio Romano. Usa SOLO informacion historica verificada y ampliamente documentada — no inventes detalles. Si hay incertidumbre historica sobre algun aspecto de su vida, menciona esa incertidumbre en lugar de inventar certeza. Responde SOLO con JSON: {nombre: 'nombre completo y titulo oficial del santo', fecha: 'dia y mes de su fiesta liturgica', siglo: 'siglo o periodo historico en que vivio', historia: 'historia verificada de 3 parrafos sobre su vida, basada en hechos historicos documentados y su significado para la Iglesia', oracion: 'oracion tradicional o composicion respetuosa de intercesion de 3-4 lineas', dato: 'un dato historico verificable y bien documentado sobre este santo, no una curiosidad inventada'}" }],
+          system: "Eres un experto en hagiografia catolica. Se te dara el nombre EXACTO y VERIFICADO (en ingles) del santo o celebracion del calendario liturgico oficial de hoy. NO debes cambiar, sustituir ni cuestionar esa identidad — solo traducir el nombre correctamente al espanol y desarrollar contenido sobre esa persona especifica. Si no estas seguro de un dato biografico especifico, omitelo en lugar de inventarlo. Respondes SOLO en JSON valido sin bloques de codigo.",
+          messages: [{
+            role: "user",
+            content: `El calendario liturgico oficial (Calendarium Romanum Generale) indica que hoy se celebra: "${calData.titulo_en}". Traduce el nombre correctamente al espanol (sin cambiar de santo) y responde SOLO con JSON: {nombre: 'nombre completo en español y titulo oficial, EXACTAMENTE esta persona', siglo: 'siglo o periodo historico', historia: 'historia verificada de 3 parrafos sobre su vida', oracion: 'oracion tradicional o de intercesion de 3-4 lineas', dato: 'un dato historico verificable sobre este santo'}`
+          }],
         }),
       });
       const data = await res.json();
@@ -596,15 +615,14 @@ function HomeScreen({ user, profile, onTabChange }) {
       setSaintOfDay({
         nombre: "Santa María, Madre de Dios",
         fecha: "1 de enero",
-        historia: "Maria, la Madre de Jesus, es la figura mas venerada en la Iglesia Catolica. Su vida entera fue un si a Dios, desde la Anunciacion hasta el pie de la Cruz.\n\nSu maternidad divina es un don para toda la humanidad. Al ser Madre de Cristo, es tambien Madre de todos los miembros de su Cuerpo, la Iglesia.\n\nLa devocion a Maria lleva a Cristo. Ella siempre apunta hacia su Hijo: Haced lo que El os diga.",
-        oracion: "Santa María, Madre de Dios y Madre nuestra, intercede por nosotros ante tu Hijo Jesús. Ayúdanos a decir sí a Dios en cada momento de nuestra vida. Amén.",
+        historia: "Maria, la Madre de Jesus, es la figura mas venerada en la Iglesia Catolica...",
+        oracion: "Santa María, Madre de Dios y Madre nuestra, intercede por nosotros...",
         dato: "El título 'Madre de Dios' (Theotokos) fue declarado dogma en el Concilio de Éfeso en el año 431."
       });
     } finally {
       setLoadingSaint(false);
     }
   }
-
   async function markPracticeDone(index) {
     const key = `${index}-${todayKey}`;
     if (completedPractices[key]) return;
