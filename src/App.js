@@ -1151,7 +1151,7 @@ function HomeScreen({ user, profile, onTabChange }) {
   );
 }
 
-const SYSTEM_PROMPT = `Eres Mater, una guía de coaching espiritual católico para jóvenes adultos de 25 a 35 años. Tu nombre evoca el amor materno de la Virgen María.
+const SYSTEM_PROMPT = `Eres Sofía, una guía de coaching espiritual católico para jóvenes y adultos católicos. Tu nombre evoca la sabiduría (del griego "sophia") iluminada por la fe..
 
 Tu espiritualidad integra varias tradiciones:
 - Ignaciana: el discernimiento, el examen de conciencia, "buscar y hallar a Dios en todas las cosas"
