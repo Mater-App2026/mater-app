@@ -1177,7 +1177,7 @@ RIGOR DOCTRINAL Y TEOLÓGICO:
 
 function ChatScreen({ user }) {
   const [messages, setMessages] = useState([
-    { role: "assistant", text: "Hola 🙏 Soy Mater, tu guía espiritual. Estoy aquí para acompañarte en tu camino de fe. ¿Cómo está tu corazón hoy?" },
+    { role: "assistant", text: "Hola 🙏 Soy Sofía, tu guía espiritual. Estoy aquí para acompañarte en tu camino de fe. ¿Cómo está tu corazón hoy?" },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -1221,10 +1221,10 @@ function ChatScreen({ user }) {
       <div style={{ padding: "52px 22px 16px", background: C.cream, borderBottom: `1px solid ${C.mist}` }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <div style={{ width: 44, height: 44, borderRadius: 14, overflow: "hidden" }}>
-            <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            <img src="/logo.jpeg" alt="Sofía" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
           <div>
-            <p style={{ fontSize: 16, fontWeight: 800, color: C.ink, margin: 0 }}>Mater</p>
+            <p style={{ fontSize: 16, fontWeight: 800, color: C.ink, margin: 0 }}>Sofía</p>
             <p style={{ fontSize: 11, color: C.sky, margin: 0, fontWeight: 600 }}>● Guía espiritual</p>
           </div>
         </div>
@@ -1235,7 +1235,7 @@ function ChatScreen({ user }) {
           <div key={i} style={{ display: "flex", justifyContent: m.role === "user" ? "flex-end" : "flex-start", marginBottom: 12, animation: "fadeIn 0.2s ease" }}>
             {m.role === "assistant" && (
               <div style={{ width: 30, height: 30, borderRadius: 10, flexShrink: 0, overflow: "hidden", marginRight: 8, alignSelf: "flex-end" }}>
-                <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <img src="/logo.jpeg" alt="Sofía" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </div>
             )}
             <div style={{ maxWidth: "78%", background: m.role === "user" ? C.navy : C.cream, color: m.role === "user" ? C.cream : C.ink, borderRadius: m.role === "user" ? "12px 12px 2px 12px" : "12px 12px 12px 2px", padding: "11px 14px", fontSize: 13.5, lineHeight: 1.65, border: m.role === "user" ? "none" : `1px solid ${C.mist}` }}>
