@@ -2391,6 +2391,13 @@ function RosaryScreen({ onBack }) {
 const DEFAULT_MONTHLY_ITEMS = ["Visita al Santuario", "Visita al Santísimo", "Confesión", "Acompañamiento espiritual", "Eucaristía"];
 const MONTHLY_SLOTS = 6;
 const BLANK_PURPOSE_SLOTS = 5; // "Propósitos" en blanco para llenar
+const FIXED_PURPOSE_CATEGORIES = [
+  "Mi relación con Dios",
+  "Mi relación conmigo mismo (a)",
+  "Mi relación con mis hermanos",
+  "Mi relación con las cosas, la naturaleza, el trabajo",
+  "Grupo de vida",
+];
 const DAY_CELL_SIZE = 30;
 const HORARIO_LABEL_WIDTH = 172;
 const HORARIO_ROW_HEIGHT = 52;
@@ -2540,6 +2547,85 @@ function HorarioTable({
   );
 }
 
+function PropositosTable({
+  groups, totalDays, monthKey, checks,
+  editingId, editValue, setEditingId, setEditValue,
+  saveItemName, deleteItem, toggleDaily,
+  addPurposeItem, addCategory, scrollRef,
+}) {
+  return (
+    <div style={{ margin: "0 22px", border: "1px solid " + C.mist, borderRadius: 12, background: C.white, display: "flex", overflow: "hidden" }}>
+      <div style={{ width: HORARIO_LABEL_WIDTH, flexShrink: 0, borderRight: "1px solid " + C.mist }}>
+        <div style={{ height: HORARIO_HEADER_HEIGHT, borderBottom: "2px solid " + C.mist }} />
+        {groups.map(group => (
+          <div key={group.categoria}>
+            <div style={{ height: 34, display: "flex", alignItems: "center", padding: "0 10px", background: C.fog, borderBottom: "1px solid " + C.mist, borderTop: "1px solid " + C.mist }}>
+              <p style={{ fontSize: 10.5, fontWeight: 800, color: C.ink, margin: 0, letterSpacing: "0.02em", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                {group.categoria}
+              </p>
+            </div>
+            {group.items.map(item => (
+              <HorarioLabelCell
+                key={item.id}
+                item={item}
+                isMonthly={false}
+                isGeneral={false}
+                placeholder="Escribe tu propósito..."
+                editingId={editingId}
+                editValue={editValue}
+                setEditingId={setEditingId}
+                setEditValue={setEditValue}
+                saveItemName={saveItemName}
+                deleteItem={deleteItem}
+              />
+            ))}
+            <div style={{ height: 34, display: "flex", alignItems: "center", borderBottom: "1px solid " + C.mist }}>
+              <button onClick={() => addPurposeItem(group.categoria)} style={{ background: "none", border: "none", cursor: "pointer", padding: "0 10px", display: "flex", alignItems: "center", gap: 4 }}>
+                <Icon name="plus" size={11} color={C.blue} />
+                <span style={{ fontSize: 10.5, color: C.blue, fontWeight: 600 }}>Añadir propósito</span>
+              </button>
+            </div>
+          </div>
+        ))}
+        <div style={{ height: 38, display: "flex", alignItems: "center" }}>
+          <button onClick={addCategory} style={{ background: "none", border: "none", cursor: "pointer", padding: "0 10px", display: "flex", alignItems: "center", gap: 4 }}>
+            <Icon name="plus" size={12} color={C.gold} />
+            <span style={{ fontSize: 11, color: C.gold, fontWeight: 700 }}>Nueva categoría</span>
+          </button>
+        </div>
+      </div>
+      <div ref={scrollRef} style={{ overflowX: "auto", flex: "1 1 0%", minWidth: 0 }}>
+        <div style={{ display: "flex", height: HORARIO_HEADER_HEIGHT, borderBottom: "2px solid " + C.mist }}>
+          {Array.from({ length: totalDays }).map((_, i) => (
+            <div key={i} style={{ width: DAY_CELL_SIZE, flexShrink: 0, textAlign: "center", fontSize: 9, color: C.inkLight, fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              {i + 1}
+            </div>
+          ))}
+        </div>
+        {groups.map(group => (
+          <div key={group.categoria}>
+            <div style={{ height: 34, background: C.fog, borderBottom: "1px solid " + C.mist, borderTop: "1px solid " + C.mist }} />
+            {group.items.map(item => (
+              <HorarioDaysRow
+                key={item.id}
+                item={item}
+                isMonthly={false}
+                totalDays={totalDays}
+                monthKey={monthKey}
+                checks={checks}
+                toggleDaily={toggleDaily}
+                toggleMonthly={() => {}}
+              />
+            ))}
+            <div style={{ height: 34, borderBottom: "1px solid " + C.mist }} />
+          </div>
+        ))}
+        <div style={{ height: 38 }} />
+      </div>
+    </div>
+  );
+}
+
 function HorarioEspiritualScreen({ user, onBack }) {
   const { isTablet } = useViewportInfo();
   const [generalItem, setGeneralItem] = useState(null);
@@ -2571,7 +2657,7 @@ function HorarioEspiritualScreen({ user, onBack }) {
     if (!data || data.length === 0) {
       const seed = [
         { user_id: user.id, name: "", position: 0, is_monthly: false, is_general: true },
-        ...Array.from({ length: BLANK_PURPOSE_SLOTS }).map((_, i) => ({ user_id: user.id, name: "", position: i, is_monthly: false, is_general: false })),
+        ...FIXED_PURPOSE_CATEGORIES.map((cat, i) => ({ user_id: user.id, name: "", position: i, is_monthly: false, is_general: false, categoria: cat })),
         ...DEFAULT_MONTHLY_ITEMS.map((name, i) => ({ user_id: user.id, name, position: i, is_monthly: true, is_general: false })),
       ];
       const { data: inserted } = await supabase.from("spiritual_schedule_items").insert(seed).select();
@@ -2631,10 +2717,16 @@ function HorarioEspiritualScreen({ user, onBack }) {
     setEditingId(null);
   }
 
-  async function addPurposeItem() {
-    const position = items.length;
-    const { data } = await supabase.from("spiritual_schedule_items").insert({ user_id: user.id, name: "", position, is_monthly: false, is_general: false }).select().single();
+  async function addPurposeItem(categoria) {
+    const maxPos = items.length ? Math.max(...items.map(it => it.position)) : -1;
+    const { data } = await supabase.from("spiritual_schedule_items").insert({ user_id: user.id, name: "", position: maxPos + 1, is_monthly: false, is_general: false, categoria }).select().single();
     if (data) setItems(prev => [...prev, data]);
+  }
+
+  async function addCategory() {
+    const nombre = window.prompt("Nombre de la nueva categoría:");
+    if (!nombre || !nombre.trim()) return;
+    await addPurposeItem(nombre.trim());
   }
 
   async function deleteItem(itemId) {
@@ -2773,6 +2865,22 @@ async function exportarInformePDF() {
       doc.save(fileName);
     }
   }
+ const groupedCategories = (() => {
+    const map = {};
+    items.forEach(it => {
+      const cat = it.categoria || "Otros propósitos";
+      if (!map[cat]) map[cat] = [];
+      map[cat].push(it);
+    });
+    const order = [...FIXED_PURPOSE_CATEGORIES];
+    const extra = Object.keys(map)
+      .filter(c => !order.includes(c))
+      .sort((a, b) => Math.min(...map[a].map(it => it.position)) - Math.min(...map[b].map(it => it.position)));
+    const extraSorted = extra.includes("Otros propósitos")
+      ? ["Otros propósitos", ...extra.filter(c => c !== "Otros propósitos")]
+      : extra;
+    return [...order, ...extraSorted].map(cat => ({ categoria: cat, items: (map[cat] || []).sort((a, b) => a.position - b.position) }));
+  })();
   const sheetOverlay = { position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: isTablet ? "center" : "flex-end", justifyContent: "center", padding: isTablet ? 24 : 0 };
   const sheetCard = (extra = {}) => ({ background: C.white, borderRadius: isTablet ? 24 : "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: isTablet ? 480 : 390, margin: "0 auto", maxHeight: "85vh", overflowY: "auto", ...extra });
 
@@ -2854,9 +2962,8 @@ async function exportarInformePDF() {
           <div style={{ padding: "20px 22px 6px" }}>
             <p style={{ fontSize: 11, fontWeight: 700, color: C.inkLight, letterSpacing: "0.08em", textTransform: "uppercase", margin: 0 }}>Propósitos</p>
           </div>
-          <HorarioTable
-            rows={items.map(item => ({ item, placeholder: "Escribe tu propósito..." }))}
-            isMonthly={false}
+          <PropositosTable
+            groups={groupedCategories}
             totalDays={totalDays}
             monthKey={monthKey}
             checks={checks}
@@ -2867,7 +2974,8 @@ async function exportarInformePDF() {
             saveItemName={saveItemName}
             deleteItem={deleteItem}
             toggleDaily={toggleDaily}
-            toggleMonthly={toggleMonthly}
+            addPurposeItem={addPurposeItem}
+            addCategory={addCategory}
             scrollRef={scrollRef}
           />
           <div style={{ padding: "10px 22px 0" }}>
