@@ -2433,7 +2433,7 @@ function HorarioLabelCell({
   const isEditing = editingId === item.id;
   const isBlank = item.name === "" && !isEditing;
   return (
-    <div style={{ minHeight: HORARIO_ROW_HEIGHT, display: "flex", alignItems: "center", gap: 4, padding: "6px 10px", borderBottom: "1px solid " + C.mist, background: C.white }}>
+   <div style={{ height: HORARIO_ROW_HEIGHT, display: "flex", alignItems: "center", borderBottom: "1px solid " + C.mist }}>
       {isEditing ? (
         <textarea
           autoFocus
@@ -2442,7 +2442,7 @@ function HorarioLabelCell({
           onBlur={() => saveItemName(item.id, isGeneral)}
           onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); saveItemName(item.id, isGeneral); } }}
           placeholder={placeholder}
-          rows={2}
+          rows={1}
           style={{ flex: 1, minWidth: 0, border: "none", outline: "none", borderBottom: "1px solid " + C.mist, fontSize: 11.5, color: C.ink, background: "transparent", fontFamily: "'DM Sans', system-ui, sans-serif", padding: "2px 0", resize: "none", lineHeight: 1.3 }}
         />
       ) : (
@@ -2450,7 +2450,7 @@ function HorarioLabelCell({
           <p style={{
             fontSize: 11.5, color: isBlank ? C.inkLight : C.ink, fontWeight: isBlank ? 400 : 600,
             margin: 0, fontStyle: isBlank ? "italic" : "normal", lineHeight: 1.3,
-            display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical",
+            display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical",
             overflow: "hidden", wordBreak: "break-word",
           }}>
             {isBlank ? placeholder : item.name}
@@ -2469,7 +2469,7 @@ function HorarioLabelCell({
 // Fila de CÍRCULOS de días — vive en la columna que SÍ hace scroll horizontal.
 function HorarioDaysRow({ item, isMonthly, totalDays, monthKey, checks, toggleDaily, toggleMonthly }) {
   return (
-    <div style={{ minHeight: HORARIO_ROW_HEIGHT, display: "flex", alignItems: "center", borderBottom: "1px solid " + C.mist }}>
+    <div style={{ height: HORARIO_ROW_HEIGHT, display: "flex", alignItems: "center", gap: 4, padding: "6px 10px", borderBottom: "1px solid " + C.mist, background: C.white, overflow: "hidden" }}>
       {Array.from({ length: isMonthly ? MONTHLY_SLOTS : totalDays }).map((_, i) => {
         const slotIdx = i + 1;
         const checkKey = isMonthly ? `${monthKey}-slot${slotIdx}` : `${monthKey}-${pad2(slotIdx)}`;
@@ -2559,7 +2559,7 @@ function PropositosTable({
         <div style={{ height: HORARIO_HEADER_HEIGHT, borderBottom: "2px solid " + C.mist }} />
         {groups.map(group => (
          <div key={group.categoria}>
-            <div style={{ minHeight: 44, display: "flex", alignItems: "center", padding: "6px 10px", background: C.navy, borderBottom: "1px solid " + C.mist, borderTop: "1px solid " + C.mist }}>
+            <div style={{ height: 44, display: "flex", alignItems: "center", padding: "6px 10px", background: C.navy, borderBottom: "1px solid " + C.mist, borderTop: "1px solid " + C.mist, overflow: "hidden" }}>
               <p style={{ fontSize: 9.5, fontWeight: 800, color: "#fff", margin: 0, letterSpacing: "0.03em", textTransform: "uppercase", lineHeight: 1.25, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                 {group.categoria}
               </p>
