@@ -2558,9 +2558,9 @@ function PropositosTable({
       <div style={{ width: HORARIO_LABEL_WIDTH, flexShrink: 0, borderRight: "1px solid " + C.mist }}>
         <div style={{ height: HORARIO_HEADER_HEIGHT, borderBottom: "2px solid " + C.mist }} />
         {groups.map(group => (
-          <div key={group.categoria}>
-            <div style={{ height: 34, display: "flex", alignItems: "center", padding: "0 10px", background: C.fog, borderBottom: "1px solid " + C.mist, borderTop: "1px solid " + C.mist }}>
-              <p style={{ fontSize: 10.5, fontWeight: 800, color: C.ink, margin: 0, letterSpacing: "0.02em", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+         <div key={group.categoria}>
+            <div style={{ height: 34, display: "flex", alignItems: "center", padding: "0 10px", background: C.navy, borderBottom: "1px solid " + C.mist, borderTop: "1px solid " + C.mist }}>
+              <p style={{ fontSize: 10, fontWeight: 800, color: "#fff", margin: 0, letterSpacing: "0.04em", textTransform: "uppercase", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                 {group.categoria}
               </p>
             </div>
@@ -2604,7 +2604,7 @@ function PropositosTable({
         </div>
         {groups.map(group => (
           <div key={group.categoria}>
-            <div style={{ height: 34, background: C.fog, borderBottom: "1px solid " + C.mist, borderTop: "1px solid " + C.mist }} />
+            <div style={{ height: 34, background: C.navy, borderBottom: "1px solid " + C.mist, borderTop: "1px solid " + C.mist }} />
             {group.items.map(item => (
               <HorarioDaysRow
                 key={item.id}
