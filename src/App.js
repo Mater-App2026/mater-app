@@ -2469,7 +2469,7 @@ function HorarioLabelCell({
 // Fila de CÍRCULOS de días — vive en la columna que SÍ hace scroll horizontal.
 function HorarioDaysRow({ item, isMonthly, totalDays, monthKey, checks, toggleDaily, toggleMonthly }) {
   return (
-    <div style={{ height: HORARIO_ROW_HEIGHT, display: "flex", alignItems: "center", borderBottom: "1px solid " + C.mist }}>
+    <div style={{ height: HORARIO_ROW_HEIGHT, display: "flex", alignItems: "center", borderBottom: "1px solid " + C.mist, width: totalDays * DAY_CELL_SIZE }}>
       {Array.from({ length: isMonthly ? MONTHLY_SLOTS : totalDays }).map((_, i) => {
         const slotIdx = i + 1;
         const checkKey = isMonthly ? `${monthKey}-slot${slotIdx}` : `${monthKey}-${pad2(slotIdx)}`;
