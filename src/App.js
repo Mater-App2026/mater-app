@@ -2399,7 +2399,7 @@ const FIXED_PURPOSE_CATEGORIES = [
   "Grupo de vida",
 ];
 const DAY_CELL_SIZE = 30;
-const HORARIO_LABEL_WIDTH = 172;
+const HORARIO_LABEL_WIDTH = 210;
 const HORARIO_ROW_HEIGHT = 52;
 const HORARIO_HEADER_HEIGHT = 28;
 
@@ -2559,8 +2559,8 @@ function PropositosTable({
         <div style={{ height: HORARIO_HEADER_HEIGHT, borderBottom: "2px solid " + C.mist }} />
         {groups.map(group => (
          <div key={group.categoria}>
-            <div style={{ height: 34, display: "flex", alignItems: "center", padding: "0 10px", background: C.navy, borderBottom: "1px solid " + C.mist, borderTop: "1px solid " + C.mist }}>
-              <p style={{ fontSize: 10, fontWeight: 800, color: "#fff", margin: 0, letterSpacing: "0.04em", textTransform: "uppercase", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+            <div style={{ minHeight: 44, display: "flex", alignItems: "center", padding: "6px 10px", background: C.navy, borderBottom: "1px solid " + C.mist, borderTop: "1px solid " + C.mist }}>
+              <p style={{ fontSize: 9.5, fontWeight: 800, color: "#fff", margin: 0, letterSpacing: "0.03em", textTransform: "uppercase", lineHeight: 1.25, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                 {group.categoria}
               </p>
             </div>
@@ -2604,7 +2604,7 @@ function PropositosTable({
         </div>
         {groups.map(group => (
           <div key={group.categoria}>
-            <div style={{ height: 34, background: C.navy, borderBottom: "1px solid " + C.mist, borderTop: "1px solid " + C.mist, width: totalDays * DAY_CELL_SIZE }} />
+            <div style={{ height: 44, background: C.navy, borderBottom: "1px solid " + C.mist, borderTop: "1px solid " + C.mist, width: totalDays * DAY_CELL_SIZE }} />
             {group.items.map(item => (
               <HorarioDaysRow
                 key={item.id}
