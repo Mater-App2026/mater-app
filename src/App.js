@@ -2604,7 +2604,7 @@ function PropositosTable({
         </div>
         {groups.map(group => (
           <div key={group.categoria}>
-            <div style={{ height: 34, background: C.navy, borderBottom: "1px solid " + C.mist, borderTop: "1px solid " + C.mist }} />
+            <div style={{ height: 34, background: C.navy, borderBottom: "1px solid " + C.mist, borderTop: "1px solid " + C.mist, width: totalDays * DAY_CELL_SIZE }} />
             {group.items.map(item => (
               <HorarioDaysRow
                 key={item.id}
