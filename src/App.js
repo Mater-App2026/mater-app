@@ -442,7 +442,7 @@ function NavBar({ active, onChange, darkMode }) {
   const T = darkMode ? DARK : C;
   const tabs = [
     { id: "home", icon: "home", label: "Inicio" },
-    { id: "chat", icon: "chat", label: "Mater" },
+    { id: "chat", icon: "chat", label: "Sofía" },
     { id: "plan", icon: "plan", label: "Plan" },
     { id: "diary", icon: "diary", label: "Diario" },
     { id: "more", icon: "grid", label: "Más" },
