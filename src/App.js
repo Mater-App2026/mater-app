@@ -2433,7 +2433,7 @@ function HorarioLabelCell({
   const isEditing = editingId === item.id;
   const isBlank = item.name === "" && !isEditing;
   return (
-   <div style={{ height: HORARIO_ROW_HEIGHT, display: "flex", alignItems: "center", borderBottom: "1px solid " + C.mist }}>
+   <div style={{ height: HORARIO_ROW_HEIGHT, display: "flex", alignItems: "center", gap: 4, padding: "6px 10px", borderBottom: "1px solid " + C.mist, background: C.white, overflow: "hidden" }}>
       {isEditing ? (
         <textarea
           autoFocus
