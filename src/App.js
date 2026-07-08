@@ -2389,7 +2389,7 @@ function RosaryScreen({ onBack }) {
 // ═══════════════════════════════════════════════════════════════════════
 
 const DEFAULT_MONTHLY_ITEMS = ["Visita al Santuario", "Visita al Santísimo", "Confesión", "Acompañamiento espiritual", "Eucaristía"];
-const MONTHLY_SLOTS = 6;
+const MONTHLY_SLOTS = 4;
 const BLANK_PURPOSE_SLOTS = 5; // "Propósitos" en blanco para llenar
 const FIXED_PURPOSE_CATEGORIES = [
   "Mi relación con Dios",
@@ -2804,12 +2804,22 @@ async function exportarInformePDF() {
       doc.autoTable({
         startY: cursorY,
         head: [["", ...headers]],
-        body: rows,
+        body: rows.map(r => [r[0], ...r.slice(1).map(() => "")]),
         styles: { fontSize: 7, halign: "center", cellPadding: 1.3, textColor: ink },
         columnStyles: { 0: { halign: "left", cellWidth: 55, fontStyle: "bold" } },
         headStyles: { fillColor: navy, textColor: 255, fontSize: 6.5 },
         theme: "grid",
         margin: { left: 14, right: 14 },
+        didDrawCell: (data) => {
+          if (data.section !== "body" || data.column.index === 0) return;
+          const marcado = rows[data.row.index][data.column.index] === "✓";
+          if (!marcado) return;
+          const cx = data.cell.x + data.cell.width / 2;
+          const cy = data.cell.y + data.cell.height / 2;
+          const r = Math.min(data.cell.width, data.cell.height) / 2 - 0.6;
+          doc.setFillColor(...gold);
+          doc.circle(cx, cy, r, "F");
+        },
       });
       cursorY = doc.lastAutoTable.finalY + 8;
     }
