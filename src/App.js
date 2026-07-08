@@ -2523,7 +2523,7 @@ function HorarioTable({
           minWidth:0 es OBLIGATORIO: sin esto, un hijo flex con overflow-x:auto
           no se reduce y empuja a sus hermanos fuera de pantalla. */}
       <div ref={scrollRef} style={{ overflowX: "auto", flex: "1 1 0%", minWidth: 0 }}>
-        <div style={{ display: "flex", height: HORARIO_HEADER_HEIGHT, borderBottom: "2px solid " + C.mist }}>
+        <div style={{ display: "flex", height: HORARIO_HEADER_HEIGHT, borderBottom: "2px solid " + C.mist, width: slotCount * DAY_CELL_SIZE }}>
           {Array.from({ length: slotCount }).map((_, i) => (
             <div key={i} style={{ width: DAY_CELL_SIZE, flexShrink: 0, textAlign: "center", fontSize: 9, color: C.inkLight, fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center" }}>
               {i + 1}
