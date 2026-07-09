@@ -1141,7 +1141,7 @@ function HomeScreen({ user, profile, onTabChange }) {
             <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
           <div style={{ flex: 1 }}>
-            <p style={{ fontSize: 13, fontWeight: 700, color: C.ink, margin: 0 }}>Hablar con Mater</p>
+            <p style={{ fontSize: 13, fontWeight: 700, color: C.ink, margin: 0 }}>Hablar con Sofía</p>
             <p style={{ fontSize: 11, color: C.inkLight, margin: "2px 0 0" }}>¿Tienes algo en el corazón hoy?</p>
           </div>
           <Icon name="chevron" size={18} color={C.blue} />
