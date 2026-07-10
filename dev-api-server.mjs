@@ -31,6 +31,7 @@ const routes = {
   "/api/chat": "./api/chat.js",
   "/api/santo-del-dia": "./api/santo-del-dia.js",
   "/api/world-intention": "./api/world-intention.js",
+  "/api/ecclesial-intention": "./api/ecclesial-intention.js",
   "/api/delete-account": "./api/delete-account.js",
 };
 

@@ -114,6 +114,7 @@ const translations = {
     home_world_intention: "Intención del mundo", home_loading: "Cargando...",
     home_world_intention_prayer: "Oración de intercesión", home_world_intention_source: "Fuente",
     home_world_intention_read_more: "Leer noticia completa →",
+    home_ecclesial_intention: "Intención eclesial", home_ecclesial_intention_prayer: "Oración por la Iglesia",
     home_talk_to_sofia: "Hablar con Sofía", home_talk_to_sofia_sub: "¿Tienes algo en el corazón hoy?",
     home_questions_to_pray: "Preguntas para orar", home_amen_done: "Amén ✓",
     home_preparing_reflection: "✨ Mater está preparando tu reflexión...",
@@ -245,6 +246,7 @@ const translations = {
     home_world_intention: "World intention", home_loading: "Loading...",
     home_world_intention_prayer: "Prayer of intercession", home_world_intention_source: "Source",
     home_world_intention_read_more: "Read the full story →",
+    home_ecclesial_intention: "Church intention", home_ecclesial_intention_prayer: "Prayer for the Church",
     home_talk_to_sofia: "Talk with Sofía", home_talk_to_sofia_sub: "Do you have something on your heart today?",
     home_questions_to_pray: "Questions to pray with", home_amen_done: "Amen ✓",
     home_preparing_reflection: "✨ Mater is preparing your reflection...",
@@ -786,6 +788,8 @@ function HomeScreen({ user, profile, onTabChange, language }) {
   const [saintOpen, setSaintOpen] = useState(false);
   const [worldIntention, setWorldIntention] = useState(null);
   const [intentionOpen, setIntentionOpen] = useState(false);
+  const [ecclesialIntention, setEcclesialIntention] = useState(null);
+  const [ecclesialOpen, setEcclesialOpen] = useState(false);
   const [practiceAIContent, setPracticeAIContent] = useState({});
   const [loadingPractice, setLoadingPractice] = useState(false);
   const practiceCache = useRef({});
@@ -919,6 +923,7 @@ function HomeScreen({ user, profile, onTabChange, language }) {
     loadPractices();
     fetchSaintOfDay();
     fetchWorldIntention();
+    fetchEcclesialIntention();
   }, [user, language]);
 
   async function fetchSaintOfDay() {
@@ -1299,6 +1304,80 @@ function HomeScreen({ user, profile, onTabChange, language }) {
         descripcion: "Hoy no pudimos obtener las últimas noticias del mundo, pero siempre hay una parte del mundo sufriendo en silencio — esperando que alguien la recuerde en oración.",
         oracion: "Señor de las naciones, te presentamos a todos los que hoy sufren por la guerra, el desastre, el hambre o la injusticia, incluso a quienes su historia no ha llegado hasta nosotros. Abre nuestro corazón al sufrimiento del mundo y úsanos como instrumentos de tu paz. Amén.",
         emoji: "🙏",
+        fuente: "", url: "",
+        ...colors,
+      });
+    }
+  }
+
+  async function fetchEcclesialIntention() {
+    const cacheKey = "ecclesial-intention-" + language + "-" + new Date().toDateString();
+    const cached = sessionStorage.getItem(cacheKey);
+    if (cached) { setEcclesialIntention(JSON.parse(cached)); return; }
+
+    const palette = [
+      { color1: "#4a1420", color2: "#7a2438" },
+      { color1: "#1a2440", color2: "#2d3f6b" },
+      { color1: "#3a2d0a", color2: "#6b5518" },
+      { color1: "#2a1a40", color2: "#4a2d6b" },
+      { color1: "#3a2c2c", color2: "#5c4a2d" },
+    ];
+    const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+    const colors = palette[dayOfYear % palette.length];
+
+    try {
+      // 1. Obtenemos un titular REAL y VERIFICADO sobre la Iglesia Católica (no inventado)
+      const newsRes = await fetch("/api/ecclesial-intention?lang=" + language);
+      const newsData = await newsRes.json();
+      if (!newsData.found) throw new Error("No hay noticia disponible hoy");
+
+      // 2. Le pedimos a Claude que redacte SOLO a partir de ese titular verificado
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-6",
+          max_tokens: 500,
+          system: language === "en"
+            ? "You are a Catholic writer preparing a daily prayer intention for the Church, based on real news about the worldwide Catholic Church (the Pope, bishops, synods, dioceses, religious life, evangelization, etc.). You will be given a VERIFIED real news headline and summary from a news API. Do NOT invent additional facts, numbers, or details — base your writing strictly and only on the given headline and summary. Write a prayer intention appropriate to whatever the topic actually is: if it concerns suffering or controversy, pray for healing, truth, and justice; if it's about a pastoral visit, decision, or ordinary Church activity, pray for the fruitfulness of that mission and for the Pope, pastors, and the People of God involved. Respond ONLY with valid JSON, in English, no code blocks: {lugar: 'place, diocese, or institution mentioned in the headline', descripcion: 'a respectful, factual 2-3 sentence summary of what is happening, based only on the given headline/summary', oracion: 'a 3-4 line Catholic intercessory prayer for the Church appropriate to the topic', emoji: 'one appropriate emoji'}"
+            : "Eres un redactor católico que prepara una intención diaria de oración por la Iglesia, basada en noticias reales sobre la Iglesia Católica en el mundo (el Papa, obispos, sínodos, diócesis, vida religiosa, evangelización, etc.). Se te dará un titular de noticia REAL y VERIFICADO junto con su resumen, obtenidos de una API de noticias. NO inventes datos, cifras ni detalles adicionales — basa tu redacción estricta y únicamente en el titular y resumen dados. Escribe una intención de oración apropiada al tema real: si trata de sufrimiento o controversia, ora por sanación, verdad y justicia; si es sobre una visita pastoral, decisión o actividad ordinaria de la Iglesia, ora por la fecundidad de esa misión y por el Papa, los pastores y el Pueblo de Dios involucrados. Responde SOLO con JSON válido, en español, sin bloques de código: {lugar: 'lugar, diócesis o institución mencionada en el titular', descripcion: 'un resumen respetuoso y factual de 2-3 frases sobre lo que está pasando, basado solo en el titular/resumen dado', oracion: 'una oración católica de intercesión de 3-4 líneas por la Iglesia apropiada al tema', emoji: 'un emoji apropiado'}",
+          messages: [{
+            role: "user",
+            content: `Titular verificado: "${newsData.titulo}". Resumen: "${newsData.resumen_original || ""}". Fuente: ${newsData.fuente || "desconocida"}.`
+          }],
+        }),
+      });
+      const data = await res.json();
+      const text = data.content?.map(b => b.text || "").join("") || "{}";
+      const parsed = JSON.parse(text.replace(/```json|```/g, "").trim());
+
+      const intention = {
+        titulo: newsData.titulo,
+        lugar: parsed.lugar || "",
+        descripcion: parsed.descripcion,
+        oracion: parsed.oracion,
+        emoji: parsed.emoji || "⛪",
+        fuente: newsData.fuente || "",
+        url: newsData.url || "",
+        ...colors,
+      };
+      sessionStorage.setItem(cacheKey, JSON.stringify(intention));
+      setEcclesialIntention(intention);
+    } catch {
+      setEcclesialIntention(language === "en" ? {
+        titulo: "A Church in need of prayer",
+        lugar: "",
+        descripcion: "Today we couldn't reach the latest Church news, but the Body of Christ around the world is always in need of prayer — its pastors, its missionaries, and all the People of God.",
+        oracion: "Lord Jesus, head of the Church, we pray for Pope Leo, for our bishops and priests, and for all who serve your people. Strengthen the Church in holiness and unity, and make her a sign of your love in the world. Amen.",
+        emoji: "⛪",
+        fuente: "", url: "",
+        ...colors,
+      } : {
+        titulo: "Una Iglesia que necesita oración",
+        lugar: "",
+        descripcion: "Hoy no pudimos obtener las últimas noticias de la Iglesia, pero el Cuerpo de Cristo en el mundo siempre necesita oración — sus pastores, sus misioneros y todo el Pueblo de Dios.",
+        oracion: "Señor Jesús, cabeza de la Iglesia, oramos por el Papa León, por nuestros obispos y sacerdotes, y por todos los que sirven a tu pueblo. Fortalece a la Iglesia en santidad y unidad, y hazla signo de tu amor en el mundo. Amén.",
+        emoji: "⛪",
         fuente: "", url: "",
         ...colors,
       });
@@ -1737,6 +1816,48 @@ function HomeScreen({ user, profile, onTabChange, language }) {
               <p style={{ fontSize: 10, color: "rgba(255,255,255,0.7)", letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 2px" }}>{t(language, "home_world_intention")}</p>
               <p style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>{worldIntention ? worldIntention.titulo : t(language, "home_loading")}</p>
               {worldIntention && <p style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", margin: "2px 0 0" }}>{worldIntention.lugar}</p>}
+            </div>
+            <Icon name="chevron" size={18} color="rgba(255,255,255,0.7)" />
+          </div>
+        </button>
+      </div>
+
+      <div style={{ padding: "22px 22px 0" }}>
+        {ecclesialOpen && ecclesialIntention && (
+          <div style={sheetOverlay} onClick={() => setEcclesialOpen(false)}>
+            <div onClick={e => e.stopPropagation()} style={sheetCard()}>
+              <div style={{ borderRadius: 16, background: "linear-gradient(135deg, " + (ecclesialIntention.color1 || "#4a1420") + ", " + (ecclesialIntention.color2 || "#7a2438") + ")", padding: "20px", marginBottom: 20, textAlign: "center" }}>
+                <p style={{ fontSize: 40, margin: "0 0 8px" }}>{ecclesialIntention.emoji}</p>
+                <p style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 4px" }}>{ecclesialIntention.lugar}</p>
+                <p style={{ fontSize: 18, fontWeight: 800, color: "#fff", margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>{ecclesialIntention.titulo}</p>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                <p style={{ fontSize: 10, color: C.gold, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>{t(language, "home_ecclesial_intention")}</p>
+                <button onClick={() => setEcclesialOpen(false)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>x</button>
+              </div>
+              <p style={{ fontSize: 13, color: C.inkMid, lineHeight: 1.8, margin: "0 0 20px" }}>{ecclesialIntention.descripcion}</p>
+              <div style={{ background: C.iceBlue, borderRadius: 14, padding: "16px", borderLeft: "3px solid " + (ecclesialIntention.color1 || C.navy) }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: ecclesialIntention.color1 || C.navy, margin: "0 0 10px", letterSpacing: "0.08em", textTransform: "uppercase" }}>{t(language, "home_ecclesial_intention_prayer")}</p>
+                <p style={{ fontSize: 13, fontStyle: "italic", color: C.inkMid, lineHeight: 1.8, margin: 0 }}>{ecclesialIntention.oracion}</p>
+              </div>
+              {ecclesialIntention.fuente && (
+                <p style={{ fontSize: 10, color: C.slateLight, margin: "12px 0 0", textAlign: "right" }}>
+                  {t(language, "home_world_intention_source")}: {ecclesialIntention.fuente}
+                  {ecclesialIntention.url && (
+                    <> · <a href={ecclesialIntention.url} target="_blank" rel="noopener noreferrer" style={{ color: C.slateLight }}>{t(language, "home_world_intention_read_more")}</a></>
+                  )}
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+        <button onClick={() => setEcclesialOpen(true)} style={{ width: "100%", borderRadius: 16, overflow: "hidden", cursor: "pointer", border: "none", padding: 0, textAlign: "left" }}>
+          <div style={{ background: "linear-gradient(135deg, " + (ecclesialIntention && ecclesialIntention.color1 ? ecclesialIntention.color1 : "#4a1420") + ", " + (ecclesialIntention && ecclesialIntention.color2 ? ecclesialIntention.color2 : "#7a2438") + ")", padding: "16px 18px", display: "flex", alignItems: "center", gap: 14 }}>
+            <span style={{ fontSize: 28, flexShrink: 0 }}>{ecclesialIntention ? ecclesialIntention.emoji : "⛪"}</span>
+            <div style={{ flex: 1 }}>
+              <p style={{ fontSize: 10, color: "rgba(255,255,255,0.7)", letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 2px" }}>{t(language, "home_ecclesial_intention")}</p>
+              <p style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>{ecclesialIntention ? ecclesialIntention.titulo : t(language, "home_loading")}</p>
+              {ecclesialIntention && <p style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", margin: "2px 0 0" }}>{ecclesialIntention.lugar}</p>}
             </div>
             <Icon name="chevron" size={18} color="rgba(255,255,255,0.7)" />
           </div>
