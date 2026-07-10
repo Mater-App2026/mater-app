@@ -1440,7 +1440,32 @@ function HomeScreen({ user, profile, onTabChange, language }) {
     setPracticeAIContent(prev => ({ ...prev, [index]: staticContent }));
   }
 
-  const practiceContent = [
+  const practiceContent = language === "en" ? [
+    {
+      icon: "moon", color: C.blue, bg: C.iceBlue,
+      label: "Morning Prayer", sub: "Prayer to start the day · 5 min",
+      saint: "St. John of the Cross",
+      saintQuote: "«At the beginning of the morning, before the soul occupies itself with anything, let it consecrate to God the first movement of the heart.»",
+      reflection: `Lauds — the Church's morning prayer — is a theological statement: before the world claims me, I belong to God.\n\nSaint Benedict taught that the monk's first work each morning should be prayer, not because God needs it, but because the soul needs it.\n\nThe person who prays in the morning carries throughout the day an inner stillness that doesn't depend on circumstances. Saint Teresa of Ávila called this "the soul's Archimedean point."\n\nToday, before checking your phone, dedicate these minutes to consecrating the day to God. Saint John Vianney said it was enough to "look at God and let God look at you."`,
+      questions: ["How do I arrive at this new day — with gratitude, with anxiety, in a rush?", "Is there something I want to specifically hand over to God this morning?", "What concrete grace do I need today?"],
+    },
+    {
+      icon: "book", color: C.navy, bg: "#DDE8F2",
+      label: "Lectio Divina", sub: "Daily Lectio Divina",
+      saint: "St. Bernard of Clairvaux",
+      saintQuote: "«The river that does not return to its spring dries up.»",
+      reflection: `The scene at Bethany is one of the most charged with tension and grace in the whole Gospel. Martha rushes in, her hands full and her heart preoccupied. Mary is sitting at Jesus's feet.\n\nJesus says something that has unsettled active Christians for two millennia: "Mary has chosen the better part."\n\nThis is not a condemnation of work. What Jesus points to is a priority: listen first, then act. Be first, then do.\n\nLectio Divina is the art of sitting with Mary while the world shouts with Martha.`,
+      questions: ["Do I identify more with Martha or with Mary at this moment?", "Is there a Word God has been wanting to tell me?", "What would happen if I dedicated 15 minutes a day to listening to God?"],
+    },
+    {
+      icon: "heart", color: C.periwinkle, bg: "#E4EDF7",
+      label: "Examination of Conscience", sub: "Examination of conscience",
+      saint: "St. Ignatius of Loyola",
+      saintQuote: "«The examination of conscience is not a spiritual accounting of sins. It is learning to read life as God reads it.»",
+      reflection: `Saint Ignatius considered the Examen the most important practice of the spiritual life. It is not a list of sins — it is learning to see one's own life through God's eyes.\n\nIts five steps: gratitude, asking for light, reviewing the day, acknowledgment, and resolve.\n\nWhat makes the Ignatian Examen unique is that it doesn't separate the "spiritual" from the "everyday." God is in the difficult meeting, in the tense conversation, in the tiredness at the end of the day.\n\nThe Examen trains us to recognize that presence where we least expect it.`,
+      questions: ["For what three moments of today can I give thanks to God?", "When did I feel the greatest inner peace? And when the greatest distance from God?", "Is there something I want to live differently tomorrow?"],
+    },
+  ] : [
     {
       icon: "moon", color: C.blue, bg: C.iceBlue,
       label: "Oración de la mañana", sub: "Oración para arrancar el día · 5 min",
