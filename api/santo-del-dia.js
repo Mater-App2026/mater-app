@@ -21,6 +21,8 @@ export default async function handler(req, res) {
       fecha: calData.date,
       titulo_en: elegida ? elegida.title : null,
       rank: elegida ? elegida.rank : null,
+      color: elegida ? elegida.colour : null,
+      rank_num: elegida ? elegida.rank_num : null,
     });
   } catch (err) {
     res.status(500).json({ error: err.message });

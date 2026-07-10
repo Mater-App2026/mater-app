@@ -48,6 +48,24 @@ const DARK = {
   cream: "#1A2535",
 };
 
+// ─── Colores litúrgicos ─────────────────────────────────────────────────────
+const LITURGICAL_COLORS = {
+  green: { hex: "#3F7D4F", key: "liturgical_color_green" },
+  red: { hex: "#A8342E", key: "liturgical_color_red" },
+  violet: { hex: "#5B3A87", key: "liturgical_color_violet" },
+  white: { hex: "#FFFFFF", key: "liturgical_color_white", border: true },
+  gold: { hex: "#D4AF37", key: "liturgical_color_gold" },
+};
+
+// El calendario litúrgico oficial no distingue "blanco" de "dorado" (son el mismo
+// color, con el dorado como opción festiva). Usamos dorado brillante para las
+// solemnidades de mayor rango (rank_num bajo = Triduo Pascual, Navidad, etc.)
+// y blanco liso para el resto de celebraciones en color blanco.
+function getLiturgicalColor(colour, rankNum) {
+  const key = colour === "white" && typeof rankNum === "number" && rankNum <= 1.3 ? "gold" : (colour || "green");
+  return LITURGICAL_COLORS[key] || LITURGICAL_COLORS.green;
+}
+
 // ─── Traducciones (i18n) ────────────────────────────────────────────────────
 const translations = {
   es: {
@@ -89,6 +107,8 @@ const translations = {
     home_verse_of_day: "Versículo del día", home_share: "Compartir",
     home_saint_of_day: "Santo del día", home_saint_loading: "Cargando santo del día...",
     home_saint_prayer: "🙏 Oración", home_saint_fact: "💡 ¿Sabías que...?",
+    liturgical_color_green: "Verde", liturgical_color_white: "Blanco", liturgical_color_gold: "Dorado",
+    liturgical_color_red: "Rojo", liturgical_color_violet: "Morado",
     home_weekly_rhythm: "Ritmo semanal", home_day_singular: "día esta semana", home_days_plural: "días esta semana",
     home_today_practices: "Prácticas de hoy",
     home_world_intention: "Intención del mundo", home_loading: "Cargando...",
@@ -218,6 +238,8 @@ const translations = {
     home_verse_of_day: "Verse of the day", home_share: "Share",
     home_saint_of_day: "Saint of the day", home_saint_loading: "Loading saint of the day...",
     home_saint_prayer: "🙏 Prayer", home_saint_fact: "💡 Did you know?",
+    liturgical_color_green: "Green", liturgical_color_white: "White", liturgical_color_gold: "Gold",
+    liturgical_color_red: "Red", liturgical_color_violet: "Violet",
     home_weekly_rhythm: "Weekly rhythm", home_day_singular: "day this week", home_days_plural: "days this week",
     home_today_practices: "Today's practices",
     home_world_intention: "World intention", home_loading: "Loading...",
@@ -917,12 +939,14 @@ function HomeScreen({ user, profile, onTabChange, language }) {
           nombre: "Ordinary time feria",
           historia: "Today the Church does not celebrate the fixed memorial of any particular saint; it is a feria within the liturgical calendar. It's an opportunity for free prayer and personal devotion.",
           oracion: "Lord, on this ordinary day, help me find you in the everyday. Amen.",
-          dato: "'Ferial' days — without an obligatory memorial — leave room for optional devotions, such as local optional memorials."
+          dato: "'Ferial' days — without an obligatory memorial — leave room for optional devotions, such as local optional memorials.",
+          color: calData.color, rankNum: calData.rank_num
         } : {
           nombre: "Feria del tiempo ordinario",
           historia: "Hoy la Iglesia no celebra la memoria fija de ningún santo particular; es un día ferial dentro del calendario litúrgico. Es una oportunidad para la oración libre y la devoción personal.",
           oracion: "Señor, en este día ordinario, ayúdame a encontrarte en lo cotidiano. Amén.",
-          dato: "Los días 'feriales' —sin memoria obligatoria— dejan espacio para devociones libres, como memorias opcionales locales."
+          dato: "Los días 'feriales' —sin memoria obligatoria— dejan espacio para devociones libres, como memorias opcionales locales.",
+          color: calData.color, rankNum: calData.rank_num
         });
         setLoadingSaint(false);
         return;
@@ -949,6 +973,8 @@ function HomeScreen({ user, profile, onTabChange, language }) {
       const data = await res.json();
       const text = data.content?.map(b => b.text || "").join("") || "{}";
       const parsed = JSON.parse(text.replace(/```json|```/g, "").trim());
+      parsed.color = calData.color;
+      parsed.rankNum = calData.rank_num;
       sessionStorage.setItem(cacheKey, JSON.stringify(parsed));
       setSaintOfDay(parsed);
     } catch {
@@ -957,13 +983,15 @@ function HomeScreen({ user, profile, onTabChange, language }) {
         fecha: "January 1",
         historia: "Mary, the Mother of Jesus, is the most venerated figure in the Catholic Church...",
         oracion: "Holy Mary, Mother of God and our Mother, pray for us...",
-        dato: "The title 'Mother of God' (Theotokos) was declared dogma at the Council of Ephesus in the year 431."
+        dato: "The title 'Mother of God' (Theotokos) was declared dogma at the Council of Ephesus in the year 431.",
+        color: "white", rankNum: 1.2
       } : {
         nombre: "Santa María, Madre de Dios",
         fecha: "1 de enero",
         historia: "Maria, la Madre de Jesus, es la figura mas venerada en la Iglesia Catolica...",
         oracion: "Santa María, Madre de Dios y Madre nuestra, intercede por nosotros...",
-        dato: "El título 'Madre de Dios' (Theotokos) fue declarado dogma en el Concilio de Éfeso en el año 431."
+        dato: "El título 'Madre de Dios' (Theotokos) fue declarado dogma en el Concilio de Éfeso en el año 431.",
+        color: "white", rankNum: 1.2
       });
     } finally {
       setLoadingSaint(false);
@@ -1495,6 +1523,7 @@ function HomeScreen({ user, profile, onTabChange, language }) {
   ];
 
   const firstName = profile?.name?.split(" ")[0] || user?.email?.split("@")[0] || "Amigo";
+  const saintColor = getLiturgicalColor(saintOfDay?.color, saintOfDay?.rankNum);
 
   return (
     <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90 }}>
@@ -1583,16 +1612,23 @@ function HomeScreen({ user, profile, onTabChange, language }) {
         {saintOpen && saintOfDay && (
           <div style={sheetOverlay} onClick={() => setSaintOpen(false)}>
             <div onClick={e => e.stopPropagation()} style={sheetCard()}>
+              <div style={{ height: 5, borderRadius: 4, background: saintColor.hex, border: saintColor.border ? `1px solid ${C.mist}` : "none", marginBottom: 16 }} />
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
                 <div>
-                  <p style={{ fontSize: 10, color: C.gold, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 4px" }}>✨ {t(language, "home_saint_of_day")}</p>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                    <p style={{ fontSize: 10, color: C.gold, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>✨ {t(language, "home_saint_of_day")}</p>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 10, fontWeight: 600, color: C.inkMid, background: C.fog, borderRadius: 20, padding: "2px 8px" }}>
+                      <span style={{ width: 8, height: 8, borderRadius: "50%", background: saintColor.hex, border: saintColor.border ? `1px solid ${C.mist}` : "none", flexShrink: 0 }} />
+                      {t(language, saintColor.key)}
+                    </span>
+                  </div>
                   <p style={{ fontSize: 18, fontWeight: 800, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>{saintOfDay.nombre}</p>
                   {saintOfDay.siglo && <p style={{ fontSize: 11, color: C.slateLight, margin: "2px 0 0" }}>{saintOfDay.siglo}</p>}
                 </div>
                 <button onClick={() => setSaintOpen(false)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
               </div>
               <p style={{ fontSize: 13, color: C.inkMid, lineHeight: 1.8, margin: "0 0 20px", whiteSpace: "pre-line" }}>{saintOfDay.historia}</p>
-              <div style={{ background: C.iceBlue, borderRadius: 14, padding: "14px 16px", marginBottom: 16, borderLeft: `3px solid ${C.gold}` }}>
+              <div style={{ background: C.iceBlue, borderRadius: 14, padding: "14px 16px", marginBottom: 16, borderLeft: `3px solid ${saintColor.hex}` }}>
                 <p style={{ fontSize: 11, fontWeight: 700, color: C.gold, margin: "0 0 8px", letterSpacing: "0.08em", textTransform: "uppercase" }}>{t(language, "home_saint_prayer")}</p>
                 <p style={{ fontSize: 13, fontStyle: "italic", color: C.inkMid, lineHeight: 1.7, margin: 0 }}>{saintOfDay.oracion}</p>
               </div>
@@ -1604,14 +1640,17 @@ function HomeScreen({ user, profile, onTabChange, language }) {
           </div>
         )}
 
-        <button onClick={() => setSaintOpen(true)} style={{ marginTop: 12, width: "100%", borderRadius: 12, background: C.cream, border: `1px solid ${C.mist}`, borderLeft: `3px solid ${C.gold}`, padding: "14px 16px", display: "flex", alignItems: "center", gap: 12, cursor: "pointer", textAlign: "left" }}>
+        <button onClick={() => setSaintOpen(true)} style={{ marginTop: 12, width: "100%", borderRadius: 12, background: C.cream, border: `1px solid ${C.mist}`, borderLeft: `3px solid ${saintColor.hex}`, padding: "14px 16px", display: "flex", alignItems: "center", gap: 12, cursor: "pointer", textAlign: "left" }}>
           <span style={{ fontSize: 24 }}>✨</span>
           <div style={{ flex: 1 }}>
             {loadingSaint ? (
               <p style={{ fontSize: 13, color: C.slateLight, margin: 0 }}>{t(language, "home_saint_loading")}</p>
             ) : saintOfDay ? (
               <>
-                <p style={{ fontSize: 10, color: C.gold, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", margin: "0 0 2px" }}>{t(language, "home_saint_of_day")}</p>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, margin: "0 0 2px" }}>
+                  <p style={{ fontSize: 10, color: C.gold, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", margin: 0 }}>{t(language, "home_saint_of_day")}</p>
+                  <span style={{ width: 8, height: 8, borderRadius: "50%", background: saintColor.hex, border: saintColor.border ? `1px solid ${C.mist}` : "none", flexShrink: 0 }} title={t(language, saintColor.key)} />
+                </div>
                 <p style={{ fontSize: 13, fontWeight: 700, color: C.ink, margin: 0 }}>{saintOfDay.nombre}</p>
               </>
             ) : (
