@@ -1,9 +1,12 @@
 export default async function handler(req, res) {
   try {
+    // Preferimos la fecha local del cliente (year/month/day en query) para evitar
+    // que el huso horario UTC del servidor muestre el santo del dia siguiente
+    // varias horas antes de medianoche en la zona horaria del usuario.
     const today = new Date();
-    const y = today.getFullYear();
-    const m = today.getMonth() + 1;
-    const d = today.getDate();
+    const y = req.query.year ? parseInt(req.query.year, 10) : today.getFullYear();
+    const m = req.query.month ? parseInt(req.query.month, 10) : today.getMonth() + 1;
+    const d = req.query.day ? parseInt(req.query.day, 10) : today.getDate();
 
     const calRes = await fetch(`http://calapi.inadiutorium.cz/api/v0/en/calendars/general-en/${y}/${m}/${d}`);
     if (!calRes.ok) throw new Error("No se pudo obtener el calendario litúrgico");

@@ -906,7 +906,9 @@ function HomeScreen({ user, profile, onTabChange, language }) {
     setLoadingSaint(true);
     try {
       // 1. Obtenemos el nombre VERIFICADO del santo de hoy (fuente real, no memoria del modelo)
-      const calRes = await fetch("/api/santo-del-dia");
+      // Mandamos la fecha LOCAL del usuario para evitar desfases por el huso horario del servidor
+      const localNow = new Date();
+      const calRes = await fetch(`/api/santo-del-dia?year=${localNow.getFullYear()}&month=${localNow.getMonth() + 1}&day=${localNow.getDate()}`);
       const calData = await calRes.json();
 
       if (!calData.titulo_en) {
