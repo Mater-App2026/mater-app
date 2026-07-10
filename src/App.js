@@ -146,6 +146,8 @@ const translations = {
     profile_about_footer: "Hecho con ❤️ para la Iglesia joven",
     profile_dark_mode: "Modo oscuro",
     profile_language: "Idioma", profile_language_es: "Español", profile_language_en: "English",
+    profile_font_size: "Tamaño de letra",
+    profile_font_size_small: "A", profile_font_size_medium: "A", profile_font_size_large: "A", profile_font_size_xlarge: "A",
     profile_reminders: "Recordatorios diarios",
     profile_name_updated: "✓ Nombre actualizado",
     profile_save: "Guardar",
@@ -278,6 +280,8 @@ const translations = {
     profile_about_footer: "Made with ❤️ for the young Church",
     profile_dark_mode: "Dark mode",
     profile_language: "Language", profile_language_es: "Español", profile_language_en: "English",
+    profile_font_size: "Text size",
+    profile_font_size_small: "A", profile_font_size_medium: "A", profile_font_size_large: "A", profile_font_size_xlarge: "A",
     profile_reminders: "Daily reminders",
     profile_name_updated: "✓ Name updated",
     profile_save: "Save",
@@ -420,6 +424,7 @@ const Icon = ({ name, size = 22, color = "currentColor" }) => {
     grid: <><rect x="3" y="3" width="7" height="7" rx="1.5" stroke={color} strokeWidth="1.8" fill="none" /><rect x="14" y="3" width="7" height="7" rx="1.5" stroke={color} strokeWidth="1.8" fill="none" /><rect x="3" y="14" width="7" height="7" rx="1.5" stroke={color} strokeWidth="1.8" fill="none" /><rect x="14" y="14" width="7" height="7" rx="1.5" stroke={color} strokeWidth="1.8" fill="none" /></>,
     rosary: <><circle cx="12" cy="4" r="1.6" stroke={color} strokeWidth="1.6" fill="none" /><circle cx="18" cy="8" r="1.6" stroke={color} strokeWidth="1.6" fill="none" /><circle cx="19" cy="15" r="1.6" stroke={color} strokeWidth="1.6" fill="none" /><circle cx="14" cy="20" r="1.6" stroke={color} strokeWidth="1.6" fill="none" /><circle cx="7" cy="19" r="1.6" stroke={color} strokeWidth="1.6" fill="none" /><circle cx="4" cy="13" r="1.6" stroke={color} strokeWidth="1.6" fill="none" /><circle cx="6" cy="6" r="1.6" stroke={color} strokeWidth="1.6" fill="none" /><path d="M12 12v9" stroke={color} strokeWidth="1.8" strokeLinecap="round" /></>,
     host: <><circle cx="12" cy="12" r="8.5" stroke={color} strokeWidth="1.8" fill="none" /><path d="M12 7.5v9M8 12h8" stroke={color} strokeWidth="1.6" strokeLinecap="round" /></>,
+    textSize: <><text x="2" y="16" fontSize="10" fontWeight="700" fill={color} fontFamily="'DM Sans', system-ui, sans-serif">A</text><text x="12" y="19" fontSize="16" fontWeight="700" fill={color} fontFamily="'DM Sans', system-ui, sans-serif">A</text></>,
   };
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" style={{ display: "block", flexShrink: 0 }}>
@@ -503,12 +508,12 @@ const globalStyles = `
   @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 `;
 
-function LandingScreen({ onEnter, language }) {
+function LandingScreen({ onEnter, language, fontScale = 1 }) {
   const verse = language === "en"
     ? { text: "«Come to me, all who labor and are heavy laden, and I will give you rest.»", ref: "Matthew 11:28" }
     : { text: "«Venid a mí todos los que estáis fatigados y cargados, y yo os haré descansar.»", ref: "Mateo 11:28" };
   return (
-    <div style={{ flex: 1, overflowY: "auto", background: C.iceBlue, display: "flex", flexDirection: "column", padding: "0 0 40px" }}>
+    <div style={{ flex: 1, overflowY: "auto", background: C.iceBlue, display: "flex", flexDirection: "column", padding: "0 0 40px", zoom: fontScale }}>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "40px 32px", textAlign: "center" }}>
         <div style={{ width: 80, height: 80, borderRadius: 20, overflow: "hidden", border: "1px solid " + C.mist, marginBottom: 24 }}>
           <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -546,7 +551,7 @@ function LandingScreen({ onEnter, language }) {
   );
 }
 
-function OnboardingScreen({ onComplete, language }) {
+function OnboardingScreen({ onComplete, language, fontScale = 1 }) {
   const [step, setStep] = useState(0);
   const [name, setName] = useState("");
 
@@ -567,7 +572,7 @@ function OnboardingScreen({ onComplete, language }) {
   }
 
   return (
-    <div style={{ flex: 1, overflowY: "auto", background: C.iceBlue, display: "flex", flexDirection: "column", padding: "0 0 40px" }}>
+    <div style={{ flex: 1, overflowY: "auto", background: C.iceBlue, display: "flex", flexDirection: "column", padding: "0 0 40px", zoom: fontScale }}>
       <div style={{ display: "flex", justifyContent: "center", gap: 6, padding: "60px 0 0" }}>
         {steps.map((_, i) => (
           <div key={i} style={{ width: i === step ? 20 : 6, height: 6, borderRadius: 3, background: i === step ? C.navy : C.mist, transition: "all 0.3s" }} />
@@ -607,7 +612,7 @@ function OnboardingScreen({ onComplete, language }) {
   );
 }
 
-function AuthScreen({ onAuth, language }) {
+function AuthScreen({ onAuth, language, fontScale = 1 }) {
   const [mode, setMode] = useState("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -676,7 +681,7 @@ function AuthScreen({ onAuth, language }) {
   };
 
   return (
-    <div style={{ flex: 1, overflowY: "auto", background: gradients.auth, display: "flex", flexDirection: "column", justifyContent: "center", padding: "2rem 1.5rem" }}>
+    <div style={{ flex: 1, overflowY: "auto", background: gradients.auth, display: "flex", flexDirection: "column", justifyContent: "center", padding: "2rem 1.5rem", zoom: fontScale }}>
       <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
         <div style={{ width: 72, height: 72, borderRadius: 22, margin: "0 auto 1rem", overflow: "hidden", boxShadow: `0 8px 28px ${C.navy}44` }}>
           <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -774,7 +779,7 @@ function NavBar({ active, onChange, darkMode, language }) {
   );
 }
 
-function HomeScreen({ user, profile, onTabChange, language }) {
+function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
   const { isTablet, columns } = useViewportInfo();
   const days = ["L", "M", "M", "J", "V", "S", "D"];
   const todayIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
@@ -1605,7 +1610,7 @@ function HomeScreen({ user, profile, onTabChange, language }) {
   const saintColor = getLiturgicalColor(saintOfDay?.color, saintOfDay?.rankNum);
 
   return (
-    <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90 }}>
+    <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90, zoom: fontScale }}>
       {openCard !== null && (
         <div style={sheetOverlay} onClick={() => setOpenCard(null)}>
           <div onClick={e => e.stopPropagation()} style={sheetCard()}>
@@ -1904,7 +1909,7 @@ RIGOR DOCTRINAL Y TEOLÓGICO:
 - Si una pregunta toca un tema doctrinal complejo o controvertido, respondes con la enseñanza oficial de la Iglesia, citando el Catecismo cuando sea posible, y reconoces cuando un tema requiere la guía de un sacerdote o director espiritual
 - Nunca presentas opiniones personales como si fueran doctrina de la Iglesia`;
 
-function ChatScreen({ user, language }) {
+function ChatScreen({ user, language, fontScale = 1 }) {
   const [messages, setMessages] = useState([
     { role: "assistant", text: t(language, "chat_greeting") },
   ]);
@@ -1947,7 +1952,7 @@ function ChatScreen({ user, language }) {
   }
 
   return (
-    <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", background: gradients.chat }}>
+    <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", background: gradients.chat, zoom: fontScale }}>
       <div style={{ padding: "52px 22px 16px", background: C.cream, borderBottom: `1px solid ${C.mist}` }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <div style={{ width: 44, height: 44, borderRadius: 14, overflow: "hidden" }}>
@@ -2012,7 +2017,7 @@ function ChatScreen({ user, language }) {
   );
 }
 
-function PlanScreen({ user, language }) {
+function PlanScreen({ user, language, fontScale = 1 }) {
   const { isTablet, columns } = useViewportInfo();
   const sheetOverlay = { position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: isTablet ? "center" : "flex-end", justifyContent: "center", padding: isTablet ? 24 : 0 };
   const sheetCard = (extra = {}) => ({ background: C.white, borderRadius: isTablet ? 24 : "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: isTablet ? 480 : 390, margin: "0 auto", maxHeight: "85vh", overflowY: "auto", ...extra });
@@ -2224,7 +2229,7 @@ function PlanScreen({ user, language }) {
   const pct = Math.round((doneCount / w.days.length) * 100);
 
   return (
-    <div style={{ flex: 1, overflowY: "auto", background: gradients.plan, paddingBottom: 90 }}>
+    <div style={{ flex: 1, overflowY: "auto", background: gradients.plan, paddingBottom: 90, zoom: fontScale }}>
       {openDay !== null && (
         <div style={sheetOverlay} onClick={() => { setOpenDay(null); setDayContent(null); }}>
           <div onClick={e => e.stopPropagation()} style={sheetCard()}>
@@ -2375,7 +2380,7 @@ function EntryForm({ data, onChange, onSave, onCancel, saving: isSaving, title, 
   );
 }
 
-function DiaryScreen({ user, language }) {
+function DiaryScreen({ user, language, fontScale = 1 }) {
   const { isTablet, columns, keyboardOpen, keyboardHeight } = useViewportInfo();
   const [entries, setEntries] = useState([]);
   const [writing, setWriting] = useState(false);
@@ -2437,7 +2442,7 @@ function DiaryScreen({ user, language }) {
   }
 
   return (
-    <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", background: gradients.diary }}>
+    <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", background: gradients.diary, zoom: fontScale }}>
       {editingEntry && (
         <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: keyboardOpen ? "flex-start" : (isTablet ? "center" : "flex-end"), justifyContent: "center", padding: isTablet ? 24 : 0, paddingTop: keyboardOpen ? "max(16px, env(safe-area-inset-top))" : undefined }} onClick={() => setEditingEntry(null)}>
           <div onClick={e => e.stopPropagation()} style={{ background: C.white, borderRadius: keyboardOpen ? 20 : (isTablet ? 24 : "24px 24px 0 0"), padding: "24px 22px 48px", width: "100%", maxWidth: isTablet ? 480 : 390, margin: "0 auto", maxHeight: keyboardOpen ? `calc(100vh - ${keyboardHeight}px - 32px)` : "80vh", overflowY: "auto" }}>
@@ -2500,7 +2505,7 @@ function DiaryScreen({ user, language }) {
   );
 }
 
-function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDarkMode, language, changeLanguage }) {
+function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDarkMode, language, changeLanguage, fontScale = 1, changeFontScale }) {
   const { isTablet } = useViewportInfo();
   const sheetOverlay = { position: "fixed", inset: 0, zIndex: 300, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: isTablet ? "center" : "flex-end", justifyContent: "center", padding: isTablet ? 24 : 0 };
   const sheetCard = (extra = {}) => ({ background: C.white, borderRadius: isTablet ? 24 : "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: isTablet ? 480 : 390, margin: "0 auto", maxHeight: "80vh", overflowY: "auto", ...extra });
@@ -2602,7 +2607,7 @@ function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDa
   }
 
   return (
-    <div style={{ flex: 1, overflowY: "auto", background: gradients.profile, paddingBottom: 90 }}>
+    <div style={{ flex: 1, overflowY: "auto", background: gradients.profile, paddingBottom: 90, zoom: fontScale }}>
       {activeModal === "about" && (
         <div style={sheetOverlay} onClick={() => setActiveModal(null)}>
           <div onClick={e => e.stopPropagation()} style={sheetCard()}>
@@ -2686,6 +2691,20 @@ function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDa
             <div style={{ display: "flex", background: C.iceBlue, borderRadius: 10, padding: 2, gap: 2 }}>
               <button onClick={() => changeLanguage("es")} style={{ border: "none", borderRadius: 8, padding: "5px 12px", fontSize: 11, fontWeight: 700, cursor: "pointer", background: language === "es" ? C.navy : "transparent", color: language === "es" ? C.cream : C.inkLight, fontFamily: "'DM Sans', system-ui, sans-serif" }}>{t(language, "profile_language_es")}</button>
               <button onClick={() => changeLanguage("en")} style={{ border: "none", borderRadius: 8, padding: "5px 12px", fontSize: 11, fontWeight: 700, cursor: "pointer", background: language === "en" ? C.navy : "transparent", color: language === "en" ? C.cream : C.inkLight, fontFamily: "'DM Sans', system-ui, sans-serif" }}>{t(language, "profile_language_en")}</button>
+            </div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 16px", borderBottom: "1px solid " + C.mist }}>
+            <Icon name="textSize" size={15} color={C.inkLight} />
+            <span style={{ fontSize: 13, color: C.ink, flex: 1 }}>{t(language, "profile_font_size")}</span>
+            <div style={{ display: "flex", background: C.iceBlue, borderRadius: 10, padding: 2, gap: 2 }}>
+              {[
+                { scale: 0.9, size: 11, key: "profile_font_size_small" },
+                { scale: 1, size: 13, key: "profile_font_size_medium" },
+                { scale: 1.15, size: 15, key: "profile_font_size_large" },
+                { scale: 1.3, size: 17, key: "profile_font_size_xlarge" },
+              ].map(opt => (
+                <button key={opt.scale} onClick={() => changeFontScale(opt.scale)} style={{ border: "none", borderRadius: 8, width: 30, height: 26, display: "flex", alignItems: "center", justifyContent: "center", fontSize: opt.size, fontWeight: 700, cursor: "pointer", background: fontScale === opt.scale ? C.navy : "transparent", color: fontScale === opt.scale ? C.cream : C.inkLight, fontFamily: "'DM Sans', system-ui, sans-serif" }}>{t(language, opt.key)}</button>
+              ))}
             </div>
           </div>
           <button onClick={() => setActiveModal("notifications")} style={{ width: "100%", display: "flex", alignItems: "center", gap: 14, padding: "14px 16px", border: "none", background: "transparent", cursor: "pointer", textAlign: "left" }}>
@@ -3024,14 +3043,14 @@ const EUCHARISTIC_MIRACLES_EN = [
   },
 ];
 
-function MoreScreen({ onOpenSection, language }) {
+function MoreScreen({ onOpenSection, language, fontScale = 1 }) {
   const items = [
     { id: "miracles", icon: "host", color: C.gold, bg: "#F5EDD8", title: t(language, "more_miracles_title"), sub: t(language, "more_miracles_sub") },
     { id: "rosary", icon: "rosary", color: C.periwinkle, bg: "#E4EDF7", title: t(language, "more_rosary_title"), sub: t(language, "more_rosary_sub") },
     { id: "horario", icon: "grid", color: C.blue, bg: "#DDE8F4", title: t(language, "more_horario_title"), sub: t(language, "more_horario_sub") },
   ];
   return (
-    <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90 }}>
+    <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90, zoom: fontScale }}>
       <div style={{ padding: "52px 22px 20px" }}>
         <p style={{ fontSize: 12, color: C.slateLight, margin: "0 0 4px", letterSpacing: "0.08em", textTransform: "uppercase" }}>{t(language, "more_explore")}</p>
         <h2 style={{ fontSize: 22, fontWeight: 600, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>{t(language, "more_title")}</h2>
@@ -3054,7 +3073,7 @@ function MoreScreen({ onOpenSection, language }) {
   );
 }
 
-function MiraclesScreen({ onBack, language }) {
+function MiraclesScreen({ onBack, language, fontScale = 1 }) {
   const { isTablet, columns } = useViewportInfo();
   const [openId, setOpenId] = useState(null);
   const sheetOverlay = { position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: isTablet ? "center" : "flex-end", justifyContent: "center", padding: isTablet ? 24 : 0 };
@@ -3063,7 +3082,7 @@ function MiraclesScreen({ onBack, language }) {
   const active = miracles.find(m => m.id === openId);
 
   return (
-    <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90 }}>
+    <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90, zoom: fontScale }}>
       {active && (
         <div style={sheetOverlay} onClick={() => setOpenId(null)}>
           <div onClick={e => e.stopPropagation()} style={sheetCard()}>
@@ -3273,7 +3292,7 @@ function construirPasosRosario(misterios, language) {
   return pasos;
 }
 
-function RosaryScreen({ onBack, language }) {
+function RosaryScreen({ onBack, language, fontScale = 1 }) {
   const { isTablet } = useViewportInfo();
   const misterios = useMemo(() => misterioDelDia(language), [language]);
   const pasos = useMemo(() => construirPasosRosario(misterios, language), [misterios, language]);
@@ -3296,7 +3315,7 @@ function RosaryScreen({ onBack, language }) {
 
   if (!iniciado) {
     return (
-      <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90 }}>
+      <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90, zoom: fontScale }}>
         <div style={{ padding: "52px 22px 8px", display: "flex", alignItems: "center", gap: 10 }}>
           <button onClick={onBack} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", padding: 4 }}>
             <Icon name="chevron" size={20} color={C.inkLight} />
@@ -3336,7 +3355,7 @@ function RosaryScreen({ onBack, language }) {
   }
 
   return (
-    <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", background: gradients.home }}>
+    <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", background: gradients.home, zoom: fontScale }}>
       <div style={{ padding: "52px 22px 12px" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
           <button onClick={reiniciar} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 6, color: C.inkLight, fontSize: 12 }}>
@@ -3633,7 +3652,7 @@ function PropositosTable({
   );
 }
 
-function HorarioEspiritualScreen({ user, onBack, language }) {
+function HorarioEspiritualScreen({ user, onBack, language, fontScale = 1 }) {
   const { isTablet } = useViewportInfo();
   const [generalItem, setGeneralItem] = useState(null);
   const [items, setItems] = useState([]);
@@ -3905,7 +3924,7 @@ async function exportarInformePDF() {
   const sheetCard = (extra = {}) => ({ background: C.white, borderRadius: isTablet ? 24 : "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: isTablet ? 480 : 390, margin: "0 auto", maxHeight: "85vh", overflowY: "auto", ...extra });
 
   return (
-    <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90 }}>
+    <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90, zoom: fontScale }}>
       {remindOpen && (
         <div style={sheetOverlay} onClick={() => setRemindOpen(false)}>
           <div onClick={e => e.stopPropagation()} style={sheetCard()}>
@@ -4037,6 +4056,7 @@ export default function App() {
   const [loadingAuth, setLoadingAuth] = useState(true);
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem("mater_dark_mode") === "true");
   const [language, setLanguage] = useState(() => localStorage.getItem("mater_language") || "es");
+  const [fontScale, setFontScale] = useState(() => parseFloat(localStorage.getItem("mater_font_scale")) || 1);
   const { isTablet, contentMaxWidth, keyboardOpen } = useViewportInfo();
 
   function toggleDarkMode() {
@@ -4050,6 +4070,11 @@ export default function App() {
   function changeLanguage(lang) {
     setLanguage(lang);
     localStorage.setItem("mater_language", lang);
+  }
+
+  function changeFontScale(scale) {
+    setFontScale(scale);
+    localStorage.setItem("mater_font_scale", String(scale));
   }
 
   useEffect(() => {
@@ -4152,20 +4177,20 @@ export default function App() {
       <style>{imgFix}</style>
       <div style={outerWrap}>
       <div style={phone} className={darkMode ? "phone-dark" : ""}>
-        {screen === "landing" && <LandingScreen onEnter={() => setScreen("onboarding")} language={language} />}
-        {screen === "onboarding" && <OnboardingScreen onComplete={handleOnboardingComplete} language={language} />}
-        {screen === "auth" && <AuthScreen onAuth={() => setScreen("app")} language={language} />}
+        {screen === "landing" && <LandingScreen onEnter={() => setScreen("onboarding")} language={language} fontScale={fontScale} />}
+        {screen === "onboarding" && <OnboardingScreen onComplete={handleOnboardingComplete} language={language} fontScale={fontScale} />}
+        {screen === "auth" && <AuthScreen onAuth={() => setScreen("app")} language={language} fontScale={fontScale} />}
         {screen === "app" && user && (
           <>
-            {activeTab === "home" && <HomeScreen user={user} profile={profile} onTabChange={setActiveTab} darkMode={darkMode} language={language} />}
-            {activeTab === "chat" && <ChatScreen user={user} darkMode={darkMode} language={language} />}
-            {activeTab === "plan" && <PlanScreen user={user} darkMode={darkMode} language={language} />}
-            {activeTab === "diary" && <DiaryScreen user={user} darkMode={darkMode} language={language} />}
-            {activeTab === "more" && moreSection === null && <MoreScreen onOpenSection={setMoreSection} language={language} />}
-            {activeTab === "more" && moreSection === "miracles" && <MiraclesScreen onBack={() => setMoreSection(null)} language={language} />}
-            {activeTab === "more" && moreSection === "rosary" && <RosaryScreen onBack={() => setMoreSection(null)} language={language} />}
-            {activeTab === "more" && moreSection === "horario" && <HorarioEspiritualScreen user={user} onBack={() => setMoreSection(null)} language={language} />}
-            {activeTab === "profile" && <ProfileScreen user={user} profile={profile} setProfile={setProfile} onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} language={language} changeLanguage={changeLanguage} />}
+            {activeTab === "home" && <HomeScreen user={user} profile={profile} onTabChange={setActiveTab} darkMode={darkMode} language={language} fontScale={fontScale} />}
+            {activeTab === "chat" && <ChatScreen user={user} darkMode={darkMode} language={language} fontScale={fontScale} />}
+            {activeTab === "plan" && <PlanScreen user={user} darkMode={darkMode} language={language} fontScale={fontScale} />}
+            {activeTab === "diary" && <DiaryScreen user={user} darkMode={darkMode} language={language} fontScale={fontScale} />}
+            {activeTab === "more" && moreSection === null && <MoreScreen onOpenSection={setMoreSection} language={language} fontScale={fontScale} />}
+            {activeTab === "more" && moreSection === "miracles" && <MiraclesScreen onBack={() => setMoreSection(null)} language={language} fontScale={fontScale} />}
+            {activeTab === "more" && moreSection === "rosary" && <RosaryScreen onBack={() => setMoreSection(null)} language={language} fontScale={fontScale} />}
+            {activeTab === "more" && moreSection === "horario" && <HorarioEspiritualScreen user={user} onBack={() => setMoreSection(null)} language={language} fontScale={fontScale} />}
+            {activeTab === "profile" && <ProfileScreen user={user} profile={profile} setProfile={setProfile} onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} language={language} changeLanguage={changeLanguage} fontScale={fontScale} changeFontScale={changeFontScale} />}
             {!keyboardOpen && (
               <NavBar
                 active={activeTab}
