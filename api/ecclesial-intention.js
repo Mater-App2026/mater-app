@@ -23,9 +23,9 @@ export default async function handler(req, res) {
     const data = await newsRes.json();
     const articles = data.articles || [];
 
-    // Elegimos una noticia distinta cada dia (no siempre la misma #1) para variar
-    const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
-    const article = articles.length ? articles[dayOfYear % articles.length] : null;
+    // El titular #1 (mas reciente/relevante); el frontend lo cachea en localStorage
+    // por fecha para que sea el mismo durante todo el dia en cada dispositivo.
+    const article = articles.length ? articles[0] : null;
 
     if (!article) {
       res.status(200).json({ found: false });

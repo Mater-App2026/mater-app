@@ -1242,8 +1242,11 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
   }
 
   async function fetchWorldIntention() {
+    // localStorage (no sessionStorage) para que la misma noticia dure todo el
+    // dia aunque el usuario cierre y reabra la app; la clave incluye la fecha
+    // asi que cambia sola al dia siguiente.
     const cacheKey = "world-intention-" + language + "-" + new Date().toDateString();
-    const cached = sessionStorage.getItem(cacheKey);
+    const cached = localStorage.getItem(cacheKey);
     if (cached) { setWorldIntention(JSON.parse(cached)); return; }
 
     const palette = [
@@ -1292,7 +1295,7 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
         url: newsData.url || "",
         ...colors,
       };
-      sessionStorage.setItem(cacheKey, JSON.stringify(intention));
+      localStorage.setItem(cacheKey, JSON.stringify(intention));
       setWorldIntention(intention);
     } catch {
       setWorldIntention(language === "en" ? {
@@ -1316,8 +1319,11 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
   }
 
   async function fetchEcclesialIntention() {
+    // localStorage (no sessionStorage) para que la misma noticia dure todo el
+    // dia aunque el usuario cierre y reabra la app; la clave incluye la fecha
+    // asi que cambia sola al dia siguiente.
     const cacheKey = "ecclesial-intention-" + language + "-" + new Date().toDateString();
-    const cached = sessionStorage.getItem(cacheKey);
+    const cached = localStorage.getItem(cacheKey);
     if (cached) { setEcclesialIntention(JSON.parse(cached)); return; }
 
     const palette = [
@@ -1366,7 +1372,7 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
         url: newsData.url || "",
         ...colors,
       };
-      sessionStorage.setItem(cacheKey, JSON.stringify(intention));
+      localStorage.setItem(cacheKey, JSON.stringify(intention));
       setEcclesialIntention(intention);
     } catch {
       setEcclesialIntention(language === "en" ? {
