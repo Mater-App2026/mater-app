@@ -10,7 +10,6 @@ workflows:
       vars:
         XCODE_WORKSPACE: "App.xcworkspace"
         XCODE_SCHEME: "App"
-        BUILD_NUMBER: "5"
       node: 22.0.0
     scripts:
       - name: Install npm dependencies
@@ -24,10 +23,10 @@ workflows:
           npm run build
       - name: Copy web assets to iOS
         script: |
-          npx cap copy ios
+          npx cap sync ios
       - name: Set build number
         script: |
-          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" ios/App/App/Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $PROJECT_BUILD_NUMBER" ios/App/App/Info.plist
       - name: Set up code signing
         script: |
           xcode-project use-profiles
