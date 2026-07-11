@@ -183,6 +183,7 @@ const translations = {
     more_miracles_title: "Milagros Eucarísticos", more_miracles_sub: "12 casos documentados a través de la historia",
     more_rosary_title: "Santo Rosario", more_rosary_sub: "Guía interactiva cuenta por cuenta",
     more_horario_title: "Horario Espiritual", more_horario_sub: "Lleva el control de tus prácticas del mes",
+    more_divinemercy_title: "Coronilla a la Divina Misericordia", more_divinemercy_sub: "Guía interactiva cuenta por cuenta",
     more_back: "Más",
 
     miracles_title: "Milagros Eucarísticos",
@@ -193,6 +194,9 @@ const translations = {
     rosary_fruit: "Fruto", rosary_begin: "Comenzar el Rosario 🙏", rosary_exit: "Salir",
     rosary_decade: "Decena", rosary_of_5: "de 5", rosary_fruit_of_mystery: "Fruto del misterio",
     rosary_previous: "‹ Anterior", rosary_next: "Siguiente ›", rosary_finish: "Terminar 🙏",
+    divinemercy_title: "Coronilla a la Divina Misericordia", divinemercy_intro_title: "Sobre esta devoción",
+    divinemercy_intro_text: "Revelada por Jesús a Santa Faustina Kowalska, esta coronilla se reza tradicionalmente en las cuentas del Rosario. Es especialmente recomendada a las 3 de la tarde, la «Hora de la Misericordia», en memoria de la muerte de Cristo en la cruz.",
+    divinemercy_begin: "Comenzar la Coronilla 🙏",
 
     horario_title: "Horario Espiritual", horario_loading: "Cargando tu Horario...",
     horario_particular_purpose: "Propósito particular", horario_purposes: "Propósitos",
@@ -321,6 +325,7 @@ const translations = {
     more_miracles_title: "Eucharistic Miracles", more_miracles_sub: "12 documented cases throughout history",
     more_rosary_title: "Holy Rosary", more_rosary_sub: "Interactive bead-by-bead guide",
     more_horario_title: "Spiritual Schedule", more_horario_sub: "Keep track of your practices for the month",
+    more_divinemercy_title: "Chaplet of Divine Mercy", more_divinemercy_sub: "Interactive bead-by-bead guide",
     more_back: "More",
 
     miracles_title: "Eucharistic Miracles",
@@ -331,6 +336,9 @@ const translations = {
     rosary_fruit: "Fruit", rosary_begin: "Begin the Rosary 🙏", rosary_exit: "Exit",
     rosary_decade: "Decade", rosary_of_5: "of 5", rosary_fruit_of_mystery: "Fruit of the mystery",
     rosary_previous: "‹ Previous", rosary_next: "Next ›", rosary_finish: "Finish 🙏",
+    divinemercy_title: "Chaplet of Divine Mercy", divinemercy_intro_title: "About this devotion",
+    divinemercy_intro_text: "Revealed by Jesus to Saint Faustina Kowalska, this chaplet is traditionally prayed on Rosary beads. It's especially recommended at 3 p.m., the \"Hour of Mercy,\" in memory of Christ's death on the cross.",
+    divinemercy_begin: "Begin the Chaplet 🙏",
 
     horario_title: "Spiritual Schedule", horario_loading: "Loading your Schedule...",
     horario_particular_purpose: "Personal resolution", horario_purposes: "Resolutions",
@@ -3182,6 +3190,7 @@ function MoreScreen({ onOpenSection, language, fontScale = 1 }) {
     { id: "miracles", icon: "host", color: C.gold, bg: "#F5EDD8", title: t(language, "more_miracles_title"), sub: t(language, "more_miracles_sub") },
     { id: "rosary", icon: "rosary", color: C.periwinkle, bg: "#E4EDF7", title: t(language, "more_rosary_title"), sub: t(language, "more_rosary_sub") },
     { id: "horario", icon: "grid", color: C.blue, bg: "#DDE8F4", title: t(language, "more_horario_title"), sub: t(language, "more_horario_sub") },
+    { id: "divinemercy", icon: "heart", color: "#A8342E", bg: "#F5DEDC", title: t(language, "more_divinemercy_title"), sub: t(language, "more_divinemercy_sub") },
   ];
   return (
     <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90, zoom: fontScale }}>
@@ -3370,6 +3379,65 @@ const ORACION_SALVE = {
   en: "Hail, Holy Queen, Mother of Mercy,\nour life, our sweetness, and our hope.\nTo thee do we cry, poor banished children of Eve;\nto thee do we send up our sighs,\nmourning and weeping in this valley of tears.\nTurn then, most gracious advocate,\nthine eyes of mercy toward us;\nand after this our exile,\nshow unto us the blessed fruit of thy womb, Jesus.\nO clement, O loving, O sweet Virgin Mary!\nPray for us, O holy Mother of God,\nthat we may be made worthy of the promises of Christ.\nAmen.",
 };
 
+const ORACION_ETERNO_PADRE = {
+  es: "Eterno Padre, te ofrezco el Cuerpo y la Sangre, el Alma y la Divinidad de tu amadísimo Hijo, Nuestro Señor Jesucristo, en propiciación por nuestros pecados y los del mundo entero.",
+  en: "Eternal Father, I offer You the Body and Blood, Soul and Divinity of Your dearly beloved Son, Our Lord Jesus Christ, in atonement for our sins and those of the whole world.",
+};
+const ORACION_POR_SU_PASION = {
+  es: "Por su dolorosa Pasión, ten misericordia de nosotros y del mundo entero.",
+  en: "For the sake of His sorrowful Passion, have mercy on us and on the whole world.",
+};
+const ORACION_SANTO_DIOS = {
+  es: "Dios Santo, Dios fuerte, Dios inmortal, ten piedad de nosotros y del mundo entero.",
+  en: "Holy God, Holy Mighty One, Holy Immortal One, have mercy on us and on the whole world.",
+};
+const ORACION_CORONILLA_FINAL = {
+  es: "Dios eterno, en quien la misericordia es infinita y el tesoro de la compasión inagotable, mira benignamente hacia nosotros y aumenta tu misericordia en nosotros, para que en los momentos difíciles no desesperemos ni nos desalentemos, sino que con gran confianza nos sometamos a tu santa voluntad, que es el Amor y la Misericordia misma. Amén.",
+  en: "Eternal God, in whom mercy is endless and the treasury of compassion inexhaustible, look kindly upon us and increase Your mercy in us, that in difficult moments we might not despair nor become despondent, but with great confidence submit ourselves to Your holy will, which is Love and Mercy itself. Amen.",
+};
+
+function construirPasosCoronilla(language) {
+  const L = language === "en" ? "en" : "es";
+  const tt = {
+    signOfCross: L === "en" ? "Sign of the Cross" : "Señal de la Cruz",
+    signOfCrossText: L === "en"
+      ? "In the sign of the Holy Cross, deliver us from our enemies, O Lord our God.\nIn the name of the Father, and of the Son, and of the Holy Spirit.\nAmen."
+      : "Por la señal de la Santa Cruz, de nuestros enemigos líbranos, Señor, Dios nuestro.\nEn el nombre del Padre, y del Hijo, y del Espíritu Santo.\nAmén.",
+    creedTitle: L === "en" ? "Apostles' Creed" : "Credo de los Apóstoles",
+    ourFatherTitle: L === "en" ? "Our Father" : "Padre Nuestro",
+    hailMaryTitle: L === "en" ? "Hail Mary" : "Ave María",
+    eternalFatherTitle: L === "en" ? "Eternal Father — offering" : "Padre Eterno — ofrenda",
+    decadeWord: L === "en" ? "decade" : "decena",
+    forSakeTitle: L === "en" ? "For the sake of His Passion" : "Por su dolorosa Pasión",
+    forSakeOf10: L === "en" ? "of 10" : "de 10",
+    holyGodTitle: L === "en" ? "Holy God" : "Dios Santo",
+    of3: L === "en" ? "of 3" : "de 3",
+    closingTitle: L === "en" ? "Closing prayer" : "Oración final",
+    finalTitle: L === "en" ? "Amen 🙏" : "Amén 🙏",
+    finalText: L === "en"
+      ? "You have finished the Chaplet of Divine Mercy. May Jesus, in whom I trust, pour out His mercy on you and on the whole world."
+      : "Has terminado tu Coronilla a la Divina Misericordia. Que Jesús, en quien confío, derrame su misericordia sobre ti y sobre el mundo entero.",
+  };
+  const pasos = [
+    { tipo: "intro", titulo: tt.signOfCross, texto: tt.signOfCrossText },
+    { tipo: "credo", titulo: tt.creedTitle, texto: ORACION_CREDO[L] },
+    { tipo: "padrenuestro", titulo: tt.ourFatherTitle, texto: ORACION_PADRENUESTRO[L] },
+    { tipo: "avemaria", titulo: tt.hailMaryTitle, texto: ORACION_AVEMARIA[L] },
+  ];
+  for (let i = 0; i < 5; i++) {
+    pasos.push({ tipo: "eternoPadre", titulo: `${tt.eternalFatherTitle} — ${tt.decadeWord} ${i + 1}`, texto: ORACION_ETERNO_PADRE[L] });
+    for (let j = 0; j < 10; j++) {
+      pasos.push({ tipo: "porSuPasion", titulo: `${tt.forSakeTitle} (${j + 1} ${tt.forSakeOf10})`, texto: ORACION_POR_SU_PASION[L], decada: i, cuenta: j + 1 });
+    }
+  }
+  for (let k = 0; k < 3; k++) {
+    pasos.push({ tipo: "santoDios", titulo: `${tt.holyGodTitle} (${k + 1} ${tt.of3})`, texto: ORACION_SANTO_DIOS[L] });
+  }
+  pasos.push({ tipo: "ofrenda", titulo: tt.closingTitle, texto: ORACION_CORONILLA_FINAL[L] });
+  pasos.push({ tipo: "final", titulo: tt.finalTitle, texto: tt.finalText });
+  return pasos;
+}
+
 function construirPasosRosario(misterios, language) {
   const L = language === "en" ? "en" : "es";
   const tt = {
@@ -3530,6 +3598,96 @@ function RosaryScreen({ onBack, language, fontScale = 1 }) {
           {t(language, "rosary_previous")}
         </button>
         <button onClick={esUltimo ? reiniciar : siguiente} style={{ flex: 2, padding: "15px", border: "none", borderRadius: 14, background: `linear-gradient(135deg, ${C.navy}, ${C.blue})`, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+          {esUltimo ? t(language, "rosary_finish") : t(language, "rosary_next")}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function DivineMercyScreen({ onBack, language, fontScale = 1 }) {
+  const pasos = useMemo(() => construirPasosCoronilla(language), [language]);
+  const [iniciado, setIniciado] = useState(false);
+  const [idx, setIdx] = useState(0);
+
+  const paso = pasos[idx];
+  const totalPasos = pasos.length;
+  const esUltimo = idx === totalPasos - 1;
+
+  function siguiente() { if (idx < totalPasos - 1) setIdx(idx + 1); }
+  function anterior() { if (idx > 0) setIdx(idx - 1); }
+  function reiniciar() { setIdx(0); setIniciado(false); }
+
+  const tipoColor = {
+    intro: C.slate, credo: C.blue, padrenuestro: C.navy, avemaria: C.periwinkle,
+    eternoPadre: "#A8342E", porSuPasion: C.teal, santoDios: C.sky, ofrenda: "#A8342E", final: "#A8342E",
+  };
+  const color = tipoColor[paso.tipo] || "#A8342E";
+
+  if (!iniciado) {
+    return (
+      <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90, zoom: fontScale }}>
+        <div style={{ padding: "52px 22px 8px", display: "flex", alignItems: "center", gap: 10 }}>
+          <button onClick={onBack} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", padding: 4 }}>
+            <Icon name="chevron" size={20} color={C.inkLight} />
+          </button>
+          <div>
+            <p style={{ fontSize: 12, color: C.slateLight, margin: "0 0 2px", letterSpacing: "0.08em", textTransform: "uppercase" }}>{t(language, "more_back")}</p>
+            <h2 style={{ fontSize: 20, fontWeight: 600, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>{t(language, "divinemercy_title")}</h2>
+          </div>
+        </div>
+
+        <div style={{ padding: "16px 22px 0" }}>
+          <div style={{ borderRadius: 18, background: "linear-gradient(135deg, #A8342E, #D4534A)", padding: "22px 20px", color: "#fff", marginBottom: 20 }}>
+            <p style={{ fontSize: 10, opacity: 0.8, margin: "0 0 4px", letterSpacing: "0.12em", textTransform: "uppercase" }}>{t(language, "divinemercy_intro_title")}</p>
+            <p style={{ fontSize: 13, lineHeight: 1.7, margin: 0 }}>{t(language, "divinemercy_intro_text")}</p>
+          </div>
+
+          <button onClick={() => setIniciado(true)} style={{ width: "100%", padding: "16px", border: "none", borderRadius: 14, background: "linear-gradient(135deg, #A8342E, #D4534A)", color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+            {t(language, "divinemercy_begin")}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", background: gradients.home, zoom: fontScale }}>
+      <div style={{ padding: "52px 22px 12px" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+          <button onClick={reiniciar} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 6, color: C.inkLight, fontSize: 12 }}>
+            <Icon name="chevron" size={16} color={C.inkLight} /> {t(language, "rosary_exit")}
+          </button>
+          <p style={{ fontSize: 11, color: C.inkLight, margin: 0 }}>{idx + 1} / {totalPasos}</p>
+        </div>
+        <div style={{ background: C.mist, borderRadius: 100, height: 5, overflow: "hidden" }}>
+          <div style={{ width: `${((idx + 1) / totalPasos) * 100}%`, height: "100%", background: color, borderRadius: 100, transition: "width 0.3s" }} />
+        </div>
+      </div>
+
+      <div style={{ flex: 1, overflowY: "auto", padding: "8px 22px 20px", display: "flex", flexDirection: "column" }}>
+        <div style={{ background: C.cream, borderRadius: 18, padding: "22px 20px", border: "1px solid " + C.mist, borderLeft: `4px solid ${color}`, flex: 1 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, color, letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 10px" }}>
+            {paso.decada !== undefined ? `${t(language, "rosary_decade")} ${paso.decada + 1} ${t(language, "rosary_of_5")}` : ""}
+          </p>
+          <p style={{ fontSize: 17, fontWeight: 700, color: C.ink, margin: "0 0 14px", fontFamily: "'Cormorant Garamond', serif", lineHeight: 1.3 }}>{paso.titulo}</p>
+          <p style={{ fontSize: 14, color: C.inkMid, lineHeight: 1.85, margin: 0, whiteSpace: "pre-line" }}>{paso.texto}</p>
+        </div>
+
+        {paso.decada !== undefined && (
+          <div style={{ display: "flex", gap: 5, justifyContent: "center", marginTop: 14, flexWrap: "wrap" }}>
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div key={i} style={{ width: 12, height: 12, borderRadius: "50%", background: i < paso.cuenta ? color : C.mist }} />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div style={{ padding: "0 22px 90px", display: "flex", gap: 10 }}>
+        <button onClick={anterior} disabled={idx === 0} style={{ flex: 1, padding: "15px", border: "1px solid " + C.mist, borderRadius: 14, background: C.white, color: C.inkMid, fontSize: 13, fontWeight: 600, cursor: idx === 0 ? "default" : "pointer", opacity: idx === 0 ? 0.4 : 1, fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+          {t(language, "rosary_previous")}
+        </button>
+        <button onClick={esUltimo ? reiniciar : siguiente} style={{ flex: 2, padding: "15px", border: "none", borderRadius: 14, background: "linear-gradient(135deg, #A8342E, #D4534A)", color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
           {esUltimo ? t(language, "rosary_finish") : t(language, "rosary_next")}
         </button>
       </div>
@@ -4324,6 +4482,7 @@ export default function App() {
             {activeTab === "more" && moreSection === "miracles" && <MiraclesScreen onBack={() => setMoreSection(null)} language={language} fontScale={fontScale} />}
             {activeTab === "more" && moreSection === "rosary" && <RosaryScreen onBack={() => setMoreSection(null)} language={language} fontScale={fontScale} />}
             {activeTab === "more" && moreSection === "horario" && <HorarioEspiritualScreen user={user} onBack={() => setMoreSection(null)} language={language} fontScale={fontScale} />}
+            {activeTab === "more" && moreSection === "divinemercy" && <DivineMercyScreen onBack={() => setMoreSection(null)} language={language} fontScale={fontScale} />}
             {activeTab === "profile" && <ProfileScreen user={user} profile={profile} setProfile={setProfile} onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} language={language} changeLanguage={changeLanguage} fontScale={fontScale} changeFontScale={changeFontScale} />}
             {!keyboardOpen && (
               <NavBar
