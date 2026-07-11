@@ -192,6 +192,20 @@ const translations = {
     telefono_shake_activate: "Activar sacudida 📳",
     telefono_shake_hint: "Sacude tu teléfono para recibir otra frase",
     telefono_shake_denied: "No se pudo activar la detección de movimiento en este dispositivo. Puedes seguir usando el botón.",
+    more_sanjosedormido_title: "San José Dormido", more_sanjosedormido_sub: "Coloca tus intenciones bajo su almohada",
+    sanjosedormido_title: "San José Dormido",
+    sanjosedormido_intro: "Así como Dios le habló a San José en sueños para guiarlo, coloca tus intenciones bajo su almohada y confíaselas.",
+    sanjosedormido_view: "Ver mis intenciones",
+    sanjosedormido_add: "+ Agregar intención",
+    sanjosedormido_modal_title: "Nueva intención",
+    sanjosedormido_placeholder: "Escribe tu intención o petición...",
+    sanjosedormido_save: "Guardar",
+    sanjosedormido_saving: "Guardando...",
+    sanjosedormido_list_title: "Mis intenciones",
+    sanjosedormido_empty: "Aún no has colocado ninguna intención bajo la almohada de San José.",
+    sanjosedormido_mark_received: "Favor recibido",
+    sanjosedormido_received_section: "Favores recibidos",
+    sanjosedormido_loading: "Cargando...",
     more_back: "Más",
 
     miracles_title: "Milagros Eucarísticos",
@@ -345,6 +359,20 @@ const translations = {
     telefono_shake_activate: "Enable shake 📳",
     telefono_shake_hint: "Shake your phone to receive another saying",
     telefono_shake_denied: "Motion detection couldn't be enabled on this device. You can keep using the button.",
+    more_sanjosedormido_title: "Sleeping Saint Joseph", more_sanjosedormido_sub: "Place your intentions under his pillow",
+    sanjosedormido_title: "Sleeping Saint Joseph",
+    sanjosedormido_intro: "Just as God spoke to Saint Joseph in his dreams to guide him, place your intentions under his pillow and entrust them to him.",
+    sanjosedormido_view: "View my intentions",
+    sanjosedormido_add: "+ Add intention",
+    sanjosedormido_modal_title: "New intention",
+    sanjosedormido_placeholder: "Write your intention or request...",
+    sanjosedormido_save: "Save",
+    sanjosedormido_saving: "Saving...",
+    sanjosedormido_list_title: "My intentions",
+    sanjosedormido_empty: "You haven't placed any intentions under Saint Joseph's pillow yet.",
+    sanjosedormido_mark_received: "Favor received",
+    sanjosedormido_received_section: "Favors received",
+    sanjosedormido_loading: "Loading...",
     more_back: "More",
 
     miracles_title: "Eucharistic Miracles",
@@ -466,6 +494,8 @@ const Icon = ({ name, size = 22, color = "currentColor" }) => {
     target: <><circle cx="12" cy="12" r="9" stroke={color} strokeWidth="1.8" fill="none" /><circle cx="12" cy="12" r="5" stroke={color} strokeWidth="1.8" fill="none" /><circle cx="12" cy="12" r="1.4" fill={color} /></>,
     staff: <><path d="M12 9v13" stroke={color} strokeWidth="1.8" strokeLinecap="round" /><circle cx="12" cy="5" r="2.3" stroke={color} strokeWidth="1.6" fill="none" /><circle cx="8.3" cy="7.2" r="1.7" stroke={color} strokeWidth="1.4" fill="none" /><circle cx="15.7" cy="7.2" r="1.7" stroke={color} strokeWidth="1.4" fill="none" /></>,
     phone: <path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.4 21 3 13.6 3 4.5c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1L6.6 10.8z" stroke={color} strokeWidth="1.6" strokeLinejoin="round" fill="none" />,
+    check: <><circle cx="12" cy="12" r="9" stroke={color} strokeWidth="1.8" fill="none" /><polyline points="8,12.5 10.5,15 16,9" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" /></>,
+    pillow: <><path d="M3 9.5C3 7.6 4.6 6 6.5 6h11C19.4 6 21 7.6 21 9.5v3.6c0 3-2.4 5.4-5.4 5.4H8.4C5.4 18.5 3 16.1 3 13.1V9.5z" stroke={color} strokeWidth="1.8" strokeLinejoin="round" fill="none" /><path d="M9 11.5c0-1 .5-2 1.5-2M15 11.5c0-1-.5-2-1.5-2" stroke={color} strokeWidth="1.3" strokeLinecap="round" fill="none" /></>,
   };
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" style={{ display: "block", flexShrink: 0 }}>
@@ -3217,6 +3247,7 @@ function MoreScreen({ onOpenSection, language, fontScale = 1 }) {
     { id: "divinemercy", icon: "heart", color: "#A8342E", bg: "#F5DEDC", title: t(language, "more_divinemercy_title"), sub: t(language, "more_divinemercy_sub") },
     { id: "sanjose", icon: "staff", color: "#6B4C9A", bg: "#EAE2F5", title: t(language, "more_sanjose_title"), sub: t(language, "more_sanjose_sub") },
     { id: "telefono", icon: "phone", color: "#B5651D", bg: "#F5E4D0", title: t(language, "more_telefono_title"), sub: t(language, "more_telefono_sub") },
+    { id: "sanjosedormido", icon: "pillow", color: "#8B6142", bg: "#EFE3D3", title: t(language, "more_sanjosedormido_title"), sub: t(language, "more_sanjosedormido_sub") },
   ];
   return (
     <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90, zoom: fontScale }}>
@@ -4128,6 +4159,202 @@ function TelefonoPadreScreen({ onBack, language, fontScale = 1 }) {
   );
 }
 
+function papelitosCount(n) {
+  if (n <= 0) return 0;
+  if (n <= 2) return 1;
+  if (n <= 5) return 2;
+  if (n <= 9) return 3;
+  return 4;
+}
+const PAPELITO_ROTATIONS = [-10, 6, -4, 9];
+const PAPELITO_OFFSETS = [
+  { left: 0, bottom: 0 }, { left: 14, bottom: 4 }, { left: -10, bottom: 8 }, { left: 6, bottom: 14 },
+];
+
+function SanJoseDormidoScreen({ user, onBack, language, fontScale = 1 }) {
+  const { isTablet } = useViewportInfo();
+  const sheetOverlay = { position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: isTablet ? "center" : "flex-end", justifyContent: "center", padding: isTablet ? 24 : 0 };
+  const sheetCard = (extra = {}) => ({ background: C.white, borderRadius: isTablet ? 24 : "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: isTablet ? 480 : 390, margin: "0 auto", maxHeight: "85vh", overflowY: "auto", ...extra });
+
+  const [intentions, setIntentions] = useState([]);
+  const [loadingIntentions, setLoadingIntentions] = useState(true);
+  const [addOpen, setAddOpen] = useState(false);
+  const [listOpen, setListOpen] = useState(false);
+  const [newText, setNewText] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [busyId, setBusyId] = useState(null);
+
+  useEffect(() => {
+    async function loadIntentions() {
+      const { data } = await supabase.from("sleeping_joseph_intentions").select("*").eq("user_id", user.id).order("created_at", { ascending: false });
+      if (data) setIntentions(data);
+      setLoadingIntentions(false);
+    }
+    loadIntentions();
+  }, [user]);
+
+  async function agregarIntencion() {
+    if (!newText.trim()) return;
+    setSaving(true);
+    const { data, error } = await supabase.from("sleeping_joseph_intentions").insert({ user_id: user.id, texto: newText.trim() }).select().single();
+    if (!error && data) {
+      setIntentions(prev => [data, ...prev]);
+      setNewText("");
+      setAddOpen(false);
+    }
+    setSaving(false);
+  }
+
+  async function marcarRespondida(id) {
+    setBusyId(id);
+    const { error } = await supabase.from("sleeping_joseph_intentions").update({ respondida: true }).eq("id", id).eq("user_id", user.id);
+    if (!error) {
+      setIntentions(prev => prev.map(i => i.id === id ? { ...i, respondida: true } : i));
+    }
+    setBusyId(null);
+  }
+
+  async function borrarIntencion(id) {
+    setBusyId(id);
+    await supabase.from("sleeping_joseph_intentions").delete().eq("id", id).eq("user_id", user.id);
+    setIntentions(prev => prev.filter(i => i.id !== id));
+    setBusyId(null);
+  }
+
+  function formatDate(iso) {
+    return new Date(iso).toLocaleDateString(language === "en" ? "en-US" : "es-ES", { day: "numeric", month: "short", year: "numeric" });
+  }
+
+  const pendientes = intentions.filter(i => !i.respondida);
+  const respondidas = intentions.filter(i => i.respondida);
+  const totalPapelitos = papelitosCount(intentions.length);
+
+  return (
+    <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90, zoom: fontScale }}>
+      <div style={{ padding: "52px 22px 8px", display: "flex", alignItems: "center", gap: 10 }}>
+        <button onClick={onBack} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", padding: 4 }}>
+          <Icon name="chevron" size={20} color={C.inkLight} />
+        </button>
+        <div>
+          <p style={{ fontSize: 12, color: C.slateLight, margin: "0 0 2px", letterSpacing: "0.08em", textTransform: "uppercase" }}>{t(language, "more_back")}</p>
+          <h2 style={{ fontSize: 20, fontWeight: 600, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>{t(language, "sanjosedormido_title")}</h2>
+        </div>
+      </div>
+      <p style={{ fontSize: 12, color: C.inkLight, lineHeight: 1.6, margin: "8px 22px 20px" }}>
+        {t(language, "sanjosedormido_intro")}
+      </p>
+
+      <div style={{ padding: "0 22px" }}>
+        <button onClick={() => setListOpen(true)} style={{ position: "relative", width: "100%", border: "1px solid " + C.mist, borderRadius: 18, background: C.cream, padding: 0, cursor: "pointer", overflow: "visible", display: "block" }}>
+          <div style={{ position: "relative", width: "100%", borderRadius: 18, overflow: "hidden" }}>
+            <img src="/san-jose-dormido.png" alt={t(language, "sanjosedormido_title")} style={{ width: "100%", height: "auto", display: "block", objectFit: "contain" }} />
+
+            {totalPapelitos > 0 && (
+              <div style={{ position: "absolute", left: "8%", bottom: "16%", width: 60, height: 40 }}>
+                {Array.from({ length: totalPapelitos }).map((_, i) => (
+                  <div key={i} style={{
+                    position: "absolute", left: PAPELITO_OFFSETS[i].left, bottom: PAPELITO_OFFSETS[i].bottom,
+                    width: 22, height: 16, borderRadius: 3, background: "#F5EDE0", border: "1px solid rgba(139,97,66,0.25)",
+                    boxShadow: "0 1px 3px rgba(60,40,20,0.25)", transform: `rotate(${PAPELITO_ROTATIONS[i]}deg)`,
+                  }} />
+                ))}
+                <div style={{
+                  position: "absolute", left: 44, bottom: 26, minWidth: 20, height: 20, borderRadius: 10, background: C.gold,
+                  color: "#fff", fontSize: 10, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", padding: "0 5px",
+                  boxShadow: "0 1px 4px rgba(0,0,0,0.3)",
+                }}>{intentions.length}</div>
+              </div>
+            )}
+          </div>
+        </button>
+
+        <button onClick={() => setListOpen(true)} style={{ display: "block", width: "100%", textAlign: "center", background: "none", border: "none", cursor: "pointer", color: C.blue, fontSize: 13, fontWeight: 600, margin: "14px 0", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+          {t(language, "sanjosedormido_view")} {intentions.length > 0 ? `(${intentions.length})` : ""}
+        </button>
+
+        <button onClick={() => setAddOpen(true)} style={{ width: "100%", padding: "16px", border: "none", borderRadius: 14, background: "linear-gradient(135deg, #8B6142, #B58860)", color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+          {t(language, "sanjosedormido_add")}
+        </button>
+      </div>
+
+      {addOpen && (
+        <div style={sheetOverlay} onClick={() => !saving && setAddOpen(false)}>
+          <div onClick={e => e.stopPropagation()} style={sheetCard()}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+              <p style={{ fontSize: 16, fontWeight: 800, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>{t(language, "sanjosedormido_modal_title")}</p>
+              <button onClick={() => setAddOpen(false)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+            </div>
+            <textarea
+              value={newText}
+              onChange={e => setNewText(e.target.value)}
+              placeholder={t(language, "sanjosedormido_placeholder")}
+              rows={4}
+              style={{ width: "100%", border: "1px solid " + C.mist, borderRadius: 12, padding: "12px 14px", fontSize: 14, color: C.ink, fontFamily: "'DM Sans', system-ui, sans-serif", resize: "none", marginBottom: 16, boxSizing: "border-box" }}
+            />
+            <button onClick={agregarIntencion} disabled={!newText.trim() || saving} style={{ width: "100%", padding: "14px", border: "none", borderRadius: 14, background: "linear-gradient(135deg, #8B6142, #B58860)", color: "#fff", fontSize: 14, fontWeight: 700, cursor: newText.trim() ? "pointer" : "default", opacity: newText.trim() ? 1 : 0.5, fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+              {saving ? t(language, "sanjosedormido_saving") : t(language, "sanjosedormido_save")}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {listOpen && (
+        <div style={sheetOverlay} onClick={() => setListOpen(false)}>
+          <div onClick={e => e.stopPropagation()} style={sheetCard()}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+              <p style={{ fontSize: 16, fontWeight: 800, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>{t(language, "sanjosedormido_list_title")}</p>
+              <button onClick={() => setListOpen(false)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+            </div>
+
+            {loadingIntentions ? (
+              <p style={{ textAlign: "center", color: C.slateLight, fontSize: 13, margin: "24px 0" }}>{t(language, "sanjosedormido_loading")}</p>
+            ) : intentions.length === 0 ? (
+              <p style={{ textAlign: "center", color: C.slateLight, fontSize: 13, margin: "24px 0", lineHeight: 1.6 }}>{t(language, "sanjosedormido_empty")}</p>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {pendientes.map(i => (
+                  <div key={i.id} style={{ background: C.cream, borderRadius: 12, padding: "14px 16px", border: "1px solid " + C.mist, borderLeft: "3px solid #8B6142", opacity: busyId === i.id ? 0.5 : 1, transition: "opacity 0.2s" }}>
+                    <p style={{ fontSize: 13, color: C.inkMid, lineHeight: 1.6, margin: "0 0 8px" }}>{i.texto}</p>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <p style={{ fontSize: 10, color: C.slateLight, margin: 0 }}>{formatDate(i.created_at)}</p>
+                      <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                        <button onClick={() => marcarRespondida(i.id)} disabled={busyId === i.id} style={{ background: "none", border: "none", cursor: "pointer", padding: "4px", display: "flex", alignItems: "center", gap: 4 }}>
+                          <Icon name="check" size={14} color={C.teal} />
+                          <span style={{ fontSize: 10, color: C.teal, fontWeight: 600 }}>{t(language, "sanjosedormido_mark_received")}</span>
+                        </button>
+                        <button onClick={() => borrarIntencion(i.id)} disabled={busyId === i.id} style={{ background: "none", border: "none", cursor: "pointer", padding: "4px" }}>
+                          <Icon name="trash" size={14} color={C.inkLight} />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {respondidas.length > 0 && (
+                  <>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: C.slateLight, letterSpacing: "0.08em", textTransform: "uppercase", margin: "10px 0 0" }}>{t(language, "sanjosedormido_received_section")}</p>
+                    {respondidas.map(i => (
+                      <div key={i.id} style={{ background: C.fog, borderRadius: 12, padding: "14px 16px", border: "1px solid " + C.mist, opacity: busyId === i.id ? 0.5 : 0.7, transition: "opacity 0.2s" }}>
+                        <p style={{ fontSize: 13, color: C.inkLight, lineHeight: 1.6, margin: "0 0 8px", textDecoration: "line-through" }}>{i.texto}</p>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <p style={{ fontSize: 10, color: C.slateLight, margin: 0 }}>{formatDate(i.created_at)}</p>
+                          <button onClick={() => borrarIntencion(i.id)} disabled={busyId === i.id} style={{ background: "none", border: "none", cursor: "pointer", padding: "4px" }}>
+                            <Icon name="trash" size={14} color={C.inkLight} />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ═══════════════════════════════════════════════════════════════════════
 // HORARIO ESPIRITUAL (menú "Más")
 // ═══════════════════════════════════════════════════════════════════════
@@ -4919,6 +5146,7 @@ export default function App() {
             {activeTab === "more" && moreSection === "divinemercy" && <DivineMercyScreen onBack={() => setMoreSection(null)} language={language} fontScale={fontScale} />}
             {activeTab === "more" && moreSection === "sanjose" && <SanJoseRosaryScreen onBack={() => setMoreSection(null)} language={language} fontScale={fontScale} />}
             {activeTab === "more" && moreSection === "telefono" && <TelefonoPadreScreen onBack={() => setMoreSection(null)} language={language} fontScale={fontScale} />}
+            {activeTab === "more" && moreSection === "sanjosedormido" && <SanJoseDormidoScreen user={user} onBack={() => setMoreSection(null)} language={language} fontScale={fontScale} />}
             {activeTab === "profile" && <ProfileScreen user={user} profile={profile} setProfile={setProfile} onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} language={language} changeLanguage={changeLanguage} fontScale={fontScale} changeFontScale={changeFontScale} />}
             {!keyboardOpen && (
               <NavBar
