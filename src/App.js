@@ -184,6 +184,7 @@ const translations = {
     more_rosary_title: "Santo Rosario", more_rosary_sub: "Guía interactiva cuenta por cuenta",
     more_horario_title: "Horario Espiritual", more_horario_sub: "Lleva el control de tus prácticas del mes",
     more_divinemercy_title: "Coronilla a la Divina Misericordia", more_divinemercy_sub: "Guía interactiva cuenta por cuenta",
+    more_sanjose_title: "Rosario a San José", more_sanjose_sub: "7 misterios, guía interactiva cuenta por cuenta",
     more_back: "Más",
 
     miracles_title: "Milagros Eucarísticos",
@@ -197,6 +198,9 @@ const translations = {
     divinemercy_title: "Coronilla a la Divina Misericordia", divinemercy_intro_title: "Sobre esta devoción",
     divinemercy_intro_text: "Revelada por Jesús a Santa Faustina Kowalska, esta coronilla se reza tradicionalmente en las cuentas del Rosario. Es especialmente recomendada a las 3 de la tarde, la «Hora de la Misericordia», en memoria de la muerte de Cristo en la cruz.",
     divinemercy_begin: "Comenzar la Coronilla 🙏",
+    sanjose_title: "Rosario a San José", sanjose_intro_title: "Sobre esta devoción",
+    sanjose_intro_text: "Esta devoción comenzó en 1871, cuando el Papa Pío IX promovió la veneración a San José como padre adoptivo de Jesús. Se reza con una coronilla de 60 cuentas en 7 grupos de 7, cada uno dedicado a un misterio de su vida.",
+    sanjose_begin: "Comenzar el Rosario 🙏", sanjose_group: "Grupo", sanjose_of_7: "de 7",
 
     horario_title: "Horario Espiritual", horario_loading: "Cargando tu Horario...",
     horario_particular_purpose: "Propósito particular", horario_purposes: "Propósitos",
@@ -326,6 +330,7 @@ const translations = {
     more_rosary_title: "Holy Rosary", more_rosary_sub: "Interactive bead-by-bead guide",
     more_horario_title: "Spiritual Schedule", more_horario_sub: "Keep track of your practices for the month",
     more_divinemercy_title: "Chaplet of Divine Mercy", more_divinemercy_sub: "Interactive bead-by-bead guide",
+    more_sanjose_title: "Rosary of Saint Joseph", more_sanjose_sub: "7 mysteries, interactive bead-by-bead guide",
     more_back: "More",
 
     miracles_title: "Eucharistic Miracles",
@@ -339,6 +344,9 @@ const translations = {
     divinemercy_title: "Chaplet of Divine Mercy", divinemercy_intro_title: "About this devotion",
     divinemercy_intro_text: "Revealed by Jesus to Saint Faustina Kowalska, this chaplet is traditionally prayed on Rosary beads. It's especially recommended at 3 p.m., the \"Hour of Mercy,\" in memory of Christ's death on the cross.",
     divinemercy_begin: "Begin the Chaplet 🙏",
+    sanjose_title: "Rosary of Saint Joseph", sanjose_intro_title: "About this devotion",
+    sanjose_intro_text: "This devotion began in 1871, when Pope Pius IX promoted devotion to Saint Joseph as the foster father of Jesus. It is prayed with a 60-bead chaplet in 7 groups of 7, each dedicated to a mystery of his life.",
+    sanjose_begin: "Begin the Rosary 🙏", sanjose_group: "Group", sanjose_of_7: "of 7",
 
     horario_title: "Spiritual Schedule", horario_loading: "Loading your Schedule...",
     horario_particular_purpose: "Personal resolution", horario_purposes: "Resolutions",
@@ -442,6 +450,7 @@ const Icon = ({ name, size = 22, color = "currentColor" }) => {
     host: <><circle cx="12" cy="12" r="8.5" stroke={color} strokeWidth="1.8" fill="none" /><path d="M12 7.5v9M8 12h8" stroke={color} strokeWidth="1.6" strokeLinecap="round" /></>,
     textSize: <><text x="2" y="16" fontSize="10" fontWeight="700" fill={color} fontFamily="'DM Sans', system-ui, sans-serif">A</text><text x="12" y="19" fontSize="16" fontWeight="700" fill={color} fontFamily="'DM Sans', system-ui, sans-serif">A</text></>,
     target: <><circle cx="12" cy="12" r="9" stroke={color} strokeWidth="1.8" fill="none" /><circle cx="12" cy="12" r="5" stroke={color} strokeWidth="1.8" fill="none" /><circle cx="12" cy="12" r="1.4" fill={color} /></>,
+    staff: <><path d="M12 8v14" stroke={color} strokeWidth="1.8" strokeLinecap="round" /><path d="M12 8c-2.2 0-4-1.3-4-3.5S9.8 1 12 1s4 1.3 4 3.5S14.2 8 12 8z" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" /><path d="M8 15c0 1.5 1.8 2.5 4 2.5s4-1 4-2.5" stroke={color} strokeWidth="1.6" strokeLinecap="round" fill="none" /></>,
   };
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" style={{ display: "block", flexShrink: 0 }}>
@@ -3191,6 +3200,7 @@ function MoreScreen({ onOpenSection, language, fontScale = 1 }) {
     { id: "rosary", icon: "rosary", color: C.periwinkle, bg: "#E4EDF7", title: t(language, "more_rosary_title"), sub: t(language, "more_rosary_sub") },
     { id: "horario", icon: "grid", color: C.blue, bg: "#DDE8F4", title: t(language, "more_horario_title"), sub: t(language, "more_horario_sub") },
     { id: "divinemercy", icon: "heart", color: "#A8342E", bg: "#F5DEDC", title: t(language, "more_divinemercy_title"), sub: t(language, "more_divinemercy_sub") },
+    { id: "sanjose", icon: "staff", color: "#6B4C9A", bg: "#EAE2F5", title: t(language, "more_sanjose_title"), sub: t(language, "more_sanjose_sub") },
   ];
   return (
     <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90, zoom: fontScale }}>
@@ -3434,6 +3444,84 @@ function construirPasosCoronilla(language) {
     pasos.push({ tipo: "santoDios", titulo: `${tt.holyGodTitle} (${k + 1} ${tt.of3})`, texto: ORACION_SANTO_DIOS[L] });
   }
   pasos.push({ tipo: "ofrenda", titulo: tt.closingTitle, texto: ORACION_CORONILLA_FINAL[L] });
+  pasos.push({ tipo: "final", titulo: tt.finalTitle, texto: tt.finalText });
+  return pasos;
+}
+
+// ─── Rosario a San José (7 misterios / 60 cuentas) ─────────────────────────
+const ORACION_ACTO_CONTRICION = {
+  es: "Señor mío Jesucristo, Dios y hombre verdadero, Creador, Padre y Redentor mío; por ser Tú quien eres, bondad infinita, y porque te amo sobre todas las cosas, me pesa de todo corazón haberte ofendido; también me pesa porque puedes castigarme con las penas del infierno. Ayudado de tu divina gracia propongo firmemente nunca más pecar, confesarme y cumplir la penitencia que se me impusiere. Amén.",
+  en: "O my God, I am heartily sorry for having offended Thee, and I detest all my sins, because I dread the loss of heaven and the pains of hell; but most of all because they offend Thee, my God, who art all good and deserving of all my love. I firmly resolve, with the help of Thy grace, to sin no more, and to avoid the near occasions of sin. Amen.",
+};
+const ORACION_DIOS_TE_SALVE_JOSE = {
+  es: "Dios te salve José, lleno de la gracia divina. Entre tus brazos descansó El Salvador y ante tus ojos creció. Bendito eres entre todos los hombres, y bendito es Jesús, el hijo divino de tu Virginal Esposa. San José, padre adoptivo de Jesús, ayúdanos en nuestras necesidades familiares, de salud y de trabajo, hasta el fin de nuestros días, y socórrenos a la hora de nuestra muerte. Amén.",
+  en: "Hail Joseph, full of divine grace. In your arms the Savior rested, and before your eyes he grew. Blessed are you among all men, and blessed is Jesus, the divine son of your Virgin Spouse. Saint Joseph, foster father of Jesus, help us in our family, health, and work needs, until the end of our days, and assist us at the hour of our death. Amen.",
+};
+const ORACION_ACUERDATE_SAN_JOSE = {
+  es: "Acuérdate, oh castísimo esposo de la Virgen María, San José, mi amable protector, que nunca se oyó decir que alguno de aquellos que invocaron tu protección e imploraron tu socorro hubiese quedado sin consuelo. Lleno de confianza, me presento ante ti y me encomiendo con fervor a tu patrocinio. No desatiendas mis oraciones, oh padre adoptivo del Redentor, mas bien escúchalas y acógelas. Amén.",
+  en: "Remember, O most chaste spouse of the Virgin Mary, that never was it known that anyone who implored your help and sought your intercession was left unassisted. Full of confidence in your power, I fly to you and beg your protection. Despise not, O guardian of the Redeemer, my humble supplication, but in your bounty, hear and answer me. Amen.",
+};
+const LETANIAS_SAN_JOSE = {
+  es: "Señor, ten piedad.\nCristo, ten piedad.\nSeñor, ten piedad.\n\nCristo, óyenos.\nCristo, escúchanos.\n\nDios, Padre celestial, ten misericordia de nosotros.\nDios, Hijo, redentor del mundo, ten misericordia de nosotros.\nDios, Espíritu Santo, ten misericordia de nosotros.\nTrinidad Santa, un solo Dios, ten misericordia de nosotros.\n\nSanta María, ruega por nosotros.\nSan José, ruega por nosotros.\nGlorioso descendiente de David, ruega por nosotros.\nLuz de los patriarcas, ruega por nosotros.\nEsposo de la Madre de Dios, ruega por nosotros.\nCustodio del Redentor, ruega por nosotros.\nCustodio casto de la Virgen, ruega por nosotros.\nTú que alimentaste al Hijo de Dios, ruega por nosotros.\nDiligente defensor de Cristo, ruega por nosotros.\nServidor de Cristo, ruega por nosotros.\nMinistro de la salvación, ruega por nosotros.\nCabeza de la Sagrada Familia, ruega por nosotros.\n\nJosé, justísimo, ruega por nosotros.\nJosé, castísimo, ruega por nosotros.\nJosé, prudentísimo, ruega por nosotros.\nJosé, fortísimo, ruega por nosotros.\nJosé, obedientísimo, ruega por nosotros.\nJosé, fidelísimo, ruega por nosotros.\n\nEspejo de paciencia, ruega por nosotros.\nAmante de la pobreza, ruega por nosotros.\nModelo de los trabajadores, ruega por nosotros.\nEsplendor de la vida doméstica, ruega por nosotros.\nCustodio de las vírgenes, ruega por nosotros.\nColumna de las familias, ruega por nosotros.\nApoyo en las dificultades, ruega por nosotros.\nConsuelo de los que sufren, ruega por nosotros.\nEsperanza de los enfermos, ruega por nosotros.\nPatrono de los exiliados, ruega por nosotros.\nPatrono de los afligidos, ruega por nosotros.\nPatrono de los pobres, ruega por nosotros.\nPatrono de los moribundos, ruega por nosotros.\nTerror de los demonios, ruega por nosotros.\nProtector de la santa Iglesia, ruega por nosotros.\n\nCordero de Dios, que quitas el pecado del mundo, perdónanos, Señor.\nCordero de Dios, que quitas el pecado del mundo, escúchanos, Señor.\nCordero de Dios, que quitas el pecado del mundo, ten misericordia de nosotros.\n\nV. Lo nombró administrador de su casa.\nR. Señor de todas sus posesiones.\n\nOremos.\nOh, Dios, que con inefable providencia elegiste a san José como esposo de la santísima Madre de tu Hijo, concédenos que merezcamos tener como intercesor en el cielo al que veneramos como protector en la tierra. Por nuestro Señor, Jesucristo. Amén.",
+  en: "Lord, have mercy.\nChrist, have mercy.\nLord, have mercy.\n\nChrist, hear us.\nChrist, graciously hear us.\n\nGod the Father in heaven, have mercy on us.\nGod the Son, Redeemer of the world, have mercy on us.\nGod the Holy Spirit, have mercy on us.\nHoly Trinity, one God, have mercy on us.\n\nHoly Mary, pray for us.\nSaint Joseph, pray for us.\nIllustrious son of David, pray for us.\nLight of Patriarchs, pray for us.\nSpouse of the Mother of God, pray for us.\nGuardian of the Redeemer, pray for us.\nPure Guardian of the Virgin, pray for us.\nProvider for the Son of God, pray for us.\nZealous defender of Christ, pray for us.\nServant of Christ, pray for us.\nMinister of salvation, pray for us.\nHead of the Holy Family, pray for us.\n\nJoseph, most just, pray for us.\nJoseph, most chaste, pray for us.\nJoseph, most prudent, pray for us.\nJoseph, most brave, pray for us.\nJoseph, most obedient, pray for us.\nJoseph, most loyal, pray for us.\n\nMirror of patience, pray for us.\nLover of poverty, pray for us.\nModel for workers, pray for us.\nGlory of family life, pray for us.\nGuardian of virgins, pray for us.\nCornerstone of families, pray for us.\nSupport in difficulties, pray for us.\nComfort of the sorrowing, pray for us.\nHope of the sick, pray for us.\nPatron of exiles, pray for us.\nPatron of the afflicted, pray for us.\nPatron of the poor, pray for us.\nPatron of the dying, pray for us.\nTerror of demons, pray for us.\nProtector of the Holy Church, pray for us.\n\nLamb of God, you take away the sins of the world, spare us, O Lord.\nLamb of God, you take away the sins of the world, hear us, O Lord.\nLamb of God, you take away the sins of the world, have mercy on us.\n\nHe made him master of his house, and ruler of all his possessions.\n\nLet us pray.\nO God, who in your inexpressible providence were pleased to choose Saint Joseph as spouse of your most holy Mother, grant, we pray, that we, who revere him as our protector on earth, may be worthy of his heavenly intercession. Who live and reign for ever and ever. Amen.",
+};
+const MISTERIOS_SAN_JOSE = {
+  es: [
+    { titulo: "San José acoge a María", cita: "Mt 1, 18-24", texto: "José, hombre justo, estaba dispuesto a apartarse en silencio para no exponer a María. Pero el Ángel le revela el plan de Dios, y José obedece sin entender del todo, confiando por encima de sus propios planes." },
+    { titulo: "El nacimiento de Jesús en Belén", cita: "Lc 2, 1-7", texto: "José busca un lugar para que nazca el Hijo de Dios y no lo encuentra más que en un pesebre. Su cuidado silencioso y providente acompaña el momento más humilde y más grande de la historia." },
+    { titulo: "La adoración de pastores y magos", cita: "Lc 2, 8-20; Mt 2, 1-12", texto: "Pastores pobres y sabios venidos de lejos reconocen al Niño. José es testigo silencioso de cómo Dios se revela primero a los sencillos, y guarda todo esto en su corazón junto a María." },
+    { titulo: "La presentación en el Templo", cita: "Lc 2, 21-38", texto: "Fiel a la Ley, José lleva al Niño al Templo. Allí, Simeón y Ana reconocen en Jesús al Mesías esperado. José cumple, con obediencia sencilla, cada precepto de la fe que ha recibido." },
+    { titulo: "La huida a Egipto", cita: "Mt 2, 13-15", texto: "Ante el peligro, José no duda: se levanta de noche y protege a su familia, dejándolo todo atrás. Es el modelo del padre que vela, que se sacrifica y que pone la vida de los suyos por encima de su propia seguridad." },
+    { titulo: "Jesús perdido y hallado en el Templo", cita: "Lc 2, 41-50", texto: "Tres días de angustia buscando al Niño terminan al encontrarlo en el Templo. José conoce también la incertidumbre y el dolor de no entender los caminos de Dios, y sigue confiando." },
+    { titulo: "La vida oculta en Nazaret", cita: "Lc 2, 51-52", texto: "Durante años, José enseña a Jesús su oficio y lo forma día a día en el trabajo silencioso de Nazaret. Es el patrono de los trabajadores, ejemplo de una santidad vivida en lo cotidiano y lo oculto." },
+  ],
+  en: [
+    { titulo: "Saint Joseph welcomes Mary", cita: "Mt 1, 18-24", texto: "Joseph, a righteous man, was ready to quietly step aside so as not to expose Mary. But the Angel reveals God's plan, and Joseph obeys without fully understanding, trusting beyond his own plans." },
+    { titulo: "The birth of Jesus in Bethlehem", cita: "Lk 2, 1-7", texto: "Joseph searches for a place for the Son of God to be born and finds only a manger. His silent, provident care accompanies the most humble and the greatest moment in history." },
+    { titulo: "The adoration of the shepherds and magi", cita: "Lk 2, 8-20; Mt 2, 1-12", texto: "Poor shepherds and wise men from afar recognize the Child. Joseph is a silent witness to how God reveals himself first to the simple, and treasures all of this in his heart alongside Mary." },
+    { titulo: "The presentation in the Temple", cita: "Lk 2, 21-38", texto: "Faithful to the Law, Joseph brings the Child to the Temple. There, Simeon and Anna recognize in Jesus the awaited Messiah. Joseph fulfills, with simple obedience, every precept of the faith he has received." },
+    { titulo: "The flight into Egypt", cita: "Mt 2, 13-15", texto: "Facing danger, Joseph doesn't hesitate: he rises in the night and protects his family, leaving everything behind. He is the model of the father who watches over, sacrifices, and places his family's safety above his own." },
+    { titulo: "Jesus lost and found in the Temple", cita: "Lk 2, 41-50", texto: "Three anguished days searching for the Child end when he is found in the Temple. Joseph too knows uncertainty and the pain of not understanding God's ways, and continues to trust." },
+    { titulo: "The hidden life in Nazareth", cita: "Lk 2, 51-52", texto: "For years, Joseph teaches Jesus his trade and forms him day by day in the quiet work of Nazareth. He is the patron of workers, an example of holiness lived in the ordinary and hidden." },
+  ],
+};
+
+function construirPasosRosarioSanJose(language) {
+  const L = language === "en" ? "en" : "es";
+  const tt = {
+    signOfCross: L === "en" ? "Sign of the Cross" : "Señal de la Cruz",
+    signOfCrossText: L === "en"
+      ? "In the sign of the Holy Cross, deliver us from our enemies, O Lord our God.\nIn the name of the Father, and of the Son, and of the Holy Spirit.\nAmen."
+      : "Por la señal de la Santa Cruz, de nuestros enemigos líbranos, Señor, Dios nuestro.\nEn el nombre del Padre, y del Hijo, y del Espíritu Santo.\nAmén.",
+    contritionTitle: L === "en" ? "Act of Contrition" : "Acto de Contrición",
+    mysteryTitle: L === "en" ? "Mystery" : "Misterio",
+    ourFatherTitle: L === "en" ? "Our Father" : "Padre Nuestro",
+    groupWord: L === "en" ? "group" : "grupo",
+    hailJosephTitle: L === "en" ? "Hail Joseph" : "Dios te salve, José",
+    of7: L === "en" ? "of 7" : "de 7",
+    gloryTitle: L === "en" ? "Glory Be" : "Gloria",
+    rememberTitle: L === "en" ? "Remember, O Saint Joseph" : "Acuérdate de San José",
+    litanyTitle: L === "en" ? "Litany of Saint Joseph" : "Letanías a San José",
+    finalTitle: L === "en" ? "Amen 🙏" : "Amén 🙏",
+    finalText: L === "en"
+      ? "You have finished the Rosary of Saint Joseph. May he who was the faithful guardian of Jesus and Mary watch over you and your family."
+      : "Has terminado el Rosario a San José. Que quien fue el guardián fiel de Jesús y María vele por ti y por tu familia.",
+  };
+  const misterios = MISTERIOS_SAN_JOSE[L];
+  const pasos = [
+    { tipo: "intro", titulo: tt.signOfCross, texto: tt.signOfCrossText },
+    { tipo: "credo", titulo: tt.contritionTitle, texto: ORACION_ACTO_CONTRICION[L] },
+  ];
+  misterios.forEach((m, i) => {
+    pasos.push({ tipo: "misterio", titulo: `${tt.mysteryTitle} ${i + 1}: ${m.titulo}`, texto: `${m.cita}\n\n${m.texto}` });
+    pasos.push({ tipo: "padrenuestro", titulo: tt.ourFatherTitle, texto: ORACION_PADRENUESTRO[L] });
+    for (let j = 0; j < 7; j++) {
+      pasos.push({ tipo: "hailJoseph", titulo: `${tt.hailJosephTitle} (${j + 1} ${tt.of7})`, texto: ORACION_DIOS_TE_SALVE_JOSE[L], decada: i, cuenta: j + 1, grupoTotal: 7 });
+    }
+    pasos.push({ tipo: "gloria", titulo: tt.gloryTitle, texto: ORACION_GLORIA[L] });
+  });
+  pasos.push({ tipo: "acuerdate", titulo: tt.rememberTitle, texto: ORACION_ACUERDATE_SAN_JOSE[L] });
+  pasos.push({ tipo: "letania", titulo: tt.litanyTitle, texto: LETANIAS_SAN_JOSE[L] });
   pasos.push({ tipo: "final", titulo: tt.finalTitle, texto: tt.finalText });
   return pasos;
 }
@@ -3688,6 +3776,96 @@ function DivineMercyScreen({ onBack, language, fontScale = 1 }) {
           {t(language, "rosary_previous")}
         </button>
         <button onClick={esUltimo ? reiniciar : siguiente} style={{ flex: 2, padding: "15px", border: "none", borderRadius: 14, background: "linear-gradient(135deg, #A8342E, #D4534A)", color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+          {esUltimo ? t(language, "rosary_finish") : t(language, "rosary_next")}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function SanJoseRosaryScreen({ onBack, language, fontScale = 1 }) {
+  const pasos = useMemo(() => construirPasosRosarioSanJose(language), [language]);
+  const [iniciado, setIniciado] = useState(false);
+  const [idx, setIdx] = useState(0);
+
+  const paso = pasos[idx];
+  const totalPasos = pasos.length;
+  const esUltimo = idx === totalPasos - 1;
+
+  function siguiente() { if (idx < totalPasos - 1) setIdx(idx + 1); }
+  function anterior() { if (idx > 0) setIdx(idx - 1); }
+  function reiniciar() { setIdx(0); setIniciado(false); }
+
+  const tipoColor = {
+    intro: C.slate, credo: C.blue, misterio: C.teal, padrenuestro: C.navy,
+    hailJoseph: "#6B4C9A", gloria: C.gold, acuerdate: "#6B4C9A", letania: "#6B4C9A", final: "#6B4C9A",
+  };
+  const color = tipoColor[paso.tipo] || "#6B4C9A";
+
+  if (!iniciado) {
+    return (
+      <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90, zoom: fontScale }}>
+        <div style={{ padding: "52px 22px 8px", display: "flex", alignItems: "center", gap: 10 }}>
+          <button onClick={onBack} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", padding: 4 }}>
+            <Icon name="chevron" size={20} color={C.inkLight} />
+          </button>
+          <div>
+            <p style={{ fontSize: 12, color: C.slateLight, margin: "0 0 2px", letterSpacing: "0.08em", textTransform: "uppercase" }}>{t(language, "more_back")}</p>
+            <h2 style={{ fontSize: 20, fontWeight: 600, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>{t(language, "sanjose_title")}</h2>
+          </div>
+        </div>
+
+        <div style={{ padding: "16px 22px 0" }}>
+          <div style={{ borderRadius: 18, background: "linear-gradient(135deg, #6B4C9A, #9B7FC0)", padding: "22px 20px", color: "#fff", marginBottom: 20 }}>
+            <p style={{ fontSize: 10, opacity: 0.8, margin: "0 0 4px", letterSpacing: "0.12em", textTransform: "uppercase" }}>{t(language, "sanjose_intro_title")}</p>
+            <p style={{ fontSize: 13, lineHeight: 1.7, margin: 0 }}>{t(language, "sanjose_intro_text")}</p>
+          </div>
+
+          <button onClick={() => setIniciado(true)} style={{ width: "100%", padding: "16px", border: "none", borderRadius: 14, background: "linear-gradient(135deg, #6B4C9A, #9B7FC0)", color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+            {t(language, "sanjose_begin")}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", background: gradients.home, zoom: fontScale }}>
+      <div style={{ padding: "52px 22px 12px" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+          <button onClick={reiniciar} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 6, color: C.inkLight, fontSize: 12 }}>
+            <Icon name="chevron" size={16} color={C.inkLight} /> {t(language, "rosary_exit")}
+          </button>
+          <p style={{ fontSize: 11, color: C.inkLight, margin: 0 }}>{idx + 1} / {totalPasos}</p>
+        </div>
+        <div style={{ background: C.mist, borderRadius: 100, height: 5, overflow: "hidden" }}>
+          <div style={{ width: `${((idx + 1) / totalPasos) * 100}%`, height: "100%", background: color, borderRadius: 100, transition: "width 0.3s" }} />
+        </div>
+      </div>
+
+      <div style={{ flex: 1, overflowY: "auto", padding: "8px 22px 20px", display: "flex", flexDirection: "column" }}>
+        <div style={{ background: C.cream, borderRadius: 18, padding: "22px 20px", border: "1px solid " + C.mist, borderLeft: `4px solid ${color}`, flex: 1 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, color, letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 10px" }}>
+            {paso.decada !== undefined ? `${t(language, "sanjose_group")} ${paso.decada + 1} ${t(language, "sanjose_of_7")}` : ""}
+          </p>
+          <p style={{ fontSize: 17, fontWeight: 700, color: C.ink, margin: "0 0 14px", fontFamily: "'Cormorant Garamond', serif", lineHeight: 1.3 }}>{paso.titulo}</p>
+          <p style={{ fontSize: 14, color: C.inkMid, lineHeight: 1.85, margin: 0, whiteSpace: "pre-line" }}>{paso.texto}</p>
+        </div>
+
+        {paso.decada !== undefined && (
+          <div style={{ display: "flex", gap: 5, justifyContent: "center", marginTop: 14, flexWrap: "wrap" }}>
+            {Array.from({ length: 7 }).map((_, i) => (
+              <div key={i} style={{ width: 12, height: 12, borderRadius: "50%", background: i < paso.cuenta ? color : C.mist }} />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div style={{ padding: "0 22px 90px", display: "flex", gap: 10 }}>
+        <button onClick={anterior} disabled={idx === 0} style={{ flex: 1, padding: "15px", border: "1px solid " + C.mist, borderRadius: 14, background: C.white, color: C.inkMid, fontSize: 13, fontWeight: 600, cursor: idx === 0 ? "default" : "pointer", opacity: idx === 0 ? 0.4 : 1, fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+          {t(language, "rosary_previous")}
+        </button>
+        <button onClick={esUltimo ? reiniciar : siguiente} style={{ flex: 2, padding: "15px", border: "none", borderRadius: 14, background: "linear-gradient(135deg, #6B4C9A, #9B7FC0)", color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
           {esUltimo ? t(language, "rosary_finish") : t(language, "rosary_next")}
         </button>
       </div>
@@ -4483,6 +4661,7 @@ export default function App() {
             {activeTab === "more" && moreSection === "rosary" && <RosaryScreen onBack={() => setMoreSection(null)} language={language} fontScale={fontScale} />}
             {activeTab === "more" && moreSection === "horario" && <HorarioEspiritualScreen user={user} onBack={() => setMoreSection(null)} language={language} fontScale={fontScale} />}
             {activeTab === "more" && moreSection === "divinemercy" && <DivineMercyScreen onBack={() => setMoreSection(null)} language={language} fontScale={fontScale} />}
+            {activeTab === "more" && moreSection === "sanjose" && <SanJoseRosaryScreen onBack={() => setMoreSection(null)} language={language} fontScale={fontScale} />}
             {activeTab === "profile" && <ProfileScreen user={user} profile={profile} setProfile={setProfile} onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} language={language} changeLanguage={changeLanguage} fontScale={fontScale} changeFontScale={changeFontScale} />}
             {!keyboardOpen && (
               <NavBar
