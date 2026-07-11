@@ -115,6 +115,10 @@ const translations = {
     home_world_intention_prayer: "Oración de intercesión", home_world_intention_source: "Fuente",
     home_world_intention_read_more: "Leer noticia completa →",
     home_ecclesial_intention: "Intención eclesial", home_ecclesial_intention_prayer: "Oración por la Iglesia",
+    home_daily_challenge: "Reto del día", home_daily_challenge_mark_done: "Marcar como cumplido",
+    home_daily_challenge_done: "¡Reto cumplido hoy! 🎉",
+    challenge_category_corporal: "Obra de misericordia corporal", challenge_category_espiritual: "Obra de misericordia espiritual",
+    challenge_category_gesto: "Gesto con el prójimo", challenge_category_oracion: "Reto de oración",
     home_talk_to_sofia: "Hablar con Sofía", home_talk_to_sofia_sub: "¿Tienes algo en el corazón hoy?",
     home_questions_to_pray: "Preguntas para orar", home_amen_done: "Amén ✓",
     home_preparing_reflection: "✨ Mater está preparando tu reflexión...",
@@ -249,6 +253,10 @@ const translations = {
     home_world_intention_prayer: "Prayer of intercession", home_world_intention_source: "Source",
     home_world_intention_read_more: "Read the full story →",
     home_ecclesial_intention: "Church intention", home_ecclesial_intention_prayer: "Prayer for the Church",
+    home_daily_challenge: "Challenge of the day", home_daily_challenge_mark_done: "Mark as done",
+    home_daily_challenge_done: "Challenge completed today! 🎉",
+    challenge_category_corporal: "Corporal work of mercy", challenge_category_espiritual: "Spiritual work of mercy",
+    challenge_category_gesto: "Gesture of love for others", challenge_category_oracion: "Prayer challenge",
     home_talk_to_sofia: "Talk with Sofía", home_talk_to_sofia_sub: "Do you have something on your heart today?",
     home_questions_to_pray: "Questions to pray with", home_amen_done: "Amen ✓",
     home_preparing_reflection: "✨ Mater is preparing your reflection...",
@@ -425,6 +433,7 @@ const Icon = ({ name, size = 22, color = "currentColor" }) => {
     rosary: <><circle cx="12" cy="4" r="1.6" stroke={color} strokeWidth="1.6" fill="none" /><circle cx="18" cy="8" r="1.6" stroke={color} strokeWidth="1.6" fill="none" /><circle cx="19" cy="15" r="1.6" stroke={color} strokeWidth="1.6" fill="none" /><circle cx="14" cy="20" r="1.6" stroke={color} strokeWidth="1.6" fill="none" /><circle cx="7" cy="19" r="1.6" stroke={color} strokeWidth="1.6" fill="none" /><circle cx="4" cy="13" r="1.6" stroke={color} strokeWidth="1.6" fill="none" /><circle cx="6" cy="6" r="1.6" stroke={color} strokeWidth="1.6" fill="none" /><path d="M12 12v9" stroke={color} strokeWidth="1.8" strokeLinecap="round" /></>,
     host: <><circle cx="12" cy="12" r="8.5" stroke={color} strokeWidth="1.8" fill="none" /><path d="M12 7.5v9M8 12h8" stroke={color} strokeWidth="1.6" strokeLinecap="round" /></>,
     textSize: <><text x="2" y="16" fontSize="10" fontWeight="700" fill={color} fontFamily="'DM Sans', system-ui, sans-serif">A</text><text x="12" y="19" fontSize="16" fontWeight="700" fill={color} fontFamily="'DM Sans', system-ui, sans-serif">A</text></>,
+    target: <><circle cx="12" cy="12" r="9" stroke={color} strokeWidth="1.8" fill="none" /><circle cx="12" cy="12" r="5" stroke={color} strokeWidth="1.8" fill="none" /><circle cx="12" cy="12" r="1.4" fill={color} /></>,
   };
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" style={{ display: "block", flexShrink: 0 }}>
@@ -455,6 +464,78 @@ const PRACTICE_MESSAGES_EN = [
   "📖 Your Lectio Divina awaits. Let today's Word speak to you.",
   "🌙 End the day with the Examination of conscience. Review your day with God."
 ];
+
+// ─── Reto del día — batería de 30, uno por día del mes, se renueva solo ────
+const CHALLENGE_CATEGORY_COLORS = { corporal: "#3A7A8C", espiritual: "#8BA3C7", gesto: "#A8864A", oracion: "#2C3E6B" };
+const DAILY_CHALLENGES = [
+  { categoria: "oracion", titulo: "Ofrece tu día", descripcion: "Al despertar, ofrece cada momento del día a Dios en una breve oración: «Todo lo hago por ti, Señor.»" },
+  { categoria: "gesto", titulo: "Llama a quien no llamas", descripcion: "Comunícate hoy con alguien con quien no hablas hace tiempo, solo para preguntar cómo está." },
+  { categoria: "corporal", titulo: "Comparte tu comida", descripcion: "Invita a alguien a comer o comparte algo de tu comida con quien lo necesite hoy." },
+  { categoria: "espiritual", titulo: "Escucha sin juzgar", descripcion: "Si alguien te cuenta algo hoy, escúchalo con paciencia y sin interrumpir ni corregir." },
+  { categoria: "oracion", titulo: "Reza por un enemigo", descripcion: "Dedica una oración sincera por alguien con quien tienes un conflicto o que te ha hecho daño." },
+  { categoria: "gesto", titulo: "Un cumplido sincero", descripcion: "Dile a tres personas hoy algo genuinamente bueno que ves en ellas." },
+  { categoria: "corporal", titulo: "Ropa que ya no usas", descripcion: "Separa ropa que ya no uses y planea donarla esta semana." },
+  { categoria: "espiritual", titulo: "Consuela a alguien triste", descripcion: "Busca a alguien que esté pasando un mal momento y ofrécele tu compañía, aunque sea unos minutos." },
+  { categoria: "oracion", titulo: "Visita al Santísimo", descripcion: "Si puedes, pasa aunque sean 10 minutos en adoración o en silencio ante el Sagrario hoy." },
+  { categoria: "gesto", titulo: "Perdona algo pequeño", descripcion: "Deja pasar una molestia de hoy sin reclamar, como ofrenda de paciencia." },
+  { categoria: "corporal", titulo: "Visita a un enfermo", descripcion: "Llama, escribe o visita a alguien que esté enfermo o convaleciente." },
+  { categoria: "espiritual", titulo: "Comparte tu fe", descripcion: "Cuéntale a alguien algo bueno que Dios ha hecho en tu vida." },
+  { categoria: "oracion", titulo: "Rosario por una intención", descripcion: "Reza un rosario completo (o una decena) por una intención específica de alguien cercano." },
+  { categoria: "gesto", titulo: "Ayuda sin que te lo pidan", descripcion: "Adelántate a ayudar en una tarea doméstica o del trabajo antes de que te lo pidan." },
+  { categoria: "corporal", titulo: "Dona algo útil", descripcion: "Dona dinero, comida o artículos a una causa o persona que lo necesite." },
+  { categoria: "espiritual", titulo: "Anima a alguien que duda", descripcion: "Si conoces a alguien que está lejos de la fe o dudando, envíale un mensaje de aliento, sin presionar." },
+  { categoria: "oracion", titulo: "Examen al final del día", descripcion: "Antes de dormir, revisa tu día con Dios: ¿dónde lo sentiste presente? ¿dónde le fallaste?" },
+  { categoria: "gesto", titulo: "Cede el paso", descripcion: "Hoy, cede tu lugar en la fila, el asiento o el turno a alguien más, con alegría." },
+  { categoria: "corporal", titulo: "Un vaso de agua", descripcion: "Ofrece algo de beber o comer a alguien que lo necesite hoy: un repartidor, un trabajador, un desconocido." },
+  { categoria: "espiritual", titulo: "Reza por los difuntos", descripcion: "Dedica una oración hoy por las almas del purgatorio, especialmente por un familiar fallecido." },
+  { categoria: "oracion", titulo: "Coronilla de la Misericordia", descripcion: "Reza la Coronilla de la Divina Misericordia por alguien que necesita conversión." },
+  { categoria: "gesto", titulo: "Escribe una nota de gracias", descripcion: "Escribe un mensaje de agradecimiento a alguien que ha sido importante en tu vida." },
+  { categoria: "corporal", titulo: "Acompaña a alguien solo", descripcion: "Busca a alguien que esté solo (un anciano, un compañero) y pasa tiempo con él o ella." },
+  { categoria: "espiritual", titulo: "Corrige con caridad", descripcion: "Si debes corregir a alguien hoy, hazlo con mansedumbre, buscando su bien, no tener razón." },
+  { categoria: "oracion", titulo: "Ayuno pequeño", descripcion: "Ofrece un pequeño sacrificio hoy (un postre, una queja, un capricho) como oración por alguien." },
+  { categoria: "gesto", titulo: "Sonríe a un desconocido", descripcion: "Regala una sonrisa o un saludo amable a personas desconocidas durante el día." },
+  { categoria: "corporal", titulo: "Un lugar donde vivir", descripcion: "Investiga o apoya alguna obra de tu parroquia o ciudad que ayude a personas sin hogar." },
+  { categoria: "espiritual", titulo: "Ora por los sacerdotes", descripcion: "Dedica una oración hoy por tu párroco y por las vocaciones sacerdotales." },
+  { categoria: "oracion", titulo: "Comunión espiritual", descripcion: "Si no puedes recibir la Eucaristía hoy, haz un acto de comunión espiritual con fe." },
+  { categoria: "gesto", titulo: "Invita a alguien a Misa", descripcion: "Invita a alguien a acompañarte a Misa esta semana, sin presión, solo como una invitación abierta." },
+];
+const DAILY_CHALLENGES_EN = [
+  { categoria: "oracion", titulo: "Offer up your day", descripcion: "Upon waking, offer every moment of your day to God in a short prayer: \"I do it all for you, Lord.\"" },
+  { categoria: "gesto", titulo: "Call someone you've lost touch with", descripcion: "Reach out today to someone you haven't spoken to in a while, just to ask how they are." },
+  { categoria: "corporal", titulo: "Share your food", descripcion: "Invite someone to eat or share some of your food with someone in need today." },
+  { categoria: "espiritual", titulo: "Listen without judging", descripcion: "If someone opens up to you today, listen patiently without interrupting or correcting." },
+  { categoria: "oracion", titulo: "Pray for an enemy", descripcion: "Offer a sincere prayer for someone you're in conflict with or who has hurt you." },
+  { categoria: "gesto", titulo: "A sincere compliment", descripcion: "Tell three people today something genuinely good you see in them." },
+  { categoria: "corporal", titulo: "Clothes you no longer wear", descripcion: "Set aside clothes you no longer use and plan to donate them this week." },
+  { categoria: "espiritual", titulo: "Comfort someone who's sad", descripcion: "Find someone going through a hard time and offer your company, even for a few minutes." },
+  { categoria: "oracion", titulo: "Visit the Blessed Sacrament", descripcion: "If you can, spend even 10 minutes in adoration or silence before the Tabernacle today." },
+  { categoria: "gesto", titulo: "Forgive something small", descripcion: "Let go of a small annoyance today without complaint, as an offering of patience." },
+  { categoria: "corporal", titulo: "Visit someone sick", descripcion: "Call, write, or visit someone who is sick or recovering." },
+  { categoria: "espiritual", titulo: "Share your faith", descripcion: "Tell someone about something good God has done in your life." },
+  { categoria: "oracion", titulo: "A rosary for an intention", descripcion: "Pray a full rosary (or one decade) for a specific intention for someone close to you." },
+  { categoria: "gesto", titulo: "Help without being asked", descripcion: "Step in to help with a chore at home or work before anyone asks you to." },
+  { categoria: "corporal", titulo: "Donate something useful", descripcion: "Donate money, food, or items to a cause or person in need." },
+  { categoria: "espiritual", titulo: "Encourage someone who doubts", descripcion: "If you know someone who is far from the faith or struggling with doubt, send them an encouraging message, without pressure." },
+  { categoria: "oracion", titulo: "End-of-day examen", descripcion: "Before bed, review your day with God: where did you feel him present? where did you fail him?" },
+  { categoria: "gesto", titulo: "Let someone go first", descripcion: "Today, give up your place in line, your seat, or your turn to someone else, cheerfully." },
+  { categoria: "corporal", titulo: "A cup of water", descripcion: "Offer something to drink or eat to someone who needs it today: a delivery worker, a laborer, a stranger." },
+  { categoria: "espiritual", titulo: "Pray for the departed", descripcion: "Dedicate a prayer today for the souls in purgatory, especially for a deceased family member." },
+  { categoria: "oracion", titulo: "Divine Mercy Chaplet", descripcion: "Pray the Chaplet of Divine Mercy for someone who needs conversion." },
+  { categoria: "gesto", titulo: "Write a thank-you note", descripcion: "Write a message of gratitude to someone who has been important in your life." },
+  { categoria: "corporal", titulo: "Keep someone lonely company", descripcion: "Find someone who is alone (an elderly person, a coworker) and spend time with them." },
+  { categoria: "espiritual", titulo: "Correct with charity", descripcion: "If you need to correct someone today, do it gently, seeking their good, not just being right." },
+  { categoria: "oracion", titulo: "A small fast", descripcion: "Offer a small sacrifice today (a dessert, a complaint, an indulgence) as a prayer for someone." },
+  { categoria: "gesto", titulo: "Smile at a stranger", descripcion: "Give a smile or a kind greeting to strangers throughout the day." },
+  { categoria: "corporal", titulo: "A place to live", descripcion: "Look into or support a ministry in your parish or city that helps the homeless." },
+  { categoria: "espiritual", titulo: "Pray for priests", descripcion: "Dedicate a prayer today for your pastor and for priestly vocations." },
+  { categoria: "oracion", titulo: "Spiritual communion", descripcion: "If you can't receive the Eucharist today, make an act of spiritual communion with faith." },
+  { categoria: "gesto", titulo: "Invite someone to Mass", descripcion: "Invite someone to join you at Mass this week, with no pressure, just an open invitation." },
+];
+function getDailyChallenge(language) {
+  const list = language === "en" ? DAILY_CHALLENGES_EN : DAILY_CHALLENGES;
+  const dayIndex = (new Date().getDate() - 1) % list.length;
+  return list[dayIndex];
+}
 
 async function requestNotificationPermission() {
   if (!("Notification" in window)) return false;
@@ -795,6 +876,8 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
   const [intentionOpen, setIntentionOpen] = useState(false);
   const [ecclesialIntention, setEcclesialIntention] = useState(null);
   const [ecclesialOpen, setEcclesialOpen] = useState(false);
+  const [challengeOpen, setChallengeOpen] = useState(false);
+  const [challengeDone, setChallengeDone] = useState(() => localStorage.getItem("mater_challenge_done_" + new Date().toDateString()) === "true");
   const [practiceAIContent, setPracticeAIContent] = useState({});
   const [loadingPractice, setLoadingPractice] = useState(false);
   const practiceCache = useRef({});
@@ -1614,6 +1697,12 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
 
   const firstName = profile?.name?.split(" ")[0] || user?.email?.split("@")[0] || "Amigo";
   const saintColor = getLiturgicalColor(saintOfDay?.color, saintOfDay?.rankNum);
+  const challenge = getDailyChallenge(language);
+  const challengeColor = CHALLENGE_CATEGORY_COLORS[challenge.categoria] || C.gold;
+  function markChallengeDone() {
+    localStorage.setItem("mater_challenge_done_" + new Date().toDateString(), "true");
+    setChallengeDone(true);
+  }
 
   return (
     <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90, zoom: fontScale }}>
@@ -1748,6 +1837,45 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
             )}
           </div>
           <Icon name="chevron" size={16} color={C.gold} />
+        </button>
+      </div>
+
+      <div style={{ padding: "22px 22px 0" }}>
+        {challengeOpen && (
+          <div style={sheetOverlay} onClick={() => setChallengeOpen(false)}>
+            <div onClick={e => e.stopPropagation()} style={sheetCard()}>
+              <div style={{ borderRadius: 16, background: `linear-gradient(135deg, ${challengeColor}, #E8A33D)`, padding: "20px", marginBottom: 20, textAlign: "center" }}>
+                <p style={{ fontSize: 40, margin: "0 0 8px" }}>🎯</p>
+                <p style={{ fontSize: 11, color: "rgba(255,255,255,0.8)", letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 4px" }}>{t(language, `challenge_category_${challenge.categoria}`)}</p>
+                <p style={{ fontSize: 18, fontWeight: 800, color: "#fff", margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>{challenge.titulo}</p>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                <p style={{ fontSize: 10, color: C.gold, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>{t(language, "home_daily_challenge")}</p>
+                <button onClick={() => setChallengeOpen(false)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+              </div>
+              <p style={{ fontSize: 13, color: C.inkMid, lineHeight: 1.8, margin: "0 0 20px" }}>{challenge.descripcion}</p>
+              {challengeDone ? (
+                <div style={{ background: C.iceBlue, borderRadius: 14, padding: "14px 16px", textAlign: "center" }}>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: challengeColor, margin: 0 }}>{t(language, "home_daily_challenge_done")}</p>
+                </div>
+              ) : (
+                <button onClick={markChallengeDone} style={{ width: "100%", border: "none", borderRadius: 14, padding: "14px", background: challengeColor, color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+                  {t(language, "home_daily_challenge_mark_done")}
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+        <button onClick={() => setChallengeOpen(true)} style={{ width: "100%", borderRadius: 16, overflow: "hidden", cursor: "pointer", border: "none", padding: 0, textAlign: "left" }}>
+          <div style={{ background: `linear-gradient(135deg, ${challengeColor}, #E8A33D)`, padding: "16px 18px", display: "flex", alignItems: "center", gap: 14 }}>
+            <span style={{ fontSize: 28, flexShrink: 0 }}>{challengeDone ? "✅" : "🎯"}</span>
+            <div style={{ flex: 1 }}>
+              <p style={{ fontSize: 10, color: "rgba(255,255,255,0.8)", letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 2px" }}>{t(language, "home_daily_challenge")}</p>
+              <p style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>{challenge.titulo}</p>
+              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.8)", margin: "2px 0 0" }}>{t(language, `challenge_category_${challenge.categoria}`)}</p>
+            </div>
+            <Icon name="chevron" size={18} color="rgba(255,255,255,0.8)" />
+          </div>
         </button>
       </div>
 
