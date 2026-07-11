@@ -185,6 +185,13 @@ const translations = {
     more_horario_title: "Horario Espiritual", more_horario_sub: "Lleva el control de tus prácticas del mes",
     more_divinemercy_title: "Coronilla a la Divina Misericordia", more_divinemercy_sub: "Guía interactiva cuenta por cuenta",
     more_sanjose_title: "Rosario a San José", more_sanjose_sub: "7 misterios, guía interactiva cuenta por cuenta",
+    more_telefono_title: "Teléfono del Padre", more_telefono_sub: "Frases del Padre Kentenich",
+    telefono_title: "Teléfono del Padre",
+    telefono_intro: "Una tradición de espiritualidad de Schoenstatt: al «llamar al Padre», recibes una frase del Padre José Kentenich para llevar contigo en el día. Toca el botón, o agita tu teléfono, para recibir una nueva.",
+    telefono_new_phrase: "Otra frase 🔄",
+    telefono_shake_activate: "Activar sacudida 📳",
+    telefono_shake_hint: "Sacude tu teléfono para recibir otra frase",
+    telefono_shake_denied: "No se pudo activar la detección de movimiento en este dispositivo. Puedes seguir usando el botón.",
     more_back: "Más",
 
     miracles_title: "Milagros Eucarísticos",
@@ -331,6 +338,13 @@ const translations = {
     more_horario_title: "Spiritual Schedule", more_horario_sub: "Keep track of your practices for the month",
     more_divinemercy_title: "Chaplet of Divine Mercy", more_divinemercy_sub: "Interactive bead-by-bead guide",
     more_sanjose_title: "Rosary of Saint Joseph", more_sanjose_sub: "7 mysteries, interactive bead-by-bead guide",
+    more_telefono_title: "The Father's Telephone", more_telefono_sub: "Sayings of Father Kentenich",
+    telefono_title: "The Father's Telephone",
+    telefono_intro: "A Schoenstatt spiritual tradition: by \"calling the Father,\" you receive a saying from Father Joseph Kentenich to carry with you through the day. Tap the button, or shake your phone, to receive a new one.",
+    telefono_new_phrase: "Another saying 🔄",
+    telefono_shake_activate: "Enable shake 📳",
+    telefono_shake_hint: "Shake your phone to receive another saying",
+    telefono_shake_denied: "Motion detection couldn't be enabled on this device. You can keep using the button.",
     more_back: "More",
 
     miracles_title: "Eucharistic Miracles",
@@ -450,7 +464,8 @@ const Icon = ({ name, size = 22, color = "currentColor" }) => {
     host: <><circle cx="12" cy="12" r="8.5" stroke={color} strokeWidth="1.8" fill="none" /><path d="M12 7.5v9M8 12h8" stroke={color} strokeWidth="1.6" strokeLinecap="round" /></>,
     textSize: <><text x="2" y="16" fontSize="10" fontWeight="700" fill={color} fontFamily="'DM Sans', system-ui, sans-serif">A</text><text x="12" y="19" fontSize="16" fontWeight="700" fill={color} fontFamily="'DM Sans', system-ui, sans-serif">A</text></>,
     target: <><circle cx="12" cy="12" r="9" stroke={color} strokeWidth="1.8" fill="none" /><circle cx="12" cy="12" r="5" stroke={color} strokeWidth="1.8" fill="none" /><circle cx="12" cy="12" r="1.4" fill={color} /></>,
-    staff: <><path d="M12 8v14" stroke={color} strokeWidth="1.8" strokeLinecap="round" /><path d="M12 8c-2.2 0-4-1.3-4-3.5S9.8 1 12 1s4 1.3 4 3.5S14.2 8 12 8z" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" /><path d="M8 15c0 1.5 1.8 2.5 4 2.5s4-1 4-2.5" stroke={color} strokeWidth="1.6" strokeLinecap="round" fill="none" /></>,
+    staff: <><path d="M12 9v13" stroke={color} strokeWidth="1.8" strokeLinecap="round" /><circle cx="12" cy="5" r="2.3" stroke={color} strokeWidth="1.6" fill="none" /><circle cx="8.3" cy="7.2" r="1.7" stroke={color} strokeWidth="1.4" fill="none" /><circle cx="15.7" cy="7.2" r="1.7" stroke={color} strokeWidth="1.4" fill="none" /></>,
+    phone: <path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.4 21 3 13.6 3 4.5c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1L6.6 10.8z" stroke={color} strokeWidth="1.6" strokeLinejoin="round" fill="none" />,
   };
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" style={{ display: "block", flexShrink: 0 }}>
@@ -3201,6 +3216,7 @@ function MoreScreen({ onOpenSection, language, fontScale = 1 }) {
     { id: "horario", icon: "grid", color: C.blue, bg: "#DDE8F4", title: t(language, "more_horario_title"), sub: t(language, "more_horario_sub") },
     { id: "divinemercy", icon: "heart", color: "#A8342E", bg: "#F5DEDC", title: t(language, "more_divinemercy_title"), sub: t(language, "more_divinemercy_sub") },
     { id: "sanjose", icon: "staff", color: "#6B4C9A", bg: "#EAE2F5", title: t(language, "more_sanjose_title"), sub: t(language, "more_sanjose_sub") },
+    { id: "telefono", icon: "phone", color: "#B5651D", bg: "#F5E4D0", title: t(language, "more_telefono_title"), sub: t(language, "more_telefono_sub") },
   ];
   return (
     <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90, zoom: fontScale }}>
@@ -3872,6 +3888,242 @@ function SanJoseRosaryScreen({ onBack, language, fontScale = 1 }) {
     </div>
   );
 }
+
+// ─── Teléfono del Padre — frases del Padre Kentenich (Schoenstatt) ─────────
+// Transcritas literalmente de "81424441-Telefono-del-Padre-PILI.pdf" (55 frases numeradas).
+// Las traducciones al inglés son propias (no existe edición oficial en inglés de este documento).
+const TELEFONO_PADRE_FRASES = {
+  es: [
+    { mensaje: "Es la voluntad de Dios, por eso permanece en silencio.", firma: "J.K." },
+    { mensaje: "Haz que el espíritu de servicialidad penetre profundamente en mis sentimientos de vida.", firma: "J.K" },
+    { mensaje: "Todo por amor, con alegría.", firma: null },
+    { mensaje: "Todo por amor para el Amor Eterno. El Amor Eterno es tan poco amado.", firma: "J.K" },
+    { mensaje: "El Angel de Señor anunció a María…", firma: null },
+    { mensaje: "Amo a los que me aman.", firma: "J.K" },
+    { mensaje: "Madre tres veces Admirable haz que permanezca enteramente tu instrumento.", firma: "J.K" },
+    { mensaje: "El amor sobrelleva y soporta, arriesga y equilibra, el amor vence todo!", firma: "Mphcev." },
+    { mensaje: "El viene cada día para cada día!", firma: null },
+    { mensaje: "Schoenstatt se construyó por el servicio desinteresado a cada persona y por el mismo camino debe seguir creciendo.", firma: "J.K" },
+    { mensaje: "Bienaventurados los de corazón puro porque verán a Dios!", firma: null },
+    { mensaje: "… Sé siempre para nosotros la Madre tres veces Admirable que resuelve todos los problemas.", firma: "Mphc. J.K" },
+    { mensaje: "Cada amor noble tiene su fuente y su corona en el amor de Dios.", firma: null },
+    { mensaje: "Hazme ser sol para todos!", firma: null },
+    { mensaje: "La voluntad del Padre Celestial sobre todas las cosas! Schoenstatt 20.1.1927.", firma: null },
+    { mensaje: "Dios es un Dios de alegría y de paz!", firma: null },
+    { mensaje: "Quedamos en eso! Permanecemos fieles!", firma: null },
+    { mensaje: "Yo vengo del Amor vivo del Amor y vuelvo al Amor…", firma: "M.h.c. J.K" },
+    { mensaje: "El que mantiene siempre abiertos el corazón y los sentidos para lo que agrada a Dios, Permanece joven hasta edad avanzada, porque nunca le falta la fuerza del amor.", firma: null },
+    { mensaje: "El verdadero amor no se siente nunca abandonado.", firma: "J.K" },
+    { mensaje: "Haga feliz cuantas personas sea posible…", firma: null },
+    { mensaje: "El Padre y la Madre me aman porque Ellos son buenos…", firma: null },
+    { mensaje: "Creo firmemente que nunca perecerá quien permanece fiel a su Alianza de Amor!", firma: "Mphcev. J.K" },
+    { mensaje: "No os preocupéis angustiosamente! La mayor preocupación es ser infinitamente despreocupados.", firma: null },
+    { mensaje: "Que mi vida sea un gran Magnificat!", firma: "J.K" },
+    { mensaje: "Hazme vivir para el Amor!", firma: null },
+    { mensaje: "Yo sé que eres mi Padre en cuyo corazón estoy cobijado.", firma: "Mphc. J.K" },
+    { mensaje: "Con María alegres por la esperanza y seguros de la victoria hacia los más nuevos tiempos.", firma: null },
+    { mensaje: "Sí, Padre, sí! Que siempre se haga tu voluntad, si me trae alegría, sufrimiento o dolor", firma: "Mphc! J.K" },
+    { mensaje: "Solamente la fe viva vence al mundo.", firma: "Mhc. J.K" },
+    { mensaje: "Lleve Ud. Su cruz tranquilo, humilde, valiente, Así ayuda Ud. a salvar al mundo!", firma: null },
+    { mensaje: "Nada pasa por casualidad! todo viene de la bondad de Dios.", firma: null },
+    { mensaje: "Hazme ser un sacrificio de la misericordia.", firma: "J.K" },
+    { mensaje: "La cruz bendice al mundo. Recuerdo cariñoso y lleno de ánimo.", firma: "J.K" },
+    { mensaje: "La semilla tiene que ser enterrada en la tierra y desaparecer, entonces trae mucho fruto.", firma: "J.K" },
+    { mensaje: "EL que quiere ganar los corazones, tiene que poner como prenda su propio corazón.", firma: null },
+    { mensaje: "El que me ha enviado no me deja nunca solo, El está siempre conmigo, porque yo hago lo que le agrada.", firma: "M.h.c J.K" },
+    { mensaje: "Aproveche todo para el crecimiento del amor a Dios. Que Dios lo bendiga…", firma: null },
+    { mensaje: "Todo para Schoentatt Schoenstatt para la Iglesia la Iglesia para Dios Uno y Trino!", firma: null },
+    { mensaje: "Aseméjanos a tu imagen!", firma: "Mphc. J.K" },
+    { mensaje: "… sea para muchas personas un indicador de camino, y portador de luz y de alegría.", firma: "J.K" },
+    { mensaje: "El amor es el poder más grande.", firma: "J.K" },
+    { mensaje: "Que Dios lo bendiga!", firma: "J.K" },
+    { mensaje: "Santa Madre, haz que las llagas que tu hijo ha sufrido por mí, se graben profundamente en mi alma.", firma: null },
+    { mensaje: "En las manos del Padre hacia el hogar.", firma: null },
+    { mensaje: "«Bueno es todo lo que El hace».", firma: null },
+    { mensaje: "Que viva en mí el alma de María, para que cante en mí el Magnificat.", firma: "J.K" },
+    { mensaje: "Permanezca Ud. alerta para todo lo bueno y busque en todo una sana medida.", firma: null },
+    { mensaje: "La soledad es fecunda!", firma: null },
+    { mensaje: "La fuerza del Altísimo te cubrirá con su sombra.", firma: null },
+    { mensaje: "Mi destino descansa en las manos del Padre.", firma: "Mphc. J.K" },
+    { mensaje: "Cristo es mi vida y morir mi ganancia.", firma: "Mhc. J.K" },
+    { mensaje: "Déjame sufrir silenciosamente tu voluntad!", firma: "J.K" },
+    { mensaje: "Hazme Padre ser un milagro de misericordia, pues soy débil y pequeño.", firma: "Mphc. J.K" },
+    { mensaje: "Hazme un pequeño sol para mi alrededor, que irradia luz y calor en todas partes.", firma: "Mphcev. J.K" },
+  ],
+  en: [
+    { mensaje: "It is the will of God, that is why he remains silent.", firma: "J.K." },
+    { mensaje: "Let the spirit of service penetrate deeply into my feelings of life.", firma: "J.K" },
+    { mensaje: "Everything for love, with joy.", firma: null },
+    { mensaje: "Everything for love, for the Eternal Love. Eternal Love is so little loved.", firma: "J.K" },
+    { mensaje: "The Angel of the Lord announced to Mary…", firma: null },
+    { mensaje: "I love those who love me.", firma: "J.K" },
+    { mensaje: "Mother Thrice Admirable, make me remain entirely your instrument.", firma: "J.K" },
+    { mensaje: "Love bears and endures, risks and balances — love conquers all!", firma: "Mphcev." },
+    { mensaje: "He comes each day for each day!", firma: null },
+    { mensaje: "Schoenstatt was built through selfless service to each person, and must keep growing along that same path.", firma: "J.K" },
+    { mensaje: "Blessed are the pure of heart, for they shall see God!", firma: null },
+    { mensaje: "… Be always for us the Mother Thrice Admirable who solves every problem.", firma: "Mphc. J.K" },
+    { mensaje: "Every noble love has its source and its crown in the love of God.", firma: null },
+    { mensaje: "Make me a sun for everyone!", firma: null },
+    { mensaje: "The will of the Heavenly Father above all things! Schoenstatt, 1.20.1927.", firma: null },
+    { mensaje: "God is a God of joy and peace!", firma: null },
+    { mensaje: "We stand by it! We remain faithful!", firma: null },
+    { mensaje: "I come from Love, live from Love, and return to Love…", firma: "M.h.c. J.K" },
+    { mensaje: "He who always keeps his heart and senses open to what pleases God remains young into old age, because the strength of love never fails him.", firma: null },
+    { mensaje: "True love never feels abandoned.", firma: "J.K" },
+    { mensaje: "Make as many people happy as possible…", firma: null },
+    { mensaje: "The Father and the Mother love me because They are good…", firma: null },
+    { mensaje: "I firmly believe that whoever remains faithful to his Covenant of Love will never perish!", firma: "Mphcev. J.K" },
+    { mensaje: "Do not be anxiously worried! The greatest concern is to be infinitely carefree.", firma: null },
+    { mensaje: "May my life be one great Magnificat!", firma: "J.K" },
+    { mensaje: "Make me live for Love!", firma: null },
+    { mensaje: "I know that you are my Father, in whose heart I am sheltered.", firma: "Mphc. J.K" },
+    { mensaje: "With Mary, joyful in hope and sure of victory, toward the newest of times.", firma: null },
+    { mensaje: "Yes, Father, yes! May your will always be done, whether it brings me joy, suffering, or sorrow", firma: "Mphc! J.K" },
+    { mensaje: "Only a living faith conquers the world.", firma: "Mhc. J.K" },
+    { mensaje: "Carry your cross calmly, humbly, bravely — this is how you help save the world!", firma: null },
+    { mensaje: "Nothing happens by chance! Everything comes from the goodness of God.", firma: null },
+    { mensaje: "Make me a sacrifice of mercy.", firma: "J.K" },
+    { mensaje: "The cross blesses the world. A loving and encouraging remembrance.", firma: "J.K" },
+    { mensaje: "The seed must be buried in the earth and disappear; only then does it bear much fruit.", firma: "J.K" },
+    { mensaje: "He who wants to win hearts must pledge his own heart.", firma: null },
+    { mensaje: "He who sent me never leaves me alone; he is always with me, because I do what pleases him.", firma: "M.h.c J.K" },
+    { mensaje: "Make the most of everything for the growth of the love of God. May God bless you…", firma: null },
+    { mensaje: "Everything for Schoenstatt, Schoenstatt for the Church, the Church for God, One and Triune!", firma: null },
+    { mensaje: "Make us resemble your image!", firma: "Mphc. J.K" },
+    { mensaje: "… may it be for many people a signpost, and a bearer of light and joy.", firma: "J.K" },
+    { mensaje: "Love is the greatest power.", firma: "J.K" },
+    { mensaje: "May God bless you!", firma: "J.K" },
+    { mensaje: "Holy Mother, let the wounds your Son suffered for me be engraved deeply in my soul.", firma: null },
+    { mensaje: "In the Father's hands, on the way home.", firma: null },
+    { mensaje: "\"Everything he does is good.\"", firma: null },
+    { mensaje: "May the soul of Mary live in me, so that the Magnificat may sing within me.", firma: "J.K" },
+    { mensaje: "Stay alert to all that is good, and seek a healthy measure in everything.", firma: null },
+    { mensaje: "Solitude is fruitful!", firma: null },
+    { mensaje: "The power of the Most High will overshadow you.", firma: null },
+    { mensaje: "My destiny rests in the Father's hands.", firma: "Mphc. J.K" },
+    { mensaje: "Christ is my life, and to die is gain.", firma: "Mhc. J.K" },
+    { mensaje: "Let me suffer your will in silence!", firma: "J.K" },
+    { mensaje: "Father, make me a miracle of mercy, for I am weak and small.", firma: "Mphc. J.K" },
+    { mensaje: "Make me a little sun for those around me, radiating light and warmth everywhere.", firma: "Mphcev. J.K" },
+  ],
+};
+
+function TelefonoPadreScreen({ onBack, language, fontScale = 1 }) {
+  const frases = TELEFONO_PADRE_FRASES[language === "en" ? "en" : "es"];
+  const [idx, setIdx] = useState(() => Math.floor(Math.random() * frases.length));
+  const [visible, setVisible] = useState(true);
+  const [shakeSupported] = useState(() => typeof window !== "undefined" && "DeviceMotionEvent" in window);
+  const [shakeEnabled, setShakeEnabled] = useState(false);
+  const [shakeDenied, setShakeDenied] = useState(false);
+  const lastAccel = useRef({ x: 0, y: 0, z: 0, time: 0 });
+  const lastShakeAt = useRef(0);
+  const idxRef = useRef(idx);
+  idxRef.current = idx;
+
+  function otraFrase() {
+    setVisible(false);
+    setTimeout(() => {
+      setIdx(prev => {
+        if (frases.length <= 1) return prev;
+        let next = prev;
+        while (next === prev) next = Math.floor(Math.random() * frases.length);
+        return next;
+      });
+      setVisible(true);
+    }, 180);
+  }
+
+  useEffect(() => {
+    function handleMotion(e) {
+      const acc = e.accelerationIncludingGravity;
+      if (!acc || acc.x === null || acc.x === undefined) return;
+      const now = Date.now();
+      const last = lastAccel.current;
+      if (last.time) {
+        const dt = now - last.time;
+        if (dt > 0) {
+          const speed = (Math.abs(acc.x - last.x) + Math.abs(acc.y - last.y) + Math.abs(acc.z - last.z)) / dt * 10000;
+          if (speed > 800 && now - lastShakeAt.current > 1200) {
+            lastShakeAt.current = now;
+            otraFrase();
+          }
+        }
+      }
+      lastAccel.current = { x: acc.x, y: acc.y, z: acc.z, time: now };
+    }
+    if (shakeEnabled) {
+      window.addEventListener("devicemotion", handleMotion);
+      return () => window.removeEventListener("devicemotion", handleMotion);
+    }
+  }, [shakeEnabled, frases.length]);
+
+  async function activarSacudida() {
+    if (typeof DeviceMotionEvent !== "undefined" && typeof DeviceMotionEvent.requestPermission === "function") {
+      try {
+        const result = await DeviceMotionEvent.requestPermission();
+        if (result === "granted") setShakeEnabled(true);
+        else setShakeDenied(true);
+      } catch {
+        setShakeDenied(true);
+      }
+    } else {
+      setShakeEnabled(true);
+    }
+  }
+
+  const frase = frases[idx];
+
+  return (
+    <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90, zoom: fontScale }}>
+      <div style={{ padding: "52px 22px 8px", display: "flex", alignItems: "center", gap: 10 }}>
+        <button onClick={onBack} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", padding: 4 }}>
+          <Icon name="chevron" size={20} color={C.inkLight} />
+        </button>
+        <div>
+          <p style={{ fontSize: 12, color: C.slateLight, margin: "0 0 2px", letterSpacing: "0.08em", textTransform: "uppercase" }}>{t(language, "more_back")}</p>
+          <h2 style={{ fontSize: 20, fontWeight: 600, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>{t(language, "telefono_title")}</h2>
+        </div>
+      </div>
+      <p style={{ fontSize: 12, color: C.inkLight, lineHeight: 1.6, margin: "8px 22px 20px" }}>
+        {t(language, "telefono_intro")}
+      </p>
+
+      <div style={{ padding: "0 22px" }}>
+        <div style={{
+          borderRadius: 18, background: "linear-gradient(135deg, #B5651D, #D89448)", padding: "32px 24px", minHeight: 220,
+          display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center",
+          opacity: visible ? 1 : 0, transform: visible ? "scale(1)" : "scale(0.96)", transition: "opacity 0.18s ease, transform 0.18s ease",
+        }}>
+          <p style={{ fontSize: 28, margin: "0 0 14px" }}>☎️</p>
+          <p style={{ fontSize: 18, fontWeight: 600, color: "#fff", margin: 0, fontFamily: "'Cormorant Garamond', serif", lineHeight: 1.4, fontStyle: "italic" }}>
+            «{frase.mensaje}»
+          </p>
+          {frase.firma && (
+            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.75)", margin: "16px 0 0", letterSpacing: "0.08em" }}>— {frase.firma}</p>
+          )}
+        </div>
+
+        <button onClick={otraFrase} style={{ width: "100%", marginTop: 14, padding: "16px", border: "none", borderRadius: 14, background: "linear-gradient(135deg, #B5651D, #D89448)", color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+          {t(language, "telefono_new_phrase")}
+        </button>
+
+        {shakeSupported && !shakeEnabled && (
+          <button onClick={activarSacudida} style={{ width: "100%", marginTop: 10, padding: "13px", border: "1px solid " + C.mist, borderRadius: 14, background: C.cream, color: C.inkMid, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+            {t(language, "telefono_shake_activate")}
+          </button>
+        )}
+        {shakeEnabled && (
+          <p style={{ textAlign: "center", fontSize: 11, color: C.slateLight, margin: "10px 0 0" }}>{t(language, "telefono_shake_hint")}</p>
+        )}
+        {shakeDenied && (
+          <p style={{ textAlign: "center", fontSize: 11, color: C.slateLight, margin: "10px 0 0" }}>{t(language, "telefono_shake_denied")}</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ═══════════════════════════════════════════════════════════════════════
 // HORARIO ESPIRITUAL (menú "Más")
 // ═══════════════════════════════════════════════════════════════════════
@@ -4662,6 +4914,7 @@ export default function App() {
             {activeTab === "more" && moreSection === "horario" && <HorarioEspiritualScreen user={user} onBack={() => setMoreSection(null)} language={language} fontScale={fontScale} />}
             {activeTab === "more" && moreSection === "divinemercy" && <DivineMercyScreen onBack={() => setMoreSection(null)} language={language} fontScale={fontScale} />}
             {activeTab === "more" && moreSection === "sanjose" && <SanJoseRosaryScreen onBack={() => setMoreSection(null)} language={language} fontScale={fontScale} />}
+            {activeTab === "more" && moreSection === "telefono" && <TelefonoPadreScreen onBack={() => setMoreSection(null)} language={language} fontScale={fontScale} />}
             {activeTab === "profile" && <ProfileScreen user={user} profile={profile} setProfile={setProfile} onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} language={language} changeLanguage={changeLanguage} fontScale={fontScale} changeFontScale={changeFontScale} />}
             {!keyboardOpen && (
               <NavBar
