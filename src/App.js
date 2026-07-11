@@ -4035,19 +4035,23 @@ function TelefonoPadreScreen({ onBack, language, fontScale = 1 }) {
   }
 
   useEffect(() => {
+    // Umbral de sacudida: comparamos muestras espaciadas al menos 100ms (en vez de
+    // cada evento, que puede llegar cada ~16ms) para no dividir por un dt minúsculo
+    // y amplificar cualquier movimiento leve. El umbral (18 m/s² de cambio) está por
+    // encima del ruido normal de sostener/caminar con el teléfono.
     function handleMotion(e) {
       const acc = e.accelerationIncludingGravity;
       if (!acc || acc.x === null || acc.x === undefined) return;
       const now = Date.now();
       const last = lastAccel.current;
+      if (now - last.time < 100) return;
       if (last.time) {
-        const dt = now - last.time;
-        if (dt > 0) {
-          const speed = (Math.abs(acc.x - last.x) + Math.abs(acc.y - last.y) + Math.abs(acc.z - last.z)) / dt * 10000;
-          if (speed > 800 && now - lastShakeAt.current > 1200) {
-            lastShakeAt.current = now;
-            otraFrase();
-          }
+        const deltaMag = Math.sqrt(
+          Math.pow(acc.x - last.x, 2) + Math.pow(acc.y - last.y, 2) + Math.pow(acc.z - last.z, 2)
+        );
+        if (deltaMag > 18 && now - lastShakeAt.current > 1500) {
+          lastShakeAt.current = now;
+          otraFrase();
         }
       }
       lastAccel.current = { x: acc.x, y: acc.y, z: acc.z, time: now };
