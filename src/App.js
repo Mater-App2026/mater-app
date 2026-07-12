@@ -599,6 +599,27 @@ function getDailyChallenge(language) {
   return list[dayIndex];
 }
 
+// Cache para Intención del Mundo / Eclesial: un éxito real se queda fijo
+// todo el día (hasta que cambie la clave por fecha); un respaldo (cuando
+// GNews falla, ej. por el límite gratuito) solo se respeta un par de horas,
+// para que el próximo remontaje reintente en vez de quedar pegado 24h.
+const INTENTION_FALLBACK_RETRY_MS = 2 * 60 * 60 * 1000;
+function readIntentionCache(cacheKey) {
+  const raw = localStorage.getItem(cacheKey);
+  if (!raw) return null;
+  try {
+    const entry = JSON.parse(raw);
+    if (!entry || !entry.data) return null; // formato antiguo o corrupto: ignorar y reintentar
+    if (entry.fallback && Date.now() - entry.cachedAt > INTENTION_FALLBACK_RETRY_MS) return null;
+    return entry.data;
+  } catch {
+    return null;
+  }
+}
+function writeIntentionCache(cacheKey, data, isFallback) {
+  localStorage.setItem(cacheKey, JSON.stringify({ data, fallback: isFallback, cachedAt: Date.now() }));
+}
+
 async function requestNotificationPermission() {
   if (!("Notification" in window)) return false;
   if (Notification.permission === "granted") return true;
@@ -1389,10 +1410,11 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
   async function fetchWorldIntention() {
     // localStorage (no sessionStorage) para que la misma noticia dure todo el
     // dia aunque el usuario cierre y reabra la app; la clave incluye la fecha
-    // asi que cambia sola al dia siguiente.
+    // asi que cambia sola al dia siguiente. Un respaldo (fallo de GNews) solo
+    // se respeta un par de horas, ver readIntentionCache/writeIntentionCache.
     const cacheKey = "world-intention-" + language + "-" + new Date().toDateString();
-    const cached = localStorage.getItem(cacheKey);
-    if (cached) { setWorldIntention(JSON.parse(cached)); return; }
+    const cached = readIntentionCache(cacheKey);
+    if (cached) { setWorldIntention(cached); return; }
 
     const palette = [
       { color1: "#6b2c2c", color2: "#8f4a2d" },
@@ -1440,7 +1462,7 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
         url: newsData.url || "",
         ...colors,
       };
-      localStorage.setItem(cacheKey, JSON.stringify(intention));
+      writeIntentionCache(cacheKey, intention, false);
       setWorldIntention(intention);
     } catch {
       // Cacheamos tambien el respaldo (igual que el exito) para que no se
@@ -1464,7 +1486,7 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
         fuente: "", url: "",
         ...colors,
       };
-      localStorage.setItem(cacheKey, JSON.stringify(fallback));
+      writeIntentionCache(cacheKey, fallback, true);
       setWorldIntention(fallback);
     }
   }
@@ -1472,10 +1494,11 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
   async function fetchEcclesialIntention() {
     // localStorage (no sessionStorage) para que la misma noticia dure todo el
     // dia aunque el usuario cierre y reabra la app; la clave incluye la fecha
-    // asi que cambia sola al dia siguiente.
+    // asi que cambia sola al dia siguiente. Un respaldo (fallo de GNews) solo
+    // se respeta un par de horas, ver readIntentionCache/writeIntentionCache.
     const cacheKey = "ecclesial-intention-" + language + "-" + new Date().toDateString();
-    const cached = localStorage.getItem(cacheKey);
-    if (cached) { setEcclesialIntention(JSON.parse(cached)); return; }
+    const cached = readIntentionCache(cacheKey);
+    if (cached) { setEcclesialIntention(cached); return; }
 
     const palette = [
       { color1: "#4a1420", color2: "#7a2438" },
@@ -1523,7 +1546,7 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
         url: newsData.url || "",
         ...colors,
       };
-      localStorage.setItem(cacheKey, JSON.stringify(intention));
+      writeIntentionCache(cacheKey, intention, false);
       setEcclesialIntention(intention);
     } catch {
       // Cacheamos tambien el respaldo (igual que el exito) para que no se
@@ -1546,7 +1569,7 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
         fuente: "", url: "",
         ...colors,
       };
-      localStorage.setItem(cacheKey, JSON.stringify(fallback));
+      writeIntentionCache(cacheKey, fallback, true);
       setEcclesialIntention(fallback);
     }
   }
