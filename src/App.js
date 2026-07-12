@@ -1443,7 +1443,11 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
       localStorage.setItem(cacheKey, JSON.stringify(intention));
       setWorldIntention(intention);
     } catch {
-      setWorldIntention(language === "en" ? {
+      // Cacheamos tambien el respaldo (igual que el exito) para que no se
+      // reintente en cada remontaje del componente: si la API fallo hoy,
+      // se queda fija esta oracion generica el resto del dia, en vez de
+      // arriesgarse a traer una noticia distinta en cada reintento.
+      const fallback = language === "en" ? {
         titulo: "A world in need of prayer",
         lugar: "",
         descripcion: "Today we couldn't reach the latest world news, but there is always a part of the world quietly suffering — waiting for someone to remember it in prayer.",
@@ -1459,7 +1463,9 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
         emoji: "🙏",
         fuente: "", url: "",
         ...colors,
-      });
+      };
+      localStorage.setItem(cacheKey, JSON.stringify(fallback));
+      setWorldIntention(fallback);
     }
   }
 
@@ -1520,7 +1526,10 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
       localStorage.setItem(cacheKey, JSON.stringify(intention));
       setEcclesialIntention(intention);
     } catch {
-      setEcclesialIntention(language === "en" ? {
+      // Cacheamos tambien el respaldo (igual que el exito) para que no se
+      // reintente en cada remontaje del componente: si la API fallo hoy,
+      // se queda fija esta oracion generica el resto del dia.
+      const fallback = language === "en" ? {
         titulo: "A Church in need of prayer",
         lugar: "",
         descripcion: "Today we couldn't reach the latest Church news, but the Body of Christ around the world is always in need of prayer — its pastors, its missionaries, and all the People of God.",
@@ -1536,7 +1545,9 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
         emoji: "⛪",
         fuente: "", url: "",
         ...colors,
-      });
+      };
+      localStorage.setItem(cacheKey, JSON.stringify(fallback));
+      setEcclesialIntention(fallback);
     }
   }
 
