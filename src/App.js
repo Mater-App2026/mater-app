@@ -5263,7 +5263,11 @@ export default function App() {
 
   async function handleLogout() {
     await supabase.auth.signOut();
-    setScreen("landing");
+    // Si este dispositivo ya paso por el onboarding antes, es un usuario
+    // que ya se registro: lo mandamos directo al login, sin repetirle las
+    // pantallas de bienvenida.
+    const alreadyOnboarded = localStorage.getItem("mater_onboarding_done") === "true";
+    setScreen(alreadyOnboarded ? "auth" : "landing");
     setActiveTab("home");
     setBiometricLocked(false);
   }
