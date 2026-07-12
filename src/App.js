@@ -152,6 +152,13 @@ const translations = {
     profile_language: "Idioma", profile_language_es: "Español", profile_language_en: "English",
     profile_font_size: "Tamaño de letra",
     profile_font_size_small: "A", profile_font_size_medium: "A", profile_font_size_large: "A", profile_font_size_xlarge: "A",
+    profile_biometric_lock: "Desbloqueo con Face ID / Touch ID",
+    profile_biometric_error: "No se pudo activar. Intenta de nuevo.",
+    biometric_lock_title: "Mater está bloqueada",
+    biometric_lock_subtitle: "Desbloquea con Face ID o Touch ID para continuar",
+    biometric_unlock_button: "Desbloquear 🔓",
+    biometric_unlock_failed: "No se pudo verificar. Intenta de nuevo.",
+    biometric_use_password: "Usar mi contraseña en su lugar",
     profile_reminders: "Recordatorios diarios",
     profile_name_updated: "✓ Nombre actualizado",
     profile_save: "Guardar",
@@ -319,6 +326,13 @@ const translations = {
     profile_language: "Language", profile_language_es: "Español", profile_language_en: "English",
     profile_font_size: "Text size",
     profile_font_size_small: "A", profile_font_size_medium: "A", profile_font_size_large: "A", profile_font_size_xlarge: "A",
+    profile_biometric_lock: "Unlock with Face ID / Touch ID",
+    profile_biometric_error: "Couldn't enable. Please try again.",
+    biometric_lock_title: "Mater is locked",
+    biometric_lock_subtitle: "Unlock with Face ID or Touch ID to continue",
+    biometric_unlock_button: "Unlock 🔓",
+    biometric_unlock_failed: "Verification failed. Try again.",
+    biometric_use_password: "Use my password instead",
     profile_reminders: "Daily reminders",
     profile_name_updated: "✓ Name updated",
     profile_save: "Save",
@@ -496,6 +510,7 @@ const Icon = ({ name, size = 22, color = "currentColor" }) => {
     phone: <path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.4 21 3 13.6 3 4.5c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1L6.6 10.8z" stroke={color} strokeWidth="1.6" strokeLinejoin="round" fill="none" />,
     check: <><circle cx="12" cy="12" r="9" stroke={color} strokeWidth="1.8" fill="none" /><polyline points="8,12.5 10.5,15 16,9" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" /></>,
     pillow: <><path d="M3 9.5C3 7.6 4.6 6 6.5 6h11C19.4 6 21 7.6 21 9.5v3.6c0 3-2.4 5.4-5.4 5.4H8.4C5.4 18.5 3 16.1 3 13.1V9.5z" stroke={color} strokeWidth="1.8" strokeLinejoin="round" fill="none" /><path d="M9 11.5c0-1 .5-2 1.5-2M15 11.5c0-1-.5-2-1.5-2" stroke={color} strokeWidth="1.3" strokeLinecap="round" fill="none" /></>,
+    biometric: <><path d="M4 8V6a2 2 0 012-2h2" stroke={color} strokeWidth="1.8" strokeLinecap="round" fill="none" /><path d="M20 8V6a2 2 0 00-2-2h-2" stroke={color} strokeWidth="1.8" strokeLinecap="round" fill="none" /><path d="M4 16v2a2 2 0 002 2h2" stroke={color} strokeWidth="1.8" strokeLinecap="round" fill="none" /><path d="M20 16v2a2 2 0 01-2 2h-2" stroke={color} strokeWidth="1.8" strokeLinecap="round" fill="none" /><circle cx="12" cy="12" r="3" stroke={color} strokeWidth="1.6" fill="none" /></>,
   };
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" style={{ display: "block", flexShrink: 0 }}>
@@ -618,6 +633,73 @@ function readIntentionCache(cacheKey) {
 }
 function writeIntentionCache(cacheKey, data, isFallback) {
   localStorage.setItem(cacheKey, JSON.stringify({ data, fallback: isFallback, cachedAt: Date.now() }));
+}
+
+// ─── Bloqueo con Face ID / Touch ID (WebAuthn, candado local) ──────────────
+// No reemplaza el login por contraseña: Supabase ya guarda la sesión sola.
+// Esto solo agrega un candado biométrico local antes de mostrar la app,
+// igual que el "App Lock" de apps bancarias. La verificación es local al
+// dispositivo (no hay servidor de por medio), suficiente para este uso.
+async function isBiometricSupported() {
+  if (typeof window === "undefined" || !window.PublicKeyCredential) return false;
+  try {
+    return await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+  } catch {
+    return false;
+  }
+}
+function isBiometricEnabledFor(userId) {
+  return localStorage.getItem("mater_biometric_enabled_" + userId) === "true";
+}
+function disableBiometricFor(userId) {
+  localStorage.removeItem("mater_biometric_credential_" + userId);
+  localStorage.removeItem("mater_biometric_enabled_" + userId);
+}
+async function registerBiometric(user) {
+  try {
+    const challenge = crypto.getRandomValues(new Uint8Array(32));
+    const credential = await navigator.credentials.create({
+      publicKey: {
+        challenge,
+        rp: { name: "Mater" },
+        user: {
+          id: new TextEncoder().encode(user.id),
+          name: user.email || "usuario",
+          displayName: user.email || "Usuario Mater",
+        },
+        pubKeyCredParams: [{ type: "public-key", alg: -7 }, { type: "public-key", alg: -257 }],
+        authenticatorSelection: { authenticatorAttachment: "platform", userVerification: "required" },
+        timeout: 60000,
+        attestation: "none",
+      },
+    });
+    if (!credential) return false;
+    const credentialId = btoa(String.fromCharCode(...new Uint8Array(credential.rawId)));
+    localStorage.setItem("mater_biometric_credential_" + user.id, credentialId);
+    localStorage.setItem("mater_biometric_enabled_" + user.id, "true");
+    return true;
+  } catch {
+    return false;
+  }
+}
+async function verifyBiometric(user) {
+  const credentialId = localStorage.getItem("mater_biometric_credential_" + user.id);
+  if (!credentialId) return false;
+  try {
+    const rawId = Uint8Array.from(atob(credentialId), c => c.charCodeAt(0));
+    const challenge = crypto.getRandomValues(new Uint8Array(32));
+    const assertion = await navigator.credentials.get({
+      publicKey: {
+        challenge,
+        allowCredentials: [{ id: rawId, type: "public-key" }],
+        userVerification: "required",
+        timeout: 60000,
+      },
+    });
+    return !!assertion;
+  } catch {
+    return false;
+  }
 }
 
 async function requestNotificationPermission() {
@@ -906,6 +988,41 @@ function AuthScreen({ onAuth, language, fontScale = 1 }) {
         )}
       </div>
       <p style={{ textAlign: "center", fontSize: 11, color: C.slateLight, marginTop: "2rem", lineHeight: 1.6 }}>{t(language, "auth_disclaimer")}</p>
+    </div>
+  );
+}
+
+function BiometricLockScreen({ user, language, fontScale = 1, onUnlock, onUsePassword }) {
+  const [verifying, setVerifying] = useState(false);
+  const [error, setError] = useState("");
+
+  async function attemptUnlock() {
+    setError("");
+    setVerifying(true);
+    const ok = await verifyBiometric(user);
+    setVerifying(false);
+    if (ok) onUnlock();
+    else setError(t(language, "biometric_unlock_failed"));
+  }
+
+  return (
+    <div style={{ flex: 1, overflowY: "auto", background: gradients.auth, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "2rem 1.5rem", zoom: fontScale, textAlign: "center" }}>
+      <div style={{ width: 72, height: 72, borderRadius: 22, margin: "0 auto 1rem", overflow: "hidden", boxShadow: `0 8px 28px ${C.navy}44` }}>
+        <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+      </div>
+      <h1 style={{ fontSize: 22, fontWeight: 700, color: C.navy, margin: "0 0 6px", fontFamily: "'Cormorant Garamond', serif" }}>{t(language, "biometric_lock_title")}</h1>
+      <p style={{ fontSize: 13, color: C.inkLight, margin: "0 0 32px", maxWidth: 280 }}>{t(language, "biometric_lock_subtitle")}</p>
+
+      <button onClick={attemptUnlock} disabled={verifying} style={{ width: 72, height: 72, borderRadius: "50%", border: "none", background: C.navy, display: "flex", alignItems: "center", justifyContent: "center", cursor: verifying ? "default" : "pointer", opacity: verifying ? 0.7 : 1, marginBottom: 20 }}>
+        <Icon name="biometric" size={30} color="#fff" />
+      </button>
+      <button onClick={attemptUnlock} disabled={verifying} style={{ background: C.navy, border: "none", borderRadius: 12, padding: "14px 28px", color: C.cream, fontWeight: 600, fontSize: 14, cursor: verifying ? "default" : "pointer", opacity: verifying ? 0.7 : 1, fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+        {t(language, "biometric_unlock_button")}
+      </button>
+      {error && <p style={{ color: "#C0392B", fontSize: 12, margin: "16px 0 0" }}>{error}</p>}
+      <button onClick={onUsePassword} style={{ background: "transparent", border: "none", color: C.slateLight, fontSize: 12, cursor: "pointer", marginTop: 24 }}>
+        {t(language, "biometric_use_password")}
+      </button>
     </div>
   );
 }
@@ -2750,6 +2867,28 @@ function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDa
   const [deletingAccount, setDeletingAccount] = useState(false);
   const [deleteError, setDeleteError] = useState("");
   const fileInputRef = useRef(null);
+  const [biometricSupported, setBiometricSupported] = useState(false);
+  const [biometricOn, setBiometricOn] = useState(() => user ? isBiometricEnabledFor(user.id) : false);
+  const [biometricBusy, setBiometricBusy] = useState(false);
+  const [biometricError, setBiometricError] = useState("");
+
+  useEffect(() => {
+    isBiometricSupported().then(setBiometricSupported);
+  }, []);
+
+  async function toggleBiometric() {
+    setBiometricError("");
+    if (biometricOn) {
+      disableBiometricFor(user.id);
+      setBiometricOn(false);
+      return;
+    }
+    setBiometricBusy(true);
+    const ok = await registerBiometric(user);
+    setBiometricBusy(false);
+    if (ok) setBiometricOn(true);
+    else setBiometricError(t(language, "profile_biometric_error"));
+  }
   const [notifTimes, setNotifTimes] = useState(() => {
     const saved = localStorage.getItem("mater_notif_times");
     return saved ? JSON.parse(saved) : ["07:00", "12:00", "21:00"];
@@ -2937,6 +3076,18 @@ function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDa
               ))}
             </div>
           </div>
+          {biometricSupported && (
+            <div style={{ padding: "14px 16px", borderBottom: "1px solid " + C.mist }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                <Icon name="biometric" size={15} color={C.inkLight} />
+                <span style={{ fontSize: 13, color: C.ink, flex: 1 }}>{t(language, "profile_biometric_lock")}</span>
+                <button onClick={toggleBiometric} disabled={biometricBusy} style={{ width: 44, height: 26, borderRadius: 13, border: "none", background: biometricOn ? C.navy : C.mist, cursor: biometricBusy ? "default" : "pointer", position: "relative", transition: "background 0.3s", opacity: biometricBusy ? 0.6 : 1 }}>
+                  <div style={{ width: 20, height: 20, borderRadius: "50%", background: "#fff", position: "absolute", top: 3, left: biometricOn ? 21 : 3, transition: "left 0.3s" }} />
+                </button>
+              </div>
+              {biometricError && <p style={{ fontSize: 11, color: "#C0392B", margin: "8px 0 0" }}>{biometricError}</p>}
+            </div>
+          )}
           <button onClick={() => setActiveModal("notifications")} style={{ width: "100%", display: "flex", alignItems: "center", gap: 14, padding: "14px 16px", border: "none", background: "transparent", cursor: "pointer", textAlign: "left" }}>
             <Icon name="bell" size={15} color={C.inkLight} />
             <span style={{ fontSize: 13, color: C.ink, flex: 1 }}>{t(language, "profile_reminders")}</span>
@@ -5044,6 +5195,7 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem("mater_dark_mode") === "true");
   const [language, setLanguage] = useState(() => localStorage.getItem("mater_language") || "es");
   const [fontScale, setFontScale] = useState(() => parseFloat(localStorage.getItem("mater_font_scale")) || 1);
+  const [biometricLocked, setBiometricLocked] = useState(false);
   const { isTablet, contentMaxWidth, keyboardOpen } = useViewportInfo();
 
   function toggleDarkMode() {
@@ -5070,6 +5222,9 @@ export default function App() {
         setUser(session.user);
         loadProfile(session.user.id);
         setScreen("app");
+        // Solo se re-bloquea al recuperar una sesion ya existente (app recien
+        // abierta), no en un login interactivo fresco (ya escribio su clave).
+        if (isBiometricEnabledFor(session.user.id)) setBiometricLocked(true);
       } else {
         setScreen("auth");
       }
@@ -5085,6 +5240,7 @@ export default function App() {
         setUser(null);
         setProfile(null);
         setScreen("auth");
+        setBiometricLocked(false);
       }
     });
 
@@ -5116,6 +5272,7 @@ export default function App() {
     await supabase.auth.signOut();
     setScreen("landing");
     setActiveTab("home");
+    setBiometricLocked(false);
   }
 
   if (loadingAuth) {
@@ -5167,7 +5324,10 @@ export default function App() {
         {screen === "landing" && <LandingScreen onEnter={() => setScreen("onboarding")} language={language} fontScale={fontScale} />}
         {screen === "onboarding" && <OnboardingScreen onComplete={handleOnboardingComplete} language={language} fontScale={fontScale} />}
         {screen === "auth" && <AuthScreen onAuth={() => setScreen("app")} language={language} fontScale={fontScale} />}
-        {screen === "app" && user && (
+        {screen === "app" && user && biometricLocked && (
+          <BiometricLockScreen user={user} language={language} fontScale={fontScale} onUnlock={() => setBiometricLocked(false)} onUsePassword={handleLogout} />
+        )}
+        {screen === "app" && user && !biometricLocked && (
           <>
             {activeTab === "home" && <HomeScreen user={user} profile={profile} onTabChange={setActiveTab} darkMode={darkMode} language={language} fontScale={fontScale} />}
             {activeTab === "chat" && <ChatScreen user={user} darkMode={darkMode} language={language} fontScale={fontScale} />}
