@@ -640,14 +640,6 @@ function writeIntentionCache(cacheKey, data, isFallback) {
 // Esto solo agrega un candado biométrico local antes de mostrar la app,
 // igual que el "App Lock" de apps bancarias. La verificación es local al
 // dispositivo (no hay servidor de por medio), suficiente para este uso.
-async function isBiometricSupported() {
-  if (typeof window === "undefined" || !window.PublicKeyCredential) return false;
-  try {
-    return await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-  } catch {
-    return false;
-  }
-}
 function isBiometricEnabledFor(userId) {
   return localStorage.getItem("mater_biometric_enabled_" + userId) === "true";
 }
@@ -661,7 +653,7 @@ async function registerBiometric(user) {
     const credential = await navigator.credentials.create({
       publicKey: {
         challenge,
-        rp: { name: "Mater" },
+        rp: { id: window.location.hostname, name: "Mater" },
         user: {
           id: new TextEncoder().encode(user.id),
           name: user.email || "usuario",
@@ -673,18 +665,18 @@ async function registerBiometric(user) {
         attestation: "none",
       },
     });
-    if (!credential) return false;
+    if (!credential) return { ok: false, reason: "no-credential" };
     const credentialId = btoa(String.fromCharCode(...new Uint8Array(credential.rawId)));
     localStorage.setItem("mater_biometric_credential_" + user.id, credentialId);
     localStorage.setItem("mater_biometric_enabled_" + user.id, "true");
-    return true;
-  } catch {
-    return false;
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, reason: (err && (err.name + ": " + err.message)) || String(err) };
   }
 }
 async function verifyBiometric(user) {
   const credentialId = localStorage.getItem("mater_biometric_credential_" + user.id);
-  if (!credentialId) return false;
+  if (!credentialId) return { ok: false, reason: "not-registered" };
   try {
     const rawId = Uint8Array.from(atob(credentialId), c => c.charCodeAt(0));
     const challenge = crypto.getRandomValues(new Uint8Array(32));
@@ -696,9 +688,9 @@ async function verifyBiometric(user) {
         timeout: 60000,
       },
     });
-    return !!assertion;
-  } catch {
-    return false;
+    return { ok: !!assertion };
+  } catch (err) {
+    return { ok: false, reason: (err && (err.name + ": " + err.message)) || String(err) };
   }
 }
 
@@ -999,10 +991,10 @@ function BiometricLockScreen({ user, language, fontScale = 1, onUnlock, onUsePas
   async function attemptUnlock() {
     setError("");
     setVerifying(true);
-    const ok = await verifyBiometric(user);
+    const result = await verifyBiometric(user);
     setVerifying(false);
-    if (ok) onUnlock();
-    else setError(t(language, "biometric_unlock_failed"));
+    if (result.ok) onUnlock();
+    else setError(t(language, "biometric_unlock_failed") + (result.reason ? ` (${result.reason})` : ""));
   }
 
   return (
@@ -2867,14 +2859,15 @@ function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDa
   const [deletingAccount, setDeletingAccount] = useState(false);
   const [deleteError, setDeleteError] = useState("");
   const fileInputRef = useRef(null);
-  const [biometricSupported, setBiometricSupported] = useState(false);
+  // Chequeo sincrono de que el navegador tiene la API (casi universal en
+  // navegadores modernos) en vez de esperar a isUserVerifyingPlatformAuthenticatorAvailable(),
+  // que en algunos Safari/PWA de iOS resuelve false aunque el dispositivo SI
+  // tenga Face ID/Touch ID configurado. Dejamos que el intento real de
+  // registro (al tocar el toggle) sea quien revele si de verdad no funciona.
+  const [biometricSupported] = useState(() => typeof window !== "undefined" && !!window.PublicKeyCredential && !!navigator.credentials);
   const [biometricOn, setBiometricOn] = useState(() => user ? isBiometricEnabledFor(user.id) : false);
   const [biometricBusy, setBiometricBusy] = useState(false);
   const [biometricError, setBiometricError] = useState("");
-
-  useEffect(() => {
-    isBiometricSupported().then(setBiometricSupported);
-  }, []);
 
   async function toggleBiometric() {
     setBiometricError("");
@@ -2884,10 +2877,10 @@ function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDa
       return;
     }
     setBiometricBusy(true);
-    const ok = await registerBiometric(user);
+    const result = await registerBiometric(user);
     setBiometricBusy(false);
-    if (ok) setBiometricOn(true);
-    else setBiometricError(t(language, "profile_biometric_error"));
+    if (result.ok) setBiometricOn(true);
+    else setBiometricError(t(language, "profile_biometric_error") + (result.reason ? ` (${result.reason})` : ""));
   }
   const [notifTimes, setNotifTimes] = useState(() => {
     const saved = localStorage.getItem("mater_notif_times");
