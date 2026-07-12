@@ -154,6 +154,7 @@ const translations = {
     profile_font_size_small: "A", profile_font_size_medium: "A", profile_font_size_large: "A", profile_font_size_xlarge: "A",
     profile_biometric_lock: "Desbloqueo con Face ID / Touch ID",
     profile_biometric_error: "No se pudo activar. Intenta de nuevo.",
+    profile_biometric_standalone_warning: "Face ID / Touch ID no está disponible dentro de la app instalada en la pantalla de inicio. Abre materapp.org directamente en Safari para activarlo.",
     biometric_lock_title: "Mater está bloqueada",
     biometric_lock_subtitle: "Desbloquea con Face ID o Touch ID para continuar",
     biometric_unlock_button: "Desbloquear 🔓",
@@ -328,6 +329,7 @@ const translations = {
     profile_font_size_small: "A", profile_font_size_medium: "A", profile_font_size_large: "A", profile_font_size_xlarge: "A",
     profile_biometric_lock: "Unlock with Face ID / Touch ID",
     profile_biometric_error: "Couldn't enable. Please try again.",
+    profile_biometric_standalone_warning: "Face ID / Touch ID isn't available inside the app installed on your home screen. Open materapp.org directly in Safari to enable it.",
     biometric_lock_title: "Mater is locked",
     biometric_lock_subtitle: "Unlock with Face ID or Touch ID to continue",
     biometric_unlock_button: "Unlock 🔓",
@@ -642,6 +644,14 @@ function writeIntentionCache(cacheKey, data, isFallback) {
 // dispositivo (no hay servidor de por medio), suficiente para este uso.
 function isBiometricEnabledFor(userId) {
   return localStorage.getItem("mater_biometric_enabled_" + userId) === "true";
+}
+// iOS restringe WebAuthn/Face ID dentro de apps abiertas desde el icono de la
+// pantalla de inicio (modo "standalone" / WebClip) — solo funciona abriendo
+// materapp.org directamente en Safari. Lo detectamos para explicarlo en vez
+// de mostrar el NotAllowedError crudo que tira navigator.credentials.create.
+function isStandaloneHomeScreenApp() {
+  if (typeof window === "undefined") return false;
+  return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone === true;
 }
 function disableBiometricFor(userId) {
   localStorage.removeItem("mater_biometric_credential_" + userId);
@@ -2874,6 +2884,10 @@ function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDa
     if (biometricOn) {
       disableBiometricFor(user.id);
       setBiometricOn(false);
+      return;
+    }
+    if (isStandaloneHomeScreenApp()) {
+      setBiometricError(t(language, "profile_biometric_standalone_warning"));
       return;
     }
     setBiometricBusy(true);
