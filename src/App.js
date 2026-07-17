@@ -4819,17 +4819,21 @@ function HorarioEspiritualScreen({ user, onBack, language, fontScale = 1 }) {
   const totalDays = daysInMonth(year, month);
   const monthLabel = new Date(year, month, 1).toLocaleDateString(language === "en" ? "en-US" : "es-ES", { month: "long", year: "numeric" });
 
-  useEffect(() => { loadItems(); }, [user]);
+  // Los propositos son por mes: cada mes tiene sus propias filas en
+  // spiritual_schedule_items (columna month_key), asi que lo que se escribe
+  // en un mes no se traslada a otro, y los meses anteriores quedan guardados
+  // tal cual al navegar de vuelta a ellos.
+  useEffect(() => { loadItems(); }, [user, monthKey]);
   useEffect(() => { if (generalItem || items.length || monthlyItems.length) loadChecks(); }, [month, year, generalItem, items, monthlyItems]);
 
   async function loadItems() {
     setLoading(true);
-    let { data } = await supabase.from("spiritual_schedule_items").select("*").eq("user_id", user.id).order("position");
+    let { data } = await supabase.from("spiritual_schedule_items").select("*").eq("user_id", user.id).eq("month_key", monthKey).order("position");
     if (!data || data.length === 0) {
       const seed = [
-        { user_id: user.id, name: "", position: 0, is_monthly: false, is_general: true },
-        ...(language === "en" ? FIXED_PURPOSE_CATEGORIES_EN : FIXED_PURPOSE_CATEGORIES).map((cat, i) => ({ user_id: user.id, name: "", position: i, is_monthly: false, is_general: false, categoria: cat })),
-        ...(language === "en" ? DEFAULT_MONTHLY_ITEMS_EN : DEFAULT_MONTHLY_ITEMS).map((name, i) => ({ user_id: user.id, name, position: i, is_monthly: true, is_general: false })),
+        { user_id: user.id, month_key: monthKey, name: "", position: 0, is_monthly: false, is_general: true },
+        ...(language === "en" ? FIXED_PURPOSE_CATEGORIES_EN : FIXED_PURPOSE_CATEGORIES).map((cat, i) => ({ user_id: user.id, month_key: monthKey, name: "", position: i, is_monthly: false, is_general: false, categoria: cat })),
+        ...(language === "en" ? DEFAULT_MONTHLY_ITEMS_EN : DEFAULT_MONTHLY_ITEMS).map((name, i) => ({ user_id: user.id, month_key: monthKey, name, position: i, is_monthly: true, is_general: false })),
       ];
       const { data: inserted } = await supabase.from("spiritual_schedule_items").insert(seed).select();
       data = inserted || [];
@@ -4890,7 +4894,7 @@ function HorarioEspiritualScreen({ user, onBack, language, fontScale = 1 }) {
 
   async function addPurposeItem(categoria) {
     const maxPos = items.length ? Math.max(...items.map(it => it.position)) : -1;
-    const { data } = await supabase.from("spiritual_schedule_items").insert({ user_id: user.id, name: "", position: maxPos + 1, is_monthly: false, is_general: false, categoria }).select().single();
+    const { data } = await supabase.from("spiritual_schedule_items").insert({ user_id: user.id, month_key: monthKey, name: "", position: maxPos + 1, is_monthly: false, is_general: false, categoria }).select().single();
     if (data) setItems(prev => [...prev, data]);
   }
 
