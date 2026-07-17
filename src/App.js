@@ -5360,7 +5360,7 @@ export default function App() {
             {!keyboardOpen && (
               <NavBar
                 active={activeTab}
-                onChange={(id) => { if (id !== "more") setMoreSection(null); setActiveTab(id); }}
+                onChange={(id) => { setMoreSection(null); setActiveTab(id); }}
                 darkMode={darkMode}
                 language={language}
               />
