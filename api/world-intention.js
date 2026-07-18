@@ -42,11 +42,29 @@ export default async function handler(req, res) {
     // Top-headlines generales de la categoria "world" (politica, economia,
     // relaciones internacionales, sociedad, etc.) en vez de una busqueda
     // acotada a palabras clave de desastres/crisis humanitarias.
-    const url = `https://gnews.io/api/v4/top-headlines?category=world&lang=${lang}&max=10&apikey=${apiKey}`;
-    const newsRes = await fetch(url);
-    if (!newsRes.ok) throw new Error("Error al consultar GNews: " + newsRes.status);
-    const data = await newsRes.json();
-    const articles = data.articles || [];
+    // Algunos idiomas/categorias tienen cobertura mas escasa en GNews en
+    // ciertos momentos del dia; si "world" no trae nada, probamos "general"
+    // antes de rendirnos. Tambien reintentamos una vez ante fallos de red o
+    // errores transitorios del lado de GNews (p. ej. 429/5xx).
+    async function fetchHeadlines(category) {
+      const url = `https://gnews.io/api/v4/top-headlines?category=${category}&lang=${lang}&max=10&apikey=${apiKey}`;
+      let lastErr = null;
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+          const newsRes = await fetch(url);
+          if (!newsRes.ok) { lastErr = new Error("Error al consultar GNews: " + newsRes.status); continue; }
+          const data = await newsRes.json();
+          return data.articles || [];
+        } catch (e) {
+          lastErr = e;
+        }
+      }
+      if (lastErr) throw lastErr;
+      return [];
+    }
+
+    let articles = await fetchHeadlines("world");
+    if (!articles.length) articles = await fetchHeadlines("general");
 
     // El titular #1 (mas prominente/relevante).
     const article = articles.length ? articles[0] : null;
