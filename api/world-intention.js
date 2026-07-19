@@ -55,7 +55,9 @@ const CUBA_INTENTION = {
 
 function isCubaRelated(article) {
   const text = ((article.title || "") + " " + (article.description || "")).toLowerCase();
-  return /\bcuba\b/.test(text) || isCubanStateMedia(article);
+  // Cubre formas flexionadas (cubano/cubana/cubanos/cubanas en espanol,
+  // Cuban en ingles), no solo la palabra exacta "Cuba".
+  return /\b(cuba|cuban|cubano|cubana|cubanos|cubanas)\b/.test(text) || isCubanStateMedia(article);
 }
 
 export default async function handler(req, res) {
