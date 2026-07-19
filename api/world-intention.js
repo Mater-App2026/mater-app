@@ -13,19 +13,28 @@
 
 import { createClient } from "@supabase/supabase-js";
 
-// Medios estatales del regimen cubano: son organos de propaganda del Partido
-// Comunista de Cuba, no prensa independiente, y no deben tratarse como
-// fuente "verificada" para una intencion de oracion. Se filtran de raiz.
-const CUBAN_STATE_MEDIA = [
-  "granma.cu", "prensa-latina.cu", "prensa-latina.com", "cubadebate.cu",
-  "jrebelde.cu", "acn.cu", "radioreloj.cu", "radiorebelde.cu", "cubasi.cu",
-  "cubaminrex.cu", "trabajadores.cu", "tvcubana.icrt.cu",
+// Cuba no tiene prensa independiente: todo medio domiciliado dentro de la
+// isla opera bajo el control del regimen de partido unico, asi que ninguna
+// fuente radicada ahi cuenta como "verificada" para una intencion de
+// oracion — sin importar el tema del articulo. En vez de mantener una lista
+// manual de medios (siempre incompleta), se detecta el dominio ".cu": es el
+// ccTLD cubano, cuyo registro (NIC Cuba) esta controlado por el propio
+// gobierno, asi que ningun medio genuinamente independiente opera bajo el.
+// Esto NO excluye a la prensa cubana en el exilio (14ymedio.com,
+// cibercuba.com, diariodecuba.com, etc.), que usa dominios fuera de Cuba.
+// Se mantienen ademas algunos nombres conocidos que a veces publican bajo
+// dominios ".com" (p. ej. Prensa Latina), como respaldo.
+const CUBAN_STATE_MEDIA_EXTRA = [
+  "prensa-latina.com", "prensa-latina.cu",
 ];
 
 function isCubanStateMedia(article) {
   const url = (article.url || "").toLowerCase();
   const source = (article.source?.name || article.source?.url || "").toLowerCase();
-  return CUBAN_STATE_MEDIA.some(domain => url.includes(domain) || source.includes(domain));
+  let host = "";
+  try { host = new URL(article.url).hostname.toLowerCase(); } catch {}
+  const isDotCu = host.endsWith(".cu");
+  return isDotCu || CUBAN_STATE_MEDIA_EXTRA.some(domain => url.includes(domain) || source.includes(domain));
 }
 
 // Cualquier titular sobre Cuba (venga de donde venga) se reemplaza por esta
