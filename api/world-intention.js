@@ -13,6 +13,42 @@
 
 import { createClient } from "@supabase/supabase-js";
 
+// Medios estatales del regimen cubano: son organos de propaganda del Partido
+// Comunista de Cuba, no prensa independiente, y no deben tratarse como
+// fuente "verificada" para una intencion de oracion. Se filtran de raiz.
+const CUBAN_STATE_MEDIA = [
+  "granma.cu", "prensa-latina.cu", "prensa-latina.com", "cubadebate.cu",
+  "jrebelde.cu", "acn.cu", "radioreloj.cu", "radiorebelde.cu", "cubasi.cu",
+  "cubaminrex.cu", "trabajadores.cu", "tvcubana.icrt.cu",
+];
+
+function isCubanStateMedia(article) {
+  const url = (article.url || "").toLowerCase();
+  const source = (article.source?.name || article.source?.url || "").toLowerCase();
+  return CUBAN_STATE_MEDIA.some(domain => url.includes(domain) || source.includes(domain));
+}
+
+// Cualquier titular sobre Cuba (venga de donde venga) se reemplaza por esta
+// intencion fija: pedido explicito del autor de la app, dada la naturaleza
+// del regimen y la persecucion religiosa historica en la isla. No pretende
+// resumir la noticia real del dia — es una intencion de oracion permanente,
+// asi que no se atribuye a ninguna fuente periodistica.
+const CUBA_INTENTION = {
+  es: {
+    titulo: "Por la libertad de Cuba",
+    resumen_original: "Cuba continúa bajo el régimen comunista de partido único vigente desde 1959, con una larga historia de represión política y restricciones a la libertad religiosa.",
+  },
+  en: {
+    titulo: "For the freedom of Cuba",
+    resumen_original: "Cuba remains under the one-party communist regime in power since 1959, with a long history of political repression and restrictions on religious freedom.",
+  },
+};
+
+function isCubaRelated(article) {
+  const text = ((article.title || "") + " " + (article.description || "")).toLowerCase();
+  return /\bcuba\b/.test(text) || isCubanStateMedia(article);
+}
+
 export default async function handler(req, res) {
   const lang = req.query.lang === "en" ? "en" : "es";
   const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD (UTC)
@@ -66,6 +102,10 @@ export default async function handler(req, res) {
     let articles = await fetchHeadlines("world");
     if (!articles.length) articles = await fetchHeadlines("general");
 
+    // Los medios estatales cubanos nunca cuentan como fuente verificada,
+    // sea cual sea el pais o tema del articulo.
+    articles = articles.filter(a => !isCubanStateMedia(a));
+
     // El titular #1 (mas prominente/relevante).
     const article = articles.length ? articles[0] : null;
 
@@ -74,7 +114,16 @@ export default async function handler(req, res) {
       return;
     }
 
-    const result = {
+    // Cualquier titular sobre Cuba se reemplaza por la intencion fija de
+    // libertad para Cuba, en vez de redactar a partir del titular real.
+    const result = isCubaRelated(article) ? {
+      found: true,
+      titulo: CUBA_INTENTION[lang].titulo,
+      resumen_original: CUBA_INTENTION[lang].resumen_original,
+      fuente: "",
+      url: "",
+      fecha: new Date().toISOString(),
+    } : {
       found: true,
       titulo: article.title,
       resumen_original: article.description || "",
