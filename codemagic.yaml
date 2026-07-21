@@ -43,3 +43,37 @@ workflows:
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
+
+  android-capacitor-workflow:
+    name: Mater Android Build
+    max_build_duration: 60
+    instance_type: linux_x2
+    environment:
+      android_signing:
+        - mater_android_keystore
+      vars:
+        PACKAGE_NAME: "org.materapp.app"
+      node: 22.0.0
+    scripts:
+      - name: Install npm dependencies
+        script: |
+          npm install
+      - name: Install Capacitor dependencies
+        script: |
+          npm install @capacitor/core @capacitor/cli @capacitor/android
+      - name: Build React app
+        script: |
+          npm run build
+      - name: Copy web assets to Android
+        script: |
+          npx cap sync android
+      - name: Set build number
+        script: |
+          sed -i "s/versionCode [0-9]*/versionCode $PROJECT_BUILD_NUMBER/" android/app/build.gradle
+      - name: Build Android release bundle
+        script: |
+          cd android
+          ./gradlew bundleRelease
+    artifacts:
+      - android/app/build/outputs/**/*.aab
+      - android/app/build/outputs/**/*.apk
