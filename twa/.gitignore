@@ -1,0 +1,13 @@
+# Signing key material — never commit. Lives only in Codemagic's secure
+# Android keystore storage (Settings > Code signing identities).
+*.keystore
+*.jks
+*.pem
+*.p12
+
+# Local build outputs / SDK config
+.gradle/
+build/
+local.properties
+*.apk
+*.aab

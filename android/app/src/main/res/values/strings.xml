@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">Mater</string>
-    <string name="title_activity_main">Mater</string>
-    <string name="package_name">org.materapp.app</string>
-    <string name="custom_url_scheme">org.materapp.app</string>
-</resources>
