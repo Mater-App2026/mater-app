@@ -150,9 +150,24 @@ android {
 
         
     }
+    signingConfigs {
+        release {
+            // Codemagic injects these env vars when an "android_signing"
+            // keystore reference is configured for the workflow. Without
+            // this block, bundleRelease silently produces an UNSIGNED
+            // .aab that Play Console rejects with "must be signed".
+            if (System.getenv("CM_KEYSTORE_PATH")) {
+                storeFile file(System.getenv("CM_KEYSTORE_PATH"))
+                storePassword System.getenv("CM_KEYSTORE_PASSWORD")
+                keyAlias System.getenv("CM_KEY_ALIAS")
+                keyPassword System.getenv("CM_KEY_PASSWORD")
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled true
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
