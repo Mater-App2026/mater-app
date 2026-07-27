@@ -47,7 +47,7 @@ workflows:
   android-twa-workflow:
     name: Mater Android Build (TWA)
     max_build_duration: 30
-    instance_type: linux_x2
+    instance_type: mac_mini_m2
     working_directory: twa
     environment:
       android_signing:
@@ -57,7 +57,7 @@ workflows:
     scripts:
       - name: Set build number
         script: |
-          sed -i "s/versionCode [0-9]*/versionCode $PROJECT_BUILD_NUMBER/" app/build.gradle
+          sed -i '' "s/versionCode [0-9]*/versionCode $PROJECT_BUILD_NUMBER/" app/build.gradle
       - name: Build Android release bundle
         script: |
           chmod +x gradlew
