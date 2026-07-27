@@ -63,5 +63,7 @@ workflows:
           chmod +x gradlew
           ./gradlew bundleRelease
     artifacts:
+      - app/build/outputs/**/*.aab
+      - app/build/outputs/**/*.apk
       - twa/app/build/outputs/**/*.aab
       - twa/app/build/outputs/**/*.apk
