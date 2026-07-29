@@ -186,6 +186,7 @@ const translations = {
     profile_delete_error_generic: "No se pudo eliminar la cuenta.",
     profile_delete_error_fallback: "Ocurrió un error. Intenta de nuevo o escribe a soporte@materapp.org.",
     profile_avatar_error: "Error al subir la imagen.",
+    profile_legal_privacy: "Política de Privacidad", profile_legal_terms: "Términos de Servicio", profile_legal_support: "Soporte",
     profile_footer: "Mater v1.0 · materapp.org",
 
     more_explore: "Explorar", more_title: "Más de Mater",
@@ -370,6 +371,7 @@ const translations = {
     profile_delete_error_generic: "Could not delete the account.",
     profile_delete_error_fallback: "An error occurred. Try again or write to support@materapp.org.",
     profile_avatar_error: "Error uploading the image.",
+    profile_legal_privacy: "Privacy Policy", profile_legal_terms: "Terms of Service", profile_legal_support: "Support",
     profile_footer: "Mater v1.0 · materapp.org",
 
     more_explore: "Explore", more_title: "More from Mater",
@@ -1544,6 +1546,11 @@ function AuthScreen({ onAuth, language, fontScale = 1 }) {
         )}
       </div>
       <p style={{ textAlign: "center", fontSize: 11, color: C.slateLight, marginTop: "2rem", lineHeight: 1.6 }}>{t(language, "auth_disclaimer")}</p>
+      <p style={{ textAlign: "center", fontSize: 10, color: C.slateLight, marginTop: 6 }}>
+        <a href="https://materapp.org/terminos.html" target="_blank" rel="noopener noreferrer" style={{ color: C.slateLight }}>{t(language, "profile_legal_terms")}</a>
+        {" · "}
+        <a href="https://materapp.org/privacidad.html" target="_blank" rel="noopener noreferrer" style={{ color: C.slateLight }}>{t(language, "profile_legal_privacy")}</a>
+      </p>
     </div>
   );
 }
@@ -3635,7 +3642,12 @@ function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDa
         </div>
       )}
 
-      <p style={{ textAlign: "center", fontSize: 11, color: C.slateLight, margin: "20px 0 0" }}>{t(language, "profile_footer")}</p>
+      <div style={{ display: "flex", justifyContent: "center", gap: 14, marginTop: 20, flexWrap: "wrap" }}>
+        <a href="https://materapp.org/privacidad.html" target="_blank" rel="noopener noreferrer" style={{ fontSize: 11, color: C.slateLight, textDecoration: "underline" }}>{t(language, "profile_legal_privacy")}</a>
+        <a href="https://materapp.org/terminos.html" target="_blank" rel="noopener noreferrer" style={{ fontSize: 11, color: C.slateLight, textDecoration: "underline" }}>{t(language, "profile_legal_terms")}</a>
+        <a href="https://materapp.org/soporte.html" target="_blank" rel="noopener noreferrer" style={{ fontSize: 11, color: C.slateLight, textDecoration: "underline" }}>{t(language, "profile_legal_support")}</a>
+      </div>
+      <p style={{ textAlign: "center", fontSize: 11, color: C.slateLight, margin: "8px 0 0" }}>{t(language, "profile_footer")}</p>
     </div>
   );
 }
