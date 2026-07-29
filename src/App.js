@@ -227,7 +227,7 @@ const translations = {
     devocionario_section_christian: "Oraciones del cristiano",
     devocionario_section_schoenstatt: "Oraciones de Schoenstatt",
     devocionario_share: "📤 Compartir",
-    devocionario_schoenstatt_note: "Las dos primeras son oraciones tradicionales de las comunidades de Schoenstatt; la última fue escrita para Mater como súplica sencilla por la causa de canonización del Padre Fundador.",
+    devocionario_schoenstatt_note: "Las tres primeras son oraciones tradicionales de las comunidades de Schoenstatt; la última fue escrita para Mater como súplica sencilla por la causa de canonización del Padre Fundador.",
 
     rosary_title: "Santo Rosario", rosary_mysteries_today: "Misterios de hoy", rosary_five_mysteries: "Los 5 misterios",
     rosary_fruit: "Fruto", rosary_begin: "Comenzar el Rosario 🙏", rosary_exit: "Salir",
@@ -411,7 +411,7 @@ const translations = {
     devocionario_section_christian: "Christian prayers",
     devocionario_section_schoenstatt: "Schoenstatt prayers",
     devocionario_share: "📤 Share",
-    devocionario_schoenstatt_note: "The first two are traditional prayers of Schoenstatt communities; the last one was written for Mater as a simple petition for the Founder's cause of canonization.",
+    devocionario_schoenstatt_note: "The first three are traditional prayers of Schoenstatt communities; the last one was written for Mater as a simple petition for the Founder's cause of canonization.",
 
     rosary_title: "Holy Rosary", rosary_mysteries_today: "Today's mysteries", rosary_five_mysteries: "The 5 mysteries",
     rosary_fruit: "Fruit", rosary_begin: "Begin the Rosary 🙏", rosary_exit: "Exit",
@@ -3971,6 +3971,7 @@ function getDevocionarioSections(language) {
   const schoenstatt = [
     { id: "instrumento", titulo: L === "en" ? "Prayer of the Instrument" : "Oración del Instrumento", texto: ORACION_INSTRUMENTO[L] },
     { id: "alianza", titulo: L === "en" ? "Consecration to Mary (Covenant of Love)" : "Consagración a María (Alianza de Amor)", texto: ORACION_CONSAGRACION_ALIANZA[L] },
+    { id: "confianza", titulo: L === "en" ? "Trust" : "Confianza", texto: ORACION_CONFIANZA_SCHOENSTATT[L] },
     { id: "kentenich", titulo: L === "en" ? "For Father Founder Joseph Kentenich" : "Por el Padre Fundador José Kentenich", texto: ORACION_PADRE_FUNDADOR[L] },
   ];
   return { cristianas, schoenstatt };
@@ -4151,10 +4152,13 @@ const ORACION_ANGELUS = {
   en: "V. The Angel of the Lord declared unto Mary.\nR. And she conceived of the Holy Spirit.\nHail Mary...\n\nV. Behold the handmaid of the Lord.\nR. Be it done unto me according to thy word.\nHail Mary...\n\nV. And the Word was made flesh.\nR. And dwelt among us.\nHail Mary...\n\nV. Pray for us, O holy Mother of God.\nR. That we may be made worthy of the promises of Christ.\n\nLet us pray: Pour forth, we beseech Thee, O Lord, Thy grace into our hearts, that we to whom the Incarnation of Christ, Thy Son, was made known by the message of an Angel, may by His Passion and Cross be brought to the glory of His Resurrection. Through the same Christ Our Lord. Amen.",
 };
 
-// Oraciones de la espiritualidad de Schoenstatt. Las dos primeras son
+// Oraciones de la espiritualidad de Schoenstatt. Las tres primeras son
 // oraciones tradicionales de las comunidades de Schoenstatt (confirmadas
-// contra schoenstatt.com/es/recursos/prayers y schoenstatt.org.ar/formacion/oraciones);
-// la tercera es una petición original escrita para Mater, no un texto oficial
+// contra schoenstatt.com/es/recursos/prayers y schoenstatt.org.ar/formacion/oraciones).
+// Deliberadamente no se incluye nada de "Hacia el Padre" (Himmelwärts) del
+// P. Kentenich: esa obra prohíbe expresamente la reproducción total o parcial
+// de su traducción castellana sin autorización del traductor.
+// La cuarta es una petición original escrita para Mater, no un texto oficial
 // del Movimiento — se presenta como tal para no atribuir falsamente autoría.
 const ORACION_INSTRUMENTO = {
   es: "Madre tres veces Admirable, consérvanos siempre como instrumento tuyo; haz que con amor, hoy y todos los días, nos pongamos a tu servicio. Según los deseos de Dios, usa de nosotros enteramente para tu Reino de Schoenstatt.\n\nToma el corazón y la voluntad: te pertenecen por completo; ciegamente quieren doblegarse a tus indicaciones y a tu palabra. Ser total posesión tuya es, para el instrumento, su honra y su gloria. Está pronto a servir sin reservas a tu Obra de Schoenstatt.\n\nMándanos sufrimientos, guíanos a la lucha, danos ganar la victoria plena. Contra las argucias y la saña del Demonio danos luz, templa nuestro espíritu. Aseméjanos a ti y enséñanos a caminar por la vida tal como tú lo hiciste: fuerte y digna, sencilla y bondadosa, repartiendo amor, paz y alegría.\n\nEn nosotros recorre nuestro tiempo preparándolo para Cristo Jesús. Aunque nos amenacen el mundo y el Demonio, o tempestades se ciernan sobre nosotros, tú vences todos los peligros y nos concedes tu inmenso poder. Tu corazón, puerta del cielo, es siempre nuestro seguro amparo.\n\nNunca pereceremos si somos fiel instrumento tuyo; nos ayudas en todo instante para que demos abundantes frutos. Con alegría caminemos de tu mano hacia el eterno Schoenstatt.",
@@ -4163,6 +4167,10 @@ const ORACION_INSTRUMENTO = {
 const ORACION_CONSAGRACION_ALIANZA = {
   es: "¡Oh Señora mía! ¡Oh Madre mía! Yo me ofrezco todo a ti, y en prueba de mi filial afecto, te consagro en este día mis ojos, mis oídos, mi lengua, mi corazón; en una palabra, todo mi ser.\n\nYa que soy todo tuyo, oh Madre de bondad, guárdame, defiéndeme y utilízame como instrumento y posesión tuya.\n\nAmén.",
   en: "O my Lady, O my Mother, I offer myself entirely to you, and as proof of my filial love I consecrate to you this day my eyes, my ears, my tongue, my heart — in a word, my whole being.\n\nSince I am all yours, O Mother of goodness, guard me, defend me, and use me as your instrument and your possession.\n\nAmen.",
+};
+const ORACION_CONFIANZA_SCHOENSTATT = {
+  es: "En tu poder y en tu bondad fundo mi vida; en ellos espero confiando como niño. Madre Admirable, en ti y en tu Hijo en toda circunstancia creo y confío ciegamente.",
+  en: "In your power and in your goodness I ground my life; in them I hope, trusting like a child. Admirable Mother, in you and in your Son, in every circumstance, I believe and I trust blindly.",
 };
 const ORACION_PADRE_FUNDADOR = {
   es: "Padre Bueno,\n\nte doy gracias por el Padre José Kentenich, que nos enseñó a confiar en tu Providencia y a poner nuestra vida, sin condiciones, en las manos de María.\n\nTe pido que su testimonio de fe, entregado incluso en el destierro y la persecución, siga dando fruto en la Iglesia. Si es tu voluntad, apresura el día en que la Iglesia lo declare santo, para que su ejemplo alumbre a más almas.\n\nPor su intercesión, dame la sencillez del instrumento dócil: nada para mí, todo para ti a través de María.\n\nAmén.",
