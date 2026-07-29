@@ -1971,88 +1971,88 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
 
     const examenContent = language === "en" ? [
       {
-        santo: "Father Joseph Kentenich",
-        cita: "«God's love comes to meet us in every event of the day — learning to see it is the art of the spiritual life.»",
-        reflexion: `At the end of this day, stop for a moment and go over what you've lived with the eyes of the heart.\n\nFather Kentenich taught us to examine the day through three essential questions — not to judge ourselves, but to learn to read life the way God writes it.\n\nDon't look for perfection in your answers. Look for honesty and love. The Lord does not call us to account like a judge — he asks like a Father who wants to know how his child's day went.\n\nAnswer slowly. Calmly. Let each question do its work within.`,
+        santo: "Monday · Examen of strength",
+        cita: "«The Lord is my strength and my shield; my heart trusted in him, and I was helped.» — Psalm 28:7",
+        reflexion: `The Monday now ending asked for strength from the first hour: picking the rhythm back up, facing what the week brings, holding commitments the weekend's rest had paused.\n\nGo back over the day without rushing. Where did you find the strength to keep going when your body or your mood asked you to stop? Was that strength entirely your own, or do you recognize in it a help you didn't go looking for?\n\nThere were also moments when strength ran out — where tiredness, irritation, or discouragement took the place of the steadiness you wanted to have. Looking at them without harshness is part of the examen: not to dwell on them, but to name honestly where you need more support tomorrow.\n\nBefore answering the usual three questions, give thanks for the strength you received and hand over the strength that was missing.`,
         preguntas: examenQuestionsEn
       },
       {
-        santo: "Father Joseph Kentenich",
-        cita: "«Whoever knows how to read providence in the everyday has found the secret of inner peace.»",
-        reflexion: `Close your eyes for a moment. Let the day pass before you like a film — without pause, without editing, just as it was.\n\nYou will see bright moments you may have let pass without giving thanks. You will see dark moments you carried alone without needing to. You will see people who gave you something and people to whom you gave.\n\nFather Kentenich believed that God speaks in the language of events. Not only in formal prayer — in the unexpected call, in the midday setback, in the conversation you hadn't planned.\n\nNow, with that film of the day in mind, answer the three questions with freedom and love.`,
+        santo: "Tuesday · Examen of trust",
+        cita: "«Commit your way to the Lord; trust in him, and he will act.» — Psalm 37:5",
+        reflexion: `Tuesday tested your trust in small and large ways: an answer that took longer than expected, an outcome that didn't depend on you, a decision you had to make without all the information you wanted.\n\nReturn to those moments. In which ones did you let go of control and rest in the fact that God was holding what you couldn't hold? In which ones did anxiety take charge instead, and you tried to fix everything on your own?\n\nTrust isn't measured by the absence of uncertainty but by what you do with it. A trusting day isn't a day without questions — it's a day where the questions are handed over instead of carried alone.\n\nNow, with that in mind, review your bond with God, your covenant of love, and your treatment of your neighbor throughout the day.`,
         preguntas: examenQuestionsEn
       },
       {
-        santo: "Father Joseph Kentenich",
-        cita: "«God speaks to us through the small events of each day — we only need to learn his language.»",
-        reflexion: `The day that is ending was full of small moments. Most we let pass without noticing they were messages of love.\n\nA kind word at just the right time. A difficulty that forced you to trust. A joy that arrived without your seeking it. A person who needed something only you could give them.\n\nFather Kentenich taught us that holiness is woven into the ordinary fabric of faithful days. Faithfulness in small things is the door to inner greatness.\n\nToday, in this examen, look for the golden threads God wove into your day. They are there, even if you didn't see them at the time.`,
+        santo: "Wednesday · Examen of presence",
+        cita: "«I am with you always, to the end of the age.» — Matthew 28:20",
+        reflexion: `Midweek makes it easy to run on autopilot: meetings, tasks, conversations handled without being fully there. Today's examen simply asks: was I present?\n\nWalk through the day hour by hour if you need to. In which moments was your body in one place and your mind in another? In which moments, instead, did you manage to be entirely where you were — with whoever was in front of you, in whatever you were doing?\n\nGod's presence doesn't depend on your noticing it, but your ability to live the day with meaning does depend on learning to notice it. Every moment of full attention today was also a moment when he was closer than you realized.\n\nWith that awareness, answer the usual three questions now.`,
         preguntas: examenQuestionsEn
       },
       {
-        santo: "Father Joseph Kentenich",
-        cita: "«Mary gathers our contributions — the small faithful acts of the day — and transforms them into a capital of graces for the world.»",
-        reflexion: `Every day is an opportunity to contribute to the Shrine's capital of graces. Not with heroic gestures, but with the small currency of daily life: the patience it cost you, the service no one saw, the prayer you said without feeling like it but said anyway.\n\nFather Kentenich believed that nothing we live with love is lost. Everything — absolutely everything — offered to Mary with the intention of love is received by her and transformed into grace for the world.\n\nThis gives immense weight to the ordinary. Today, with its routines and surprises, its achievements and failures, is material for holiness if you offer it with love.\n\nAs you answer today's three questions, remember: you examine yourself not to condemn yourself but to grow in love.`,
+        santo: "Thursday · Examen of gratitude",
+        cita: "«What shall I render to the Lord for all his benefits to me?» — Psalm 116:12",
+        reflexion: `Thursday, one step from the weekend, tends to bring accumulated tiredness. It's tempting to close it out by counting only what's missing, what went wrong, what still weighs on you.\n\nBefore that, stop and look for the good you received today — even if it was small. A conversation that lightened your load. A problem that resolved more easily than expected. A gesture from someone who had no reason to give it.\n\nGratitude doesn't deny what was hard about the day; it puts it in its right place, as a part and not the whole. A grateful examen isn't naive — it's accurate: it sees both what cost you and what you received.\n\nStart there, and then answer the three examen questions with that same honesty.`,
         preguntas: examenQuestionsEn
       },
       {
-        santo: "Father Joseph Kentenich",
-        cita: "«The perfect instrument is not the one who never fails — it is the one who always returns to Mary's hands.»",
-        reflexion: `No one ends the day having been perfect. No one. Not the saints, not the mystics, not the most faithful members of the Movement.\n\nWhat distinguishes a soul that grows is not the absence of failures but the speed with which it returns. It returns to prayer. It returns to Mary. It returns to love.\n\nFather Kentenich understood the spiritual life as a dynamic process, not a static state. Every day is a new beginning. Every examen is a new opportunity to adjust course.\n\nIf you failed today in any of the three dimensions — don't condemn yourself. Acknowledge it simply, offer it to Mary, and set one concrete intention for tomorrow. Just one. That is enough.`,
+        santo: "Friday · Examen of surrender",
+        cita: "«No one has greater love than this, to lay down one's life for one's friends.» — John 15:13",
+        reflexion: `Friday closes the work week and brings a certain relief — but like every day, it was also a place where something asked to be given up: time, patience, comfort, your own plan.\n\nReview where you gave today without expecting anything back, and where, instead, you held on — out of tiredness, calculation, or fear of coming up short. Both are a real part of the day; the examen isn't looking only for the good, it's looking for the true.\n\nGiving doesn't always look heroic. Sometimes it's yielding a place, listening longer than you wanted to, finishing a task that had stopped being enjoyable. That small surrender today carries the same weight as a big one, because love isn't measured in size but in sincerity.\n\nWith this in mind, now enter the three questions of the day's examen.`,
         preguntas: examenQuestionsEn
       },
       {
-        santo: "Father Joseph Kentenich",
-        cita: "«Inner life is not an escape from the world — it is learning to find God in the heart of the world.»",
-        reflexion: `Father Kentenich did not form contemplatives who fled the world. He formed people who learned to find God in the heart of the world — in work, in family, in the city, in the tensions and joys of modern life.\n\nThis examen you do at the end of the day is precisely that: learning to read the world with eyes of faith. Not as one more religious burden, but as the gesture of a child who, coming home, tells the Father how their day went.\n\nThe Lord wants to know about your day. He is interested in the meeting that was difficult, the conversation that made you happy, the moment you felt his presence, and the moment you forgot him.\n\nTell him. Without embellishment. With the trust of a child who knows they are loved.`,
+        santo: "Saturday · Examen of renewal",
+        cita: "«Come to me, all who labor and are heavy laden, and I will give you rest.» — Matthew 11:28",
+        reflexion: `Saturday invites a different rhythm — slower, freer — but we don't always manage to enter it. Sometimes we fill the day with another kind of activity and arrive at night just as tired as on any Monday.\n\nAsk yourself today, calmly: did I really rest, or did I just change what kept me busy? Was there a moment — even a brief one — when I stopped producing and simply was, simply breathed?\n\nThe rest God offers isn't the absence of activity but the presence of peace. You can be very busy and at peace, or completely inactive and restless inside. What matters today isn't how much you did, but whether you let yourself be restored.\n\nNow review your day in that light, and answer the usual three questions with the same calm this day asks for.`,
         preguntas: examenQuestionsEn
       },
       {
-        santo: "Father Joseph Kentenich",
-        cita: "«At the end of the day, what matters is not how much you did but how much love you did it with.»",
-        reflexion: `Sunday. The Lord's day comes to an end. It has been a day to rest, to celebrate, to be with the people you love, to meet God in the Eucharist.\n\nHow was it? Was it truly a day of inner rest, or was it full of agitation disguised as leisure? Did you find God at Mass, in your family, in the silence of the afternoon?\n\nFather Kentenich believed that a Sunday well lived recharges the whole week — not as a recharge of physical energy but as a renewal of the spirit.\n\nAs you examine this Sunday, besides the usual three questions, add a fourth for yourself: Did I truly rest — did I rest in God?`,
+        santo: "Sunday · Examen of consecration",
+        cita: "«God rested on the seventh day from all his work that he had done.» — Genesis 2:2",
+        reflexion: `Sunday. The Lord's day comes to an end. It has been — or should have been — a day different from the other six: for the Eucharist, for family, for a rest that is not just a pause but an encounter.\n\nHow was it? Did you find God at Mass, in silence, in the people you love? Or did Sunday fill up with the same rush as always, disguised as rest?\n\nThis is traditionally the day the whole week is consecrated to God again — not only what was lived today, but what will be lived in the six days that follow. It's a good moment to look back at the whole week, not only ahead.\n\nAs you examine this Sunday, add a fourth question to the usual three, just for yourself: did I truly rest — did I rest in God?`,
         preguntas: examenQuestionsEn
       },
     ] : [
       {
-        santo: "Padre José Kentenich",
-        cita: "«El amor de Dios nos sale al encuentro en cada acontecimiento del día — aprender a verlo es el arte de la vida espiritual.»",
-        reflexion: `Al final de este día, detente un momento y recorre lo vivido con los ojos del corazón.\n\nEl Padre Kentenich nos enseñó a hacer el examen de la jornada a partir de tres preguntas esenciales — no para juzgarnos, sino para aprender a leer la vida como Dios la escribe.\n\nNo busques perfección en tus respuestas. Busca honestidad y amor. El Señor no pide cuentas como un juez — las pide como un Padre que quiere saber cómo estuvo el día de su hijo.\n\nResponde despacio. Con calma. Deja que cada pregunta haga su trabajo en el interior.`,
+        santo: "Lunes · Examen de fortaleza",
+        cita: "«El Señor es mi fortaleza y mi escudo; en él confió mi corazón, y fui ayudado.» — Salmo 28:7",
+        reflexion: `El lunes que termina te pidió fortaleza desde la primera hora: retomar el ritmo, enfrentar lo que la semana trae, sostener compromisos que el descanso del fin de semana había puesto en pausa.\n\nRepasa el día sin prisa. ¿Dónde encontraste la fuerza para seguir cuando el cuerpo o el ánimo pedían detenerse? ¿Fue tuya esa fuerza, o reconoces en ella una ayuda que no viniste a buscar?\n\nHay también momentos donde la fortaleza faltó — donde el cansancio, la irritación o el desánimo tomaron el lugar de la entereza que querías tener. Mirarlos sin dureza es parte del examen: no para lamentarte, sino para nombrar con honestidad dónde necesitas apoyarte mejor mañana.\n\nAntes de responder las tres preguntas de siempre, agradece la fuerza recibida y entrega la que faltó.`,
         preguntas: examenQuestionsEs
       },
       {
-        santo: "Padre José Kentenich",
-        cita: "«El que sabe leer la providencia en lo cotidiano, ha encontrado el secreto de la paz interior.»",
-        reflexion: `Cierra los ojos un momento. Deja que el día pase ante ti como una película — sin pausa, sin edición, tal como fue.\n\nVerás momentos luminosos que quizás dejaste pasar sin agradecerlos. Verás momentos oscuros que cargaste solo sin necesidad. Verás personas que te dieron algo y personas a quienes tú diste.\n\nEl Padre Kentenich creía que Dios habla en el lenguaje de los acontecimientos. No solo en la oración formal — en la llamada inesperada, en el contratiempo del mediodía, en la conversación que no tenías planeada.\n\nAhora, con esa película del día en la mente, responde las tres preguntas con libertad y amor.`,
+        santo: "Martes · Examen de confianza",
+        cita: "«Encomienda al Señor tu camino; confía en él, y él actuará.» — Salmo 37:5",
+        reflexion: `El martes puso a prueba tu confianza de maneras pequeñas y grandes: una respuesta que tardó en llegar, un resultado que no dependía de ti, una decisión que tuviste que tomar sin tener toda la información.\n\nVuelve sobre esos momentos. ¿En cuáles soltaste el control y descansaste en que Dios sostenía lo que tú no podías sostener? ¿En cuáles, en cambio, la ansiedad tomó el mando y trataste de resolverlo todo por tu cuenta?\n\nLa confianza no se mide por la ausencia de incertidumbre, sino por lo que haces con ella. Un día confiado no es un día sin preguntas — es un día donde las preguntas se entregan en vez de cargarse solas.\n\nRevisa ahora, con esa mirada, cómo fue tu vínculo con Dios, tu alianza de amor y tu trato con el prójimo en esta jornada.`,
         preguntas: examenQuestionsEs
       },
       {
-        santo: "Padre José Kentenich",
-        cita: "«Dios nos habla a través de los pequeños acontecimientos de cada día — solo necesitamos aprender su idioma.»",
-        reflexion: `El día que termina estuvo lleno de momentos pequeños. La mayoría los dejamos pasar sin advertir que eran mensajes de amor.\n\nUna palabra amable en el momento justo. Una dificultad que te obligó a confiar. Una alegría que llegó sin que la buscaras. Una persona que necesitaba algo que solo tú podías darle.\n\nEl Padre Kentenich nos enseñó que la santidad se teje en la trama ordinaria de los días fieles. La fidelidad en lo pequeño es la puerta a la grandeza interior.\n\nHoy, en este examen, busca los hilos dorados que Dios tejió en tu jornada. Están ahí, aunque no los hayas visto en su momento.`,
+        santo: "Miércoles · Examen de presencia",
+        cita: "«Yo estoy con vosotros todos los días, hasta el fin del mundo.» — Mateo 28:20",
+        reflexion: `A mitad de semana es fácil funcionar en piloto automático: reuniones, tareas, conversaciones que se atienden sin estar del todo ahí. Hoy el examen te invita a preguntarte, simplemente, ¿estuve presente?\n\nRecorre el día hora por hora si hace falta. ¿En qué momentos tu cuerpo estaba en un lugar y tu mente en otro? ¿En qué momentos, en cambio, lograste estar enteramente donde estabas — con quien tenías delante, en lo que hacías?\n\nLa presencia de Dios no depende de que tú la notes, pero tu capacidad de vivir el día con sentido sí depende de que aprendas a notarla. Cada instante de atención plena de hoy fue también un instante donde él estuvo más cerca de lo que creíste.\n\nCon esa conciencia, responde ahora las tres preguntas de siempre.`,
         preguntas: examenQuestionsEs
       },
       {
-        santo: "Padre José Kentenich",
-        cita: "«María recoge nuestras contribuciones — las pequeñas fidelidades del día — y las transforma en capital de gracias para el mundo.»",
-        reflexion: `Cada día es una oportunidad de contribuir al capital de gracias del Santuario. No con gestos heroicos, sino con la moneda pequeña de la vida cotidiana: la paciencia que costó, el servicio que nadie vio, la oración que rezaste sin ganas pero la rezaste.\n\nEl Padre Kentenich creía que nada de lo que vivimos con amor se pierde. Todo — absolutamente todo — que se ofrece a María con intención de amor, es recibido por ella y transformado en gracia para el mundo.\n\nEsto le da un peso inmenso a lo ordinario. El día de hoy, con sus rutinas y sus sorpresas, sus logros y sus fracasos, es material de santidad si lo ofreces con amor.\n\nAl responder las tres preguntas de hoy, recuerda: no te examinas para condenarte sino para crecer en amor.`,
+        santo: "Jueves · Examen de gratitud",
+        cita: "«¿Qué pagaré al Señor por todos sus beneficios para conmigo?» — Salmo 116:12",
+        reflexion: `El jueves, a un paso del fin de semana, suele traer cansancio acumulado. Es tentador terminarlo enumerando solo lo que falta, lo que salió mal, lo que aún pesa.\n\nAntes de eso, detente a buscar lo bueno recibido hoy — aunque haya sido pequeño. Una conversación que te alivianó. Un problema que se resolvió más fácil de lo esperado. Un gesto de alguien que no tenía por qué dártelo.\n\nLa gratitud no niega lo difícil del día; lo pone en su lugar correcto, como una parte y no como el todo. Un examen agradecido no es ingenuo — es preciso: ve tanto lo que costó como lo que se recibió.\n\nEmpieza por ahí, y luego responde con esa misma honestidad las tres preguntas del examen.`,
         preguntas: examenQuestionsEs
       },
       {
-        santo: "Padre José Kentenich",
-        cita: "«El instrumento perfecto no es el que nunca falla — es el que siempre vuelve a ponerse en manos de María.»",
-        reflexion: `Nadie termina el día habiendo sido perfecto. Nadie. Ni los santos, ni los místicos, ni los más fieles miembros del Movimiento.\n\nLo que distingue al alma que crece no es la ausencia de fallos sino la velocidad con que vuelve. Vuelve a la oración. Vuelve a María. Vuelve al amor.\n\nEl Padre Kentenich entendía la vida espiritual como un proceso dinámico, no como un estado estático. Cada día es un nuevo comienzo. Cada examen es una nueva oportunidad de ajustar el rumbo.\n\nSi hoy fallaste en alguna de las tres dimensiones — no te condenes. Reconócelo con sencillez, ofrécelo a María y proponte una cosa concreta para mañana. Solo una. Eso es suficiente.`,
+        santo: "Viernes · Examen de entrega",
+        cita: "«Nadie tiene amor más grande que el que da su vida por sus amigos.» — Juan 15:13",
+        reflexion: `El viernes cierra la semana laboral y trae consigo cierto alivio — pero también fue, como cada día, un lugar donde algo se te pidió entregar: tiempo, paciencia, comodidad, tu propio plan.\n\nRevisa dónde diste hoy sin esperar nada a cambio y dónde, en cambio, retuviste — por cansancio, por cálculo, por miedo a quedarte corto. Ambas cosas son parte real de la jornada; el examen no busca solo lo bueno, busca lo verdadero.\n\nEntregar no siempre se ve heroico. A veces es ceder un lugar, escuchar más de lo que se quería, terminar una tarea que ya no daba gusto hacer. Esa entrega pequeña de hoy tiene el mismo peso que la grande, porque el amor no se mide en tamaño sino en sinceridad.\n\nCon esto presente, entra ahora en las tres preguntas del examen de la jornada.`,
         preguntas: examenQuestionsEs
       },
       {
-        santo: "Padre José Kentenich",
-        cita: "«La vida interior no es una fuga del mundo — es aprender a encontrar a Dios en el corazón del mundo.»",
-        reflexion: `El Padre Kentenich no formó contemplativos que huyeran del mundo. Formó personas que aprendieran a encontrar a Dios en el corazón del mundo — en el trabajo, en la familia, en la ciudad, en las tensiones y alegrías de la vida moderna.\n\nEste examen que haces al final del día es precisamente eso: aprender a leer el mundo con ojos de fe. No como una carga religiosa más, sino como el gesto del hijo que al volver a casa le cuenta al Padre cómo le fue.\n\nEl Señor quiere saber de tu día. Le interesa la reunión que fue difícil, la conversación que te alegró, el momento en que sentiste su presencia y el momento en que lo olvidaste.\n\nCuéntaselo. Sin ornamentos. Con la confianza de un hijo que sabe que es amado.`,
+        santo: "Sábado · Examen de renovación",
+        cita: "«Venid a mí todos los que estáis trabajados y cargados, y yo os haré descansar.» — Mateo 11:28",
+        reflexion: `El sábado invita a un ritmo distinto — más lento, más libre — pero no siempre logramos entrar en él. A veces llenamos el día de otra clase de actividad y llegamos a la noche tan cansados como cualquier lunes.\n\nPregúntate hoy, con calma: ¿descansé de verdad, o solo cambié de ocupación? ¿Hubo un momento — aunque breve — en que dejé de producir y simplemente fui, estuve, respiré?\n\nEl descanso que Dios ofrece no es la ausencia de actividad sino la presencia de paz. Se puede estar muy ocupado y en paz, o completamente inactivo y agitado por dentro. Lo que hoy interesa no es cuánto hiciste, sino si te dejaste reparar.\n\nRevisa ahora tu día bajo esa luz, y responde las tres preguntas de siempre con la misma calma que este día pide.`,
         preguntas: examenQuestionsEs
       },
       {
-        santo: "Padre José Kentenich",
-        cita: "«Al final del día, lo que importa no es cuánto hiciste sino con cuánto amor lo hiciste.»",
-        reflexion: `Domingo. El día del Señor llega a su fin. Ha sido un día para descansar, para celebrar, para estar con las personas que amas, para encontrarte con Dios en la Eucaristía.\n\n¿Cómo fue? ¿Fue realmente un día de descanso interior o estuvo lleno de agitación disfrazada de ocio? ¿Encontraste a Dios en la Misa, en la familia, en el silencio de la tarde?\n\nEl Padre Kentenich creía que el domingo bien vivido carga las baterías de toda la semana — no como recarga de energía física sino como renovación del espíritu.\n\nAl hacer el examen de este domingo, además de las tres preguntas habituales, añade una cuarta para ti: ¿Descansé de verdad — descansé en Dios?`,
+        santo: "Domingo · Examen de consagración",
+        cita: "«Descansó Dios en el séptimo día de toda la obra que había hecho.» — Génesis 2:2",
+        reflexion: `Domingo. El día del Señor llega a su fin. Ha sido — o debía haber sido — un día distinto a los otros seis: para la Eucaristía, para la familia, para el descanso que no es solo pausa sino encuentro.\n\n¿Cómo fue? ¿Encontraste a Dios en la Misa, en el silencio, en las personas que amas? ¿O el domingo se llenó de la misma prisa de siempre, disfrazada de descanso?\n\nEste es el día en que, tradicionalmente, se consagra de nuevo la semana entera a Dios — no solo lo que se vivió hoy, sino lo que se vivirá en los seis días que siguen. Es un buen momento para mirar atrás, a la semana completa, y no solo hacia adelante.\n\nAl examinar este domingo, añade a las tres preguntas de siempre una cuarta, solo para ti: ¿descansé de verdad — descansé en Dios?`,
         preguntas: examenQuestionsEs
       },
     ];
@@ -2060,7 +2060,7 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
     const arr = practiceArrays[index] || laudesContent;
     const weekDay = new Date().getDay();
     const laudesIdx = weekDay === 0 ? 6 : weekDay - 1;
-    const rotationIdx = index === 0 ? laudesIdx : dayOfYear % arr.length;
+    const rotationIdx = (index === 0 || index === 2) ? laudesIdx : dayOfYear % arr.length;
     return arr[rotationIdx % arr.length];
   }
 
