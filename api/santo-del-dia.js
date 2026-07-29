@@ -1,3 +1,13 @@
+// La API externa calapi.inadiutorium.cz tiene algunas entradas desactualizadas
+// que no reflejan decretos litúrgicos posteriores. Corregimos aquí los casos
+// conocidos en vez de confiar ciegamente en el dato de terceros.
+// Clave: "mes-dia" (fijo cada año). Ej: 29 de julio, tras el decreto de 2021,
+// pasó a ser "Saints Martha, Mary and Lazarus" y su color correcto es blanco
+// (ninguno de los tres fue mártir), pero calapi todavía la marca como roja.
+const KNOWN_CALAPI_CORRECTIONS = {
+  "7-29": { title: "Saints Martha, Mary and Lazarus", colour: "white" },
+};
+
 export default async function handler(req, res) {
   try {
     // Preferimos la fecha local del cliente (year/month/day en query) para evitar
@@ -15,7 +25,12 @@ export default async function handler(req, res) {
     // Elegimos la celebración de mayor prioridad que tenga un título real
     // (rank_num más bajo = mayor prioridad; algunas entradas son solo "feria" sin santo)
     const conTitulo = (calData.celebrations || []).filter(c => c.title && c.title.trim() !== "");
-    const elegida = conTitulo.sort((a, b) => a.rank_num - b.rank_num)[0] || null;
+    let elegida = conTitulo.sort((a, b) => a.rank_num - b.rank_num)[0] || null;
+
+    const correccion = KNOWN_CALAPI_CORRECTIONS[`${m}-${d}`];
+    if (elegida && correccion) {
+      elegida = { ...elegida, title: correccion.title, colour: correccion.colour };
+    }
 
     res.status(200).json({
       fecha: calData.date,
