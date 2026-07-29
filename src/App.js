@@ -202,6 +202,7 @@ const translations = {
     telefono_shake_hint: "Sacude tu teléfono para recibir otra frase",
     telefono_shake_denied: "No se pudo activar la detección de movimiento en este dispositivo. Puedes seguir usando el botón.",
     more_sanjosedormido_title: "San José Dormido", more_sanjosedormido_sub: "Coloca tus intenciones bajo su almohada",
+    more_devocionario_title: "Devocionario", more_devocionario_sub: "Oraciones del cristiano y de Schoenstatt",
     sanjosedormido_title: "San José Dormido",
     sanjosedormido_intro: "Así como Dios le habló a San José en sueños para guiarlo, coloca tus intenciones bajo su almohada y confíaselas.",
     sanjosedormido_view: "Ver mis intenciones",
@@ -220,6 +221,13 @@ const translations = {
     miracles_title: "Milagros Eucarísticos",
     miracles_intro: "Casos documentados a lo largo de la historia de la Iglesia. Cada uno señala con distinto grado de reconocimiento oficial — lo indicamos en cada ficha.",
     miracles_fact: "💡 ¿Sabías que...?", miracles_recognition: "📜 Reconocimiento", miracles_share: "📤 Compartir",
+
+    devocionario_title: "Devocionario",
+    devocionario_intro: "Las oraciones que todo cristiano reza, junto con las oraciones propias de la espiritualidad de Schoenstatt. Toca cualquiera para leerla completa.",
+    devocionario_section_christian: "Oraciones del cristiano",
+    devocionario_section_schoenstatt: "Oraciones de Schoenstatt",
+    devocionario_share: "📤 Compartir",
+    devocionario_schoenstatt_note: "Las dos primeras son oraciones tradicionales de las comunidades de Schoenstatt; la última fue escrita para Mater como súplica sencilla por la causa de canonización del Padre Fundador.",
 
     rosary_title: "Santo Rosario", rosary_mysteries_today: "Misterios de hoy", rosary_five_mysteries: "Los 5 misterios",
     rosary_fruit: "Fruto", rosary_begin: "Comenzar el Rosario 🙏", rosary_exit: "Salir",
@@ -378,6 +386,7 @@ const translations = {
     telefono_shake_hint: "Shake your phone to receive another saying",
     telefono_shake_denied: "Motion detection couldn't be enabled on this device. You can keep using the button.",
     more_sanjosedormido_title: "Sleeping Saint Joseph", more_sanjosedormido_sub: "Place your intentions under his pillow",
+    more_devocionario_title: "Prayer Book", more_devocionario_sub: "Christian prayers and Schoenstatt prayers",
     sanjosedormido_title: "Sleeping Saint Joseph",
     sanjosedormido_intro: "Just as God spoke to Saint Joseph in his dreams to guide him, place your intentions under his pillow and entrust them to him.",
     sanjosedormido_view: "View my intentions",
@@ -396,6 +405,13 @@ const translations = {
     miracles_title: "Eucharistic Miracles",
     miracles_intro: "Documented cases throughout the Church's history. Each one is marked with a different degree of official recognition — we note it on each card.",
     miracles_fact: "💡 Did you know?", miracles_recognition: "📜 Recognition", miracles_share: "📤 Share",
+
+    devocionario_title: "Prayer Book",
+    devocionario_intro: "The prayers every Christian prays, together with the prayers proper to Schoenstatt spirituality. Tap any of them to read it in full.",
+    devocionario_section_christian: "Christian prayers",
+    devocionario_section_schoenstatt: "Schoenstatt prayers",
+    devocionario_share: "📤 Share",
+    devocionario_schoenstatt_note: "The first two are traditional prayers of Schoenstatt communities; the last one was written for Mater as a simple petition for the Founder's cause of canonization.",
 
     rosary_title: "Holy Rosary", rosary_mysteries_today: "Today's mysteries", rosary_five_mysteries: "The 5 mysteries",
     rosary_fruit: "Fruit", rosary_begin: "Begin the Rosary 🙏", rosary_exit: "Exit",
@@ -3841,6 +3857,7 @@ function MoreScreen({ onOpenSection, language, fontScale = 1 }) {
     { id: "sanjose", icon: "staff", color: "#6B4C9A", bg: "#EAE2F5", title: t(language, "more_sanjose_title"), sub: t(language, "more_sanjose_sub") },
     { id: "telefono", icon: "phone", color: "#B5651D", bg: "#F5E4D0", title: t(language, "more_telefono_title"), sub: t(language, "more_telefono_sub") },
     { id: "sanjosedormido", icon: "pillow", color: "#8B6142", bg: "#EFE3D3", title: t(language, "more_sanjosedormido_title"), sub: t(language, "more_sanjosedormido_sub") },
+    { id: "devocionario", icon: "book", color: C.teal, bg: "#DEEAEC", title: t(language, "more_devocionario_title"), sub: t(language, "more_devocionario_sub") },
   ];
   return (
     <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90, zoom: fontScale }}>
@@ -3937,6 +3954,98 @@ function MiraclesScreen({ onBack, language, fontScale = 1 }) {
   );
 }
 
+function getDevocionarioSections(language) {
+  const L = language === "en" ? "en" : "es";
+  const cristianas = [
+    { id: "senal", titulo: L === "en" ? "Sign of the Cross" : "Señal de la Cruz", texto: ORACION_SENAL_CRUZ[L] },
+    { id: "padrenuestro", titulo: L === "en" ? "Our Father" : "Padre Nuestro", texto: ORACION_PADRENUESTRO[L] },
+    { id: "avemaria", titulo: L === "en" ? "Hail Mary" : "Ave María", texto: ORACION_AVEMARIA[L] },
+    { id: "gloria", titulo: L === "en" ? "Glory Be" : "Gloria", texto: ORACION_GLORIA[L] },
+    { id: "credo", titulo: L === "en" ? "Apostles' Creed" : "Credo de los Apóstoles", texto: ORACION_CREDO[L] },
+    { id: "angelguarda", titulo: L === "en" ? "Guardian Angel" : "Ángel de la Guarda", texto: ORACION_ANGEL_GUARDA[L] },
+    { id: "angelus", titulo: L === "en" ? "The Angelus" : "El Ángelus", texto: ORACION_ANGELUS[L] },
+    { id: "salve", titulo: L === "en" ? "Hail Holy Queen" : "Salve", texto: ORACION_SALVE[L] },
+    { id: "fatima", titulo: L === "en" ? "Fatima Prayer" : "Oración de Fátima", texto: ORACION_FATIMA[L] },
+    { id: "contricion", titulo: L === "en" ? "Act of Contrition" : "Acto de Contrición", texto: ORACION_ACTO_CONTRICION[L] },
+  ];
+  const schoenstatt = [
+    { id: "instrumento", titulo: L === "en" ? "Prayer of the Instrument" : "Oración del Instrumento", texto: ORACION_INSTRUMENTO[L] },
+    { id: "alianza", titulo: L === "en" ? "Consecration to Mary (Covenant of Love)" : "Consagración a María (Alianza de Amor)", texto: ORACION_CONSAGRACION_ALIANZA[L] },
+    { id: "kentenich", titulo: L === "en" ? "For Father Founder Joseph Kentenich" : "Por el Padre Fundador José Kentenich", texto: ORACION_PADRE_FUNDADOR[L] },
+  ];
+  return { cristianas, schoenstatt };
+}
+
+function DevocionarioScreen({ onBack, language, fontScale = 1 }) {
+  const { isTablet } = useViewportInfo();
+  const [openId, setOpenId] = useState(null);
+  const { cristianas, schoenstatt } = useMemo(() => getDevocionarioSections(language), [language]);
+  const all = [...cristianas, ...schoenstatt];
+  const active = all.find(p => p.id === openId);
+  const sheetOverlay = { position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,30,50,0.7)", display: "flex", alignItems: isTablet ? "center" : "flex-end", justifyContent: "center", padding: isTablet ? 24 : 0 };
+  const sheetCard = { background: C.white, borderRadius: isTablet ? 24 : "24px 24px 0 0", padding: "24px 22px 48px", width: "100%", maxWidth: isTablet ? 480 : 390, margin: "0 auto", maxHeight: "85vh", overflowY: "auto" };
+
+  function Section({ title, items }) {
+    return (
+      <>
+        <p style={{ fontSize: 11, fontWeight: 700, color: C.teal, letterSpacing: "0.08em", textTransform: "uppercase", margin: "18px 22px 10px" }}>{title}</p>
+        <div style={{ padding: "0 22px", display: "flex", flexDirection: "column", gap: 10 }}>
+          {items.map(p => (
+            <button key={p.id} onClick={() => setOpenId(p.id)} style={{ display: "flex", alignItems: "center", gap: 12, background: C.cream, borderRadius: 12, padding: "14px 16px", border: "1px solid " + C.mist, borderLeft: `3px solid ${C.teal}`, cursor: "pointer", textAlign: "left", width: "100%" }}>
+              <div style={{ width: 36, height: 36, borderRadius: 10, background: "#DEEAEC", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <Icon name="book" size={17} color={C.teal} />
+              </div>
+              <p style={{ flex: 1, fontSize: 13, fontWeight: 700, color: C.ink, margin: 0 }}>{p.titulo}</p>
+              <Icon name="chevron" size={16} color={C.teal} />
+            </button>
+          ))}
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <div style={{ flex: 1, overflowY: "auto", background: gradients.home, paddingBottom: 90, zoom: fontScale }}>
+      {active && (
+        <div style={sheetOverlay} onClick={() => setOpenId(null)}>
+          <div onClick={e => e.stopPropagation()} style={sheetCard}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
+              <p style={{ fontSize: 17, fontWeight: 800, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif", flex: 1, paddingRight: 12 }}>{active.titulo}</p>
+              <button onClick={() => setOpenId(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+            </div>
+            <p style={{ fontSize: 14, color: C.inkMid, lineHeight: 1.9, margin: "0 0 20px", whiteSpace: "pre-line" }}>{active.texto}</p>
+            <button
+              onClick={() => shareContent(active.titulo + "\n\n" + active.texto, "Devocionario — Mater")}
+              style={{ width: "100%", padding: "14px", background: "#DEEAEC", border: "none", borderRadius: 14, color: C.teal, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}
+            >
+              {t(language, "devocionario_share")}
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div style={{ padding: "52px 22px 8px", display: "flex", alignItems: "center", gap: 10 }}>
+        <button onClick={onBack} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", padding: 4 }}>
+          <Icon name="chevron" size={20} color={C.inkLight} />
+        </button>
+        <div>
+          <p style={{ fontSize: 12, color: C.slateLight, margin: "0 0 2px", letterSpacing: "0.08em", textTransform: "uppercase" }}>{t(language, "more_back")}</p>
+          <h2 style={{ fontSize: 20, fontWeight: 600, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>{t(language, "devocionario_title")}</h2>
+        </div>
+      </div>
+      <p style={{ fontSize: 12, color: C.inkLight, lineHeight: 1.6, margin: "8px 22px 4px" }}>
+        {t(language, "devocionario_intro")}
+      </p>
+
+      <Section title={t(language, "devocionario_section_christian")} items={cristianas} />
+      <Section title={t(language, "devocionario_section_schoenstatt")} items={schoenstatt} />
+      <p style={{ fontSize: 10, color: C.slateLight, lineHeight: 1.6, margin: "16px 22px 0", fontStyle: "italic" }}>
+        {t(language, "devocionario_schoenstatt_note")}
+      </p>
+    </div>
+  );
+}
+
 const MISTERIOS_GOZOSOS = [
   { titulo: "La Anunciación del Ángel a María", texto: "María dice sí sin condiciones, y ese sí la convierte en instrumento dócil en las manos de Dios. Pido hoy esa misma disponibilidad: que mi voluntad no ponga condiciones a lo que Dios quiera hacer conmigo.", fruto: "Disponibilidad" },
   { titulo: "La Visitación de María a su prima Isabel", texto: "María no se guarda para sí el don recibido — corre a servir. Un instrumento fiel no retiene la gracia: la lleva a quien la necesita, con manos y tiempo concretos.", fruto: "Servicio generoso" },
@@ -4027,6 +4136,37 @@ const ORACION_CREDO = {
 const ORACION_SALVE = {
   es: "Dios te salve, Reina y Madre de misericordia,\nvida, dulzura y esperanza nuestra; Dios te salve.\nA ti llamamos los desterrados hijos de Eva;\na ti suspiramos, gimiendo y llorando,\nen este valle de lágrimas.\nEa, pues, Señora, abogada nuestra,\nvuelve a nosotros esos tus ojos misericordiosos;\ny después de este destierro muéstranos a Jesús,\nfruto bendito de tu vientre.\n¡Oh clementísima, oh piadosa, oh dulce siempre Virgen María!\nRuega por nosotros, Santa Madre de Dios,\npara que seamos dignos de alcanzar las promesas de Cristo.\nAmén.",
   en: "Hail, Holy Queen, Mother of Mercy,\nour life, our sweetness, and our hope.\nTo thee do we cry, poor banished children of Eve;\nto thee do we send up our sighs,\nmourning and weeping in this valley of tears.\nTurn then, most gracious advocate,\nthine eyes of mercy toward us;\nand after this our exile,\nshow unto us the blessed fruit of thy womb, Jesus.\nO clement, O loving, O sweet Virgin Mary!\nPray for us, O holy Mother of God,\nthat we may be made worthy of the promises of Christ.\nAmen.",
+};
+
+const ORACION_SENAL_CRUZ = {
+  es: "Por la señal de la Santa Cruz, de nuestros enemigos líbranos, Señor, Dios nuestro.\nEn el nombre del Padre, y del Hijo, y del Espíritu Santo.\nAmén.",
+  en: "In the sign of the Holy Cross, deliver us from our enemies, O Lord our God.\nIn the name of the Father, and of the Son, and of the Holy Spirit.\nAmen.",
+};
+const ORACION_ANGEL_GUARDA = {
+  es: "Ángel de mi guarda, dulce compañía,\nno me desampares ni de noche ni de día;\nno me dejes solo,\nque me perdería.\nAmén.",
+  en: "Angel of God, my guardian dear,\nto whom God's love commits me here,\never this day be at my side,\nto light and guard, to rule and guide.\nAmen.",
+};
+const ORACION_ANGELUS = {
+  es: "V. El Ángel del Señor anunció a María.\nR. Y concibió por obra y gracia del Espíritu Santo.\nDios te salve, María...\n\nV. He aquí la esclava del Señor.\nR. Hágase en mí según tu palabra.\nDios te salve, María...\n\nV. Y el Verbo de Dios se hizo carne.\nR. Y habitó entre nosotros.\nDios te salve, María...\n\nV. Ruega por nosotros, Santa Madre de Dios.\nR. Para que seamos dignos de alcanzar las promesas de Cristo.\n\nOremos: Infunde, Señor, tu gracia en nuestras almas, para que los que hemos conocido, por el anuncio del Ángel, la Encarnación de Jesucristo tu Hijo, por su Pasión y Cruz seamos llevados a la gloria de su Resurrección. Por el mismo Cristo, nuestro Señor. Amén.",
+  en: "V. The Angel of the Lord declared unto Mary.\nR. And she conceived of the Holy Spirit.\nHail Mary...\n\nV. Behold the handmaid of the Lord.\nR. Be it done unto me according to thy word.\nHail Mary...\n\nV. And the Word was made flesh.\nR. And dwelt among us.\nHail Mary...\n\nV. Pray for us, O holy Mother of God.\nR. That we may be made worthy of the promises of Christ.\n\nLet us pray: Pour forth, we beseech Thee, O Lord, Thy grace into our hearts, that we to whom the Incarnation of Christ, Thy Son, was made known by the message of an Angel, may by His Passion and Cross be brought to the glory of His Resurrection. Through the same Christ Our Lord. Amen.",
+};
+
+// Oraciones de la espiritualidad de Schoenstatt. Las dos primeras son
+// oraciones tradicionales de las comunidades de Schoenstatt (confirmadas
+// contra schoenstatt.com/es/recursos/prayers y schoenstatt.org.ar/formacion/oraciones);
+// la tercera es una petición original escrita para Mater, no un texto oficial
+// del Movimiento — se presenta como tal para no atribuir falsamente autoría.
+const ORACION_INSTRUMENTO = {
+  es: "Madre tres veces Admirable, consérvanos siempre como instrumento tuyo; haz que con amor, hoy y todos los días, nos pongamos a tu servicio. Según los deseos de Dios, usa de nosotros enteramente para tu Reino de Schoenstatt.\n\nToma el corazón y la voluntad: te pertenecen por completo; ciegamente quieren doblegarse a tus indicaciones y a tu palabra. Ser total posesión tuya es, para el instrumento, su honra y su gloria. Está pronto a servir sin reservas a tu Obra de Schoenstatt.\n\nMándanos sufrimientos, guíanos a la lucha, danos ganar la victoria plena. Contra las argucias y la saña del Demonio danos luz, templa nuestro espíritu. Aseméjanos a ti y enséñanos a caminar por la vida tal como tú lo hiciste: fuerte y digna, sencilla y bondadosa, repartiendo amor, paz y alegría.\n\nEn nosotros recorre nuestro tiempo preparándolo para Cristo Jesús. Aunque nos amenacen el mundo y el Demonio, o tempestades se ciernan sobre nosotros, tú vences todos los peligros y nos concedes tu inmenso poder. Tu corazón, puerta del cielo, es siempre nuestro seguro amparo.\n\nNunca pereceremos si somos fiel instrumento tuyo; nos ayudas en todo instante para que demos abundantes frutos. Con alegría caminemos de tu mano hacia el eterno Schoenstatt.",
+  en: "Mother, thrice Admirable, keep us always as your instrument; with love, today and every day, let us place ourselves at your service. According to God's desires, use us entirely for your Kingdom of Schoenstatt.\n\nTake our heart and our will: they belong wholly to you; they want to bend blindly to your guidance and your word. To be your total possession is, for the instrument, its honor and its glory. It stands ready to serve your Work of Schoenstatt without reserve.\n\nSend us sufferings, lead us into the struggle, let us win the full victory. Against the tricks and fury of the Enemy, give us light, temper our spirit. Make us like you, and teach us to walk through life as you did: strong and worthy, simple and kind, spreading love, peace, and joy.\n\nWalk through our time with us, preparing it for Christ Jesus. Though the world and the Enemy threaten us, or storms gather over us, you conquer every danger and grant us your immense power. Your heart, the gate of heaven, is always our sure shelter.\n\nWe will never perish if we are your faithful instrument; you help us at every moment so that we may bear abundant fruit. With joy let us walk, hand in hand with you, toward the eternal Schoenstatt.",
+};
+const ORACION_CONSAGRACION_ALIANZA = {
+  es: "¡Oh Señora mía! ¡Oh Madre mía! Yo me ofrezco todo a ti, y en prueba de mi filial afecto, te consagro en este día mis ojos, mis oídos, mi lengua, mi corazón; en una palabra, todo mi ser.\n\nYa que soy todo tuyo, oh Madre de bondad, guárdame, defiéndeme y utilízame como instrumento y posesión tuya.\n\nAmén.",
+  en: "O my Lady, O my Mother, I offer myself entirely to you, and as proof of my filial love I consecrate to you this day my eyes, my ears, my tongue, my heart — in a word, my whole being.\n\nSince I am all yours, O Mother of goodness, guard me, defend me, and use me as your instrument and your possession.\n\nAmen.",
+};
+const ORACION_PADRE_FUNDADOR = {
+  es: "Padre Bueno,\n\nte doy gracias por el Padre José Kentenich, que nos enseñó a confiar en tu Providencia y a poner nuestra vida, sin condiciones, en las manos de María.\n\nTe pido que su testimonio de fe, entregado incluso en el destierro y la persecución, siga dando fruto en la Iglesia. Si es tu voluntad, apresura el día en que la Iglesia lo declare santo, para que su ejemplo alumbre a más almas.\n\nPor su intercesión, dame la sencillez del instrumento dócil: nada para mí, todo para ti a través de María.\n\nAmén.",
+  en: "Good Father,\n\nI thank you for Father Joseph Kentenich, who taught us to trust in your Providence and to place our lives, without conditions, in Mary's hands.\n\nI ask that his witness of faith, given even through exile and persecution, continue to bear fruit in the Church. If it is your will, hasten the day when the Church declares him a saint, so that his example may light the way for more souls.\n\nThrough his intercession, give me the simplicity of the docile instrument: nothing for myself, everything for you through Mary.\n\nAmen.",
 };
 
 const ORACION_ETERNO_PADRE = {
@@ -5757,6 +5897,7 @@ export default function App() {
             {activeTab === "more" && moreSection === "sanjose" && <SanJoseRosaryScreen onBack={() => setMoreSection(null)} language={language} fontScale={fontScale} />}
             {activeTab === "more" && moreSection === "telefono" && <TelefonoPadreScreen onBack={() => setMoreSection(null)} language={language} fontScale={fontScale} />}
             {activeTab === "more" && moreSection === "sanjosedormido" && <SanJoseDormidoScreen user={user} onBack={() => setMoreSection(null)} language={language} fontScale={fontScale} />}
+            {activeTab === "more" && moreSection === "devocionario" && <DevocionarioScreen onBack={() => setMoreSection(null)} language={language} fontScale={fontScale} />}
             {activeTab === "profile" && <ProfileScreen user={user} profile={profile} setProfile={setProfile} onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} language={language} changeLanguage={changeLanguage} fontScale={fontScale} changeFontScale={changeFontScale} />}
             {!keyboardOpen && (
               <NavBar
