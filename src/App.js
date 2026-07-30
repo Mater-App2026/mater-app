@@ -99,6 +99,15 @@ const translations = {
     auth_send_reset: "Enviar correo de recuperación",
     auth_reset_sent: "✓ Revisa tu correo — te enviamos un enlace para restablecer tu contraseña.",
     auth_back_to_login: "Volver al inicio de sesión",
+    reset_title: "Nueva contraseña",
+    reset_subtitle: "Escribe y confirma tu nueva contraseña.",
+    reset_new_password_placeholder: "Nueva contraseña",
+    reset_confirm_password_placeholder: "Confirma tu nueva contraseña",
+    reset_submit: "Guardar contraseña",
+    reset_success: "✓ Tu contraseña se actualizó. Entrando a Mater...",
+    reset_error_length: "La contraseña debe tener al menos 6 caracteres.",
+    reset_error_match: "Las contraseñas no coinciden.",
+    reset_error_generic: "No pudimos actualizar tu contraseña. Pide un nuevo enlace de recuperación e inténtalo de nuevo.",
     auth_forgot_password: "¿Olvidaste tu contraseña?",
     auth_disclaimer: "Al usar Mater aceptas acompañar tu fe con honestidad y apertura. 🙏",
     auth_saving: "...",
@@ -284,6 +293,15 @@ const translations = {
     auth_send_reset: "Send recovery email",
     auth_reset_sent: "✓ Check your email — we sent you a link to reset your password.",
     auth_back_to_login: "Back to login",
+    reset_title: "New password",
+    reset_subtitle: "Type and confirm your new password.",
+    reset_new_password_placeholder: "New password",
+    reset_confirm_password_placeholder: "Confirm your new password",
+    reset_submit: "Save password",
+    reset_success: "✓ Your password was updated. Signing you in...",
+    reset_error_length: "Password must be at least 6 characters.",
+    reset_error_match: "Passwords don't match.",
+    reset_error_generic: "We couldn't update your password. Request a new recovery link and try again.",
     auth_forgot_password: "Forgot your password?",
     auth_disclaimer: "By using Mater you agree to walk your faith with honesty and openness. 🙏",
     auth_saving: "...",
@@ -1551,6 +1569,78 @@ function AuthScreen({ onAuth, language, fontScale = 1 }) {
         {" · "}
         <a href="https://materapp.org/privacidad.html" target="_blank" rel="noopener noreferrer" style={{ color: C.slateLight }}>{t(language, "profile_legal_privacy")}</a>
       </p>
+    </div>
+  );
+}
+
+function ResetPasswordScreen({ onDone, language, fontScale = 1 }) {
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+
+  async function handleSubmit() {
+    setError("");
+    if (!password || password.length < 6) { setError(t(language, "reset_error_length")); return; }
+    if (password !== confirmPassword) { setError(t(language, "reset_error_match")); return; }
+    setLoading(true);
+    try {
+      const { error: err } = await supabase.auth.updateUser({ password });
+      if (err) throw err;
+      setSuccess(true);
+      setTimeout(() => onDone(), 1200);
+    } catch (err) {
+      setError(err.message || t(language, "reset_error_generic"));
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const inputStyle = {
+    width: "100%", border: "none", outline: "none",
+    background: "transparent", borderBottom: `1px solid ${C.mist}`,
+    padding: "12px 4px", fontSize: 16, color: C.ink,
+    fontFamily: "'DM Sans', system-ui, sans-serif", boxSizing: "border-box",
+  };
+
+  return (
+    <div style={{ flex: 1, overflowY: "auto", background: gradients.auth, display: "flex", flexDirection: "column", justifyContent: "center", padding: "2rem 1.5rem", zoom: fontScale }}>
+      <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
+        <div style={{ width: 72, height: 72, borderRadius: 22, margin: "0 auto 1rem", overflow: "hidden", boxShadow: `0 8px 28px ${C.navy}44` }}>
+          <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        </div>
+        <h1 style={{ fontSize: 24, fontWeight: 700, color: C.navy, margin: "0 0 4px", fontFamily: "'Cormorant Garamond', serif" }}>{t(language, "reset_title")}</h1>
+        <p style={{ fontSize: 12, color: C.inkLight, margin: 0 }}>{t(language, "reset_subtitle")}</p>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <div style={{ position: "relative" }}>
+          <input
+            value={password} onChange={e => setPassword(e.target.value)}
+            placeholder={t(language, "reset_new_password_placeholder")} type={showPass ? "text" : "password"}
+            style={{ ...inputStyle, paddingRight: 44 }}
+            autoFocus
+          />
+          <button onClick={() => setShowPass(s => !s)} style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer" }}>
+            <Icon name="eye" size={18} color={C.slateLight} />
+          </button>
+        </div>
+        <input
+          value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}
+          placeholder={t(language, "reset_confirm_password_placeholder")} type={showPass ? "text" : "password"}
+          style={inputStyle}
+          onKeyDown={e => e.key === "Enter" && handleSubmit()}
+        />
+        {error && <p style={{ color: "#C0392B", fontSize: 12, margin: 0, textAlign: "center" }}>{error}</p>}
+        {success && <p style={{ color: C.blue, fontSize: 12, margin: 0, textAlign: "center" }}>{t(language, "reset_success")}</p>}
+        <button
+          onClick={handleSubmit} disabled={loading || success}
+          style={{ background: C.navy, border: "none", borderRadius: 12, padding: "14px", color: C.cream, fontWeight: 600, fontSize: 14, cursor: (loading || success) ? "default" : "pointer", opacity: (loading || success) ? 0.7 : 1, fontFamily: "'DM Sans', system-ui, sans-serif", marginTop: 8 }}
+        >
+          {loading ? t(language, "auth_saving") : t(language, "reset_submit")}
+        </button>
+      </div>
     </div>
   );
 }
@@ -5803,7 +5893,15 @@ export default function App() {
       setLoadingAuth(false);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      // El enlace de recuperación de contraseña también crea una sesión válida
+      // (session.user existe); si la tratáramos como un login normal, el
+      // usuario entraría directo a la app sin haber cambiado su contraseña.
+      if (event === "PASSWORD_RECOVERY") {
+        if (session?.user) { setUser(session.user); loadProfile(session.user.id); }
+        setScreen("resetPassword");
+        return;
+      }
       if (session?.user) {
         setUser(session.user);
         loadProfile(session.user.id);
@@ -5900,6 +5998,7 @@ export default function App() {
         {screen === "landing" && <LandingScreen onEnter={() => setScreen("onboarding")} language={language} fontScale={fontScale} />}
         {screen === "onboarding" && <OnboardingScreen onComplete={handleOnboardingComplete} language={language} fontScale={fontScale} />}
         {screen === "auth" && <AuthScreen onAuth={() => setScreen("app")} language={language} fontScale={fontScale} />}
+        {screen === "resetPassword" && <ResetPasswordScreen onDone={() => setScreen("app")} language={language} fontScale={fontScale} />}
         {screen === "app" && user && biometricLocked && (
           <BiometricLockScreen user={user} language={language} fontScale={fontScale} onUnlock={() => setBiometricLocked(false)} onUsePassword={handleLogout} />
         )}
