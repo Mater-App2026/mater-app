@@ -108,6 +108,10 @@ const translations = {
     reset_error_length: "La contraseña debe tener al menos 6 caracteres.",
     reset_error_match: "Las contraseñas no coinciden.",
     reset_error_generic: "No pudimos actualizar tu contraseña. Pide un nuevo enlace de recuperación e inténtalo de nuevo.",
+    recovery_confirm_title: "Restablecer contraseña",
+    recovery_confirm_subtitle: "Confirma para continuar y elegir tu nueva contraseña.",
+    recovery_confirm_button: "Continuar",
+    recovery_confirm_error: "Este enlace ya no es válido — puede que ya se haya usado o haya expirado. Pide uno nuevo desde \"¿Olvidaste tu contraseña?\".",
     auth_forgot_password: "¿Olvidaste tu contraseña?",
     auth_disclaimer: "Al usar Mater aceptas acompañar tu fe con honestidad y apertura. 🙏",
     auth_saving: "...",
@@ -302,6 +306,10 @@ const translations = {
     reset_error_length: "Password must be at least 6 characters.",
     reset_error_match: "Passwords don't match.",
     reset_error_generic: "We couldn't update your password. Request a new recovery link and try again.",
+    recovery_confirm_title: "Reset password",
+    recovery_confirm_subtitle: "Confirm to continue and choose your new password.",
+    recovery_confirm_button: "Continue",
+    recovery_confirm_error: "This link is no longer valid — it may have already been used or expired. Request a new one from \"Forgot your password?\".",
     auth_forgot_password: "Forgot your password?",
     auth_disclaimer: "By using Mater you agree to walk your faith with honesty and openness. 🙏",
     auth_saving: "...",
@@ -1641,6 +1649,49 @@ function ResetPasswordScreen({ onDone, language, fontScale = 1 }) {
           {loading ? t(language, "auth_saving") : t(language, "reset_submit")}
         </button>
       </div>
+    </div>
+  );
+}
+
+// Pantalla intermedia para el enlace de recuperación: exige un clic real del
+// usuario antes de canjear el token (verifyOtp). Los enlaces de un solo uso
+// que se canjean solos con solo visitarlos (GET automático) se pueden gastar
+// por una revisita del propio navegador (historial/atrás) antes de que el
+// usuario alcance a usarlos — este paso intermedio evita eso.
+function RecoveryConfirmScreen({ tokenHash, language, fontScale = 1 }) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleConfirm() {
+    setError("");
+    setLoading(true);
+    try {
+      const { error: err } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: "recovery" });
+      if (err) throw err;
+      // El cambio de pantalla a "resetPassword" lo dispara el evento
+      // PASSWORD_RECOVERY del listener global de onAuthStateChange.
+    } catch (err) {
+      setError(t(language, "recovery_confirm_error"));
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div style={{ flex: 1, overflowY: "auto", background: gradients.auth, display: "flex", flexDirection: "column", justifyContent: "center", padding: "2rem 1.5rem", zoom: fontScale }}>
+      <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
+        <div style={{ width: 72, height: 72, borderRadius: 22, margin: "0 auto 1rem", overflow: "hidden", boxShadow: `0 8px 28px ${C.navy}44` }}>
+          <img src="/logo.jpeg" alt="Mater" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        </div>
+        <h1 style={{ fontSize: 24, fontWeight: 700, color: C.navy, margin: "0 0 4px", fontFamily: "'Cormorant Garamond', serif" }}>{t(language, "recovery_confirm_title")}</h1>
+        <p style={{ fontSize: 12, color: C.inkLight, margin: 0 }}>{t(language, "recovery_confirm_subtitle")}</p>
+      </div>
+      {error && <p style={{ color: "#C0392B", fontSize: 12, margin: "0 0 16px", textAlign: "center" }}>{error}</p>}
+      <button
+        onClick={handleConfirm} disabled={loading}
+        style={{ background: C.navy, border: "none", borderRadius: 12, padding: "14px", color: C.cream, fontWeight: 600, fontSize: 14, cursor: loading ? "default" : "pointer", opacity: loading ? 0.7 : 1, fontFamily: "'DM Sans', system-ui, sans-serif" }}
+      >
+        {loading ? t(language, "auth_saving") : t(language, "recovery_confirm_button")}
+      </button>
     </div>
   );
 }
@@ -5858,6 +5909,7 @@ export default function App() {
   const [language, setLanguage] = useState(() => localStorage.getItem("mater_language") || "es");
   const [fontScale, setFontScale] = useState(() => parseFloat(localStorage.getItem("mater_font_scale")) || 1);
   const [biometricLocked, setBiometricLocked] = useState(false);
+  const [recoveryTokenHash, setRecoveryTokenHash] = useState(null);
   const { isTablet, contentMaxWidth, keyboardOpen } = useViewportInfo();
 
   function toggleDarkMode() {
@@ -5879,19 +5931,35 @@ export default function App() {
   }
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        setUser(session.user);
-        loadProfile(session.user.id);
-        setScreen("app");
-        // Solo se re-bloquea al recuperar una sesion ya existente (app recien
-        // abierta), no en un login interactivo fresco (ya escribio su clave).
-        if (isBiometricEnabledFor(session.user.id)) setBiometricLocked(true);
-      } else {
-        setScreen("auth");
-      }
+    // Enlace de recuperación con token_hash propio (no el ?ConfirmationURL de
+    // Supabase, que se canjea solo con un GET y puede gastarse por una
+    // revisita del navegador antes de que el usuario llegue a usarlo). Acá
+    // solo guardamos el token; el canje real (verifyOtp) espera un clic real
+    // del usuario en RecoveryConfirmScreen.
+    const params = new URLSearchParams(window.location.search);
+    const tokenHash = params.get("token_hash");
+    const isRecoveryLink = tokenHash && params.get("type") === "recovery";
+
+    if (isRecoveryLink) {
+      window.history.replaceState({}, "", window.location.pathname);
+      setRecoveryTokenHash(tokenHash);
+      setScreen("recoveryConfirm");
       setLoadingAuth(false);
-    });
+    } else {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session?.user) {
+          setUser(session.user);
+          loadProfile(session.user.id);
+          setScreen("app");
+          // Solo se re-bloquea al recuperar una sesion ya existente (app recien
+          // abierta), no en un login interactivo fresco (ya escribio su clave).
+          if (isBiometricEnabledFor(session.user.id)) setBiometricLocked(true);
+        } else {
+          setScreen("auth");
+        }
+        setLoadingAuth(false);
+      });
+    }
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       // El enlace de recuperación de contraseña también crea una sesión válida
@@ -5905,11 +5973,11 @@ export default function App() {
       if (session?.user) {
         setUser(session.user);
         loadProfile(session.user.id);
-        setScreen("app");
+        setScreen(prev => prev === "recoveryConfirm" ? prev : "app");
       } else {
         setUser(null);
         setProfile(null);
-        setScreen("auth");
+        setScreen(prev => prev === "recoveryConfirm" ? prev : "auth");
         setBiometricLocked(false);
       }
     });
@@ -5998,6 +6066,7 @@ export default function App() {
         {screen === "landing" && <LandingScreen onEnter={() => setScreen("onboarding")} language={language} fontScale={fontScale} />}
         {screen === "onboarding" && <OnboardingScreen onComplete={handleOnboardingComplete} language={language} fontScale={fontScale} />}
         {screen === "auth" && <AuthScreen onAuth={() => setScreen("app")} language={language} fontScale={fontScale} />}
+        {screen === "recoveryConfirm" && <RecoveryConfirmScreen tokenHash={recoveryTokenHash} language={language} fontScale={fontScale} />}
         {screen === "resetPassword" && <ResetPasswordScreen onDone={() => setScreen("app")} language={language} fontScale={fontScale} />}
         {screen === "app" && user && biometricLocked && (
           <BiometricLockScreen user={user} language={language} fontScale={fontScale} onUnlock={() => setBiometricLocked(false)} onUsePassword={handleLogout} />
