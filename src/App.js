@@ -113,13 +113,13 @@ const translations = {
     recovery_confirm_button: "Continuar",
     recovery_confirm_error: "Este enlace ya no es válido — puede que ya se haya usado o haya expirado. Pide uno nuevo desde \"¿Olvidaste tu contraseña?\".",
     auth_forgot_password: "¿Olvidaste tu contraseña?",
-    auth_disclaimer: "Al usar Mater aceptas acompañar tu fe con honestidad y apertura. 🙏",
+    auth_disclaimer: "Al usar Mater aceptas acompañar tu fe con honestidad y apertura.",
     auth_saving: "...",
 
     home_greeting_morning: "Buenos días", home_greeting_afternoon: "Buenas tardes", home_greeting_evening: "Buenas noches",
     home_verse_of_day: "Versículo del día", home_share: "Compartir",
     home_saint_of_day: "Santo del día", home_saint_loading: "Cargando santo del día...",
-    home_saint_prayer: "🙏 Oración", home_saint_fact: "💡 ¿Sabías que...?",
+    home_saint_prayer: "Oración", home_saint_fact: "¿Sabías que...?",
     liturgical_color_green: "Verde", liturgical_color_white: "Blanco", liturgical_color_gold: "Dorado",
     liturgical_color_red: "Rojo", liturgical_color_violet: "Morado",
     home_weekly_rhythm: "Ritmo semanal", home_day_singular: "día esta semana", home_days_plural: "días esta semana",
@@ -129,24 +129,24 @@ const translations = {
     home_world_intention_read_more: "Leer noticia completa →",
     home_ecclesial_intention: "Intención eclesial", home_ecclesial_intention_prayer: "Oración por la Iglesia",
     home_daily_challenge: "Reto del día", home_daily_challenge_mark_done: "Marcar como cumplido",
-    home_daily_challenge_done: "¡Reto cumplido hoy! 🎉",
+    home_daily_challenge_done: "¡Reto cumplido hoy!",
     challenge_category_corporal: "Obra de misericordia corporal", challenge_category_espiritual: "Obra de misericordia espiritual",
     challenge_category_gesto: "Gesto con el prójimo", challenge_category_oracion: "Reto de oración",
     home_talk_to_sofia: "Hablar con Sofía", home_talk_to_sofia_sub: "¿Tienes algo en el corazón hoy?",
     home_questions_to_pray: "Preguntas para orar", home_amen_done: "Amén ✓",
-    home_preparing_reflection: "✨ Mater está preparando tu reflexión...",
-    home_lectio_step_evangelio: "📜 EVANGELIO — Texto completo",
-    home_lectio_step_lectio: "📖 LECTIO — Leer", home_lectio_step_meditatio: "🤔 MEDITATIO — Rumiar",
-    home_lectio_step_oratio: "🙏 ORATIO — Responder", home_lectio_step_contemplatio: "✨ CONTEMPLATIO — Descansar",
+    home_preparing_reflection: "Mater está preparando tu reflexión...",
+    home_lectio_step_evangelio: "EVANGELIO — Texto completo",
+    home_lectio_step_lectio: "LECTIO — Leer", home_lectio_step_meditatio: "MEDITATIO — Rumiar",
+    home_lectio_step_oratio: "ORATIO — Responder", home_lectio_step_contemplatio: "CONTEMPLATIO — Descansar",
 
     chat_status: "● Guía espiritual",
-    chat_greeting: "Hola 🙏 Soy Sofía, tu guía espiritual. Estoy aquí para acompañarte en tu camino de fe. ¿Cómo está tu corazón hoy?",
+    chat_greeting: "Hola Soy Sofía, tu guía espiritual. Estoy aquí para acompañarte en tu camino de fe. ¿Cómo está tu corazón hoy?",
     chat_placeholder: "Escribe lo que llevas en el corazón...",
     chat_error: "Hubo un error al conectar. Por favor intenta de nuevo.",
     chat_suggestion_1: "No sé cuál es mi vocación", chat_suggestion_2: "Me cuesta orar en el día a día", chat_suggestion_3: "Siento que Dios está lejos",
 
     plan_header_label: "Plan de formación", plan_title: "30 días hacia Dios",
-    plan_questions_to_pray: "Preguntas para orar", plan_preparing: "✨ Mater está preparando tu reflexión...",
+    plan_questions_to_pray: "Preguntas para orar", plan_preparing: "Mater está preparando tu reflexión...",
     plan_completed: "✓ Completado", plan_mark_done: "Amén ✓ — Marcar como hecho",
     plan_of_days_completed: "de", plan_days_completed_suffix: "completados",
     plan_week_short: "Sem.",
@@ -159,9 +159,9 @@ const translations = {
     diary_tag_consolacion: "Consolación", diary_tag_discernimiento: "Discernimiento", diary_tag_gracias: "Acción de gracias", diary_tag_desolacion: "Desolación",
 
     profile_edit_name: "Editar nombre", profile_about: "Acerca de Mater",
-    profile_about_title: "🌿 Acerca de Mater", profile_about_version: "Versión 1.0 · materapp.org",
+    profile_about_title: "Acerca de Mater", profile_about_version: "Versión 1.0 · materapp.org",
     profile_about_body: "Mater es una plataforma de coaching espiritual católico para jóvenes adultos de 25-35 años. Integra espiritualidad ignaciana, mariana, franciscana, carmelita y schoenstattiana.",
-    profile_about_footer: "Hecho con ❤️ para la Iglesia joven",
+    profile_about_footer: "Hecho con amor para la Iglesia joven",
     profile_dark_mode: "Modo oscuro",
     profile_language: "Idioma", profile_language_es: "Español", profile_language_en: "English",
     profile_font_size: "Tamaño de letra",
@@ -171,19 +171,19 @@ const translations = {
     profile_biometric_standalone_warning: "Face ID / Touch ID no está disponible dentro de la app instalada en la pantalla de inicio. Abre materapp.org directamente en Safari para activarlo.",
     biometric_lock_title: "Mater está bloqueada",
     biometric_lock_subtitle: "Desbloquea con Face ID o Touch ID para continuar",
-    biometric_unlock_button: "Desbloquear 🔓",
+    biometric_unlock_button: "Desbloquear",
     biometric_unlock_failed: "No se pudo verificar. Intenta de nuevo.",
     biometric_use_password: "Usar mi contraseña en su lugar",
     profile_reminders: "Recordatorios diarios",
     profile_name_updated: "✓ Nombre actualizado",
     profile_save: "Guardar",
-    profile_notifications_title: "🔔 Recordatorios diarios",
+    profile_notifications_title: "Recordatorios diarios",
     profile_notifications_enable: "Activar notificaciones", profile_notifications_enable_sub: "Recibe avisos para tus 3 prácticas",
     profile_notifications_granted: "✓ Notificaciones activadas",
     profile_notifications_denied: "Permiso denegado. Actívalo en la configuración del navegador.",
     profile_notifications_choose_times: "Elige tus horarios",
     profile_notifications_iphone_hint: "En iPhone, instala Mater en tu pantalla de inicio (Compartir → Añadir a inicio) para recibir notificaciones.",
-    profile_share: "Compartir Mater 🔗", profile_share_copied: "¡Enlace copiado!",
+    profile_share: "Compartir Mater", profile_share_copied: "¡Enlace copiado!",
     profile_share_title: "Mater — Coaching espiritual", profile_share_text: "Te invito a Mater, una app de coaching espiritual católico.",
     profile_logout: "Cerrar sesión",
     profile_delete_account: "Eliminar cuenta",
@@ -211,8 +211,8 @@ const translations = {
     more_telefono_title: "Teléfono del Padre", more_telefono_sub: "Frases del Padre Kentenich",
     telefono_title: "Teléfono del Padre",
     telefono_intro: "Una tradición de espiritualidad de Schoenstatt: al «llamar al Padre», recibes una frase del Padre José Kentenich para llevar contigo en el día. Toca el botón, o agita tu teléfono, para recibir una nueva.",
-    telefono_new_phrase: "Otra frase 🔄",
-    telefono_shake_activate: "Activar sacudida 📳",
+    telefono_new_phrase: "Otra frase",
+    telefono_shake_activate: "Activar sacudida",
     telefono_shake_hint: "Sacude tu teléfono para recibir otra frase",
     telefono_shake_denied: "No se pudo activar la detección de movimiento en este dispositivo. Puedes seguir usando el botón.",
     more_sanjosedormido_title: "San José Dormido", more_sanjosedormido_sub: "Coloca tus intenciones bajo su almohada",
@@ -234,31 +234,31 @@ const translations = {
 
     miracles_title: "Milagros Eucarísticos",
     miracles_intro: "Casos documentados a lo largo de la historia de la Iglesia. Cada uno señala con distinto grado de reconocimiento oficial — lo indicamos en cada ficha.",
-    miracles_fact: "💡 ¿Sabías que...?", miracles_recognition: "📜 Reconocimiento", miracles_share: "📤 Compartir",
+    miracles_fact: "¿Sabías que...?", miracles_recognition: "Reconocimiento", miracles_share: "Compartir",
 
     devocionario_title: "Devocionario",
     devocionario_intro: "Las oraciones que todo cristiano reza, junto con las oraciones propias de la espiritualidad de Schoenstatt. Toca cualquiera para leerla completa.",
     devocionario_section_christian: "Oraciones del cristiano",
     devocionario_section_schoenstatt: "Oraciones de Schoenstatt",
-    devocionario_share: "📤 Compartir",
+    devocionario_share: "Compartir",
     devocionario_schoenstatt_note: "Las tres primeras son oraciones tradicionales de las comunidades de Schoenstatt; la última fue escrita para Mater como súplica sencilla por la causa de canonización del Padre Fundador.",
 
     rosary_title: "Santo Rosario", rosary_mysteries_today: "Misterios de hoy", rosary_five_mysteries: "Los 5 misterios",
-    rosary_fruit: "Fruto", rosary_begin: "Comenzar el Rosario 🙏", rosary_exit: "Salir",
+    rosary_fruit: "Fruto", rosary_begin: "Comenzar el Rosario", rosary_exit: "Salir",
     rosary_decade: "Decena", rosary_of_5: "de 5", rosary_fruit_of_mystery: "Fruto del misterio",
-    rosary_previous: "‹ Anterior", rosary_next: "Siguiente ›", rosary_finish: "Terminar 🙏",
+    rosary_previous: "‹ Anterior", rosary_next: "Siguiente ›", rosary_finish: "Terminar",
     divinemercy_title: "Coronilla a la Divina Misericordia", divinemercy_intro_title: "Sobre esta devoción",
     divinemercy_intro_text: "Revelada por Jesús a Santa Faustina Kowalska, esta coronilla se reza tradicionalmente en las cuentas del Rosario. Es especialmente recomendada a las 3 de la tarde, la «Hora de la Misericordia», en memoria de la muerte de Cristo en la cruz.",
-    divinemercy_begin: "Comenzar la Coronilla 🙏",
+    divinemercy_begin: "Comenzar la Coronilla",
     sanjose_title: "Rosario a San José", sanjose_intro_title: "Sobre esta devoción",
     sanjose_intro_text: "Esta devoción comenzó en 1871, cuando el Papa Pío IX promovió la veneración a San José como padre adoptivo de Jesús. Se reza con una coronilla de 60 cuentas en 7 grupos de 7, cada uno dedicado a un misterio de su vida.",
-    sanjose_begin: "Comenzar el Rosario 🙏", sanjose_group: "Grupo", sanjose_of_7: "de 7",
+    sanjose_begin: "Comenzar el Rosario", sanjose_group: "Grupo", sanjose_of_7: "de 7",
 
     horario_title: "Horario Espiritual", horario_loading: "Cargando tu Horario...",
     horario_particular_purpose: "Propósito particular", horario_purposes: "Propósitos",
     horario_add_purpose: "Añadir propósito", horario_new_category: "Nueva categoría",
     horario_monthly_goals: "Metas mensuales", horario_purpose_placeholder: "Escribe tu propósito...",
-    horario_reminder_title: "🔔 Recordatorio diario", horario_reminder_enable: "Activar recordatorio",
+    horario_reminder_title: "Recordatorio diario", horario_reminder_enable: "Activar recordatorio",
     horario_reminder_enable_sub: "Un aviso al día para revisar tu Horario",
     horario_reminder_time: "Hora del recordatorio",
     horario_reminder_granted: "✓ Recordatorio activado",
@@ -311,13 +311,13 @@ const translations = {
     recovery_confirm_button: "Continue",
     recovery_confirm_error: "This link is no longer valid — it may have already been used or expired. Request a new one from \"Forgot your password?\".",
     auth_forgot_password: "Forgot your password?",
-    auth_disclaimer: "By using Mater you agree to walk your faith with honesty and openness. 🙏",
+    auth_disclaimer: "By using Mater you agree to walk your faith with honesty and openness.",
     auth_saving: "...",
 
     home_greeting_morning: "Good morning", home_greeting_afternoon: "Good afternoon", home_greeting_evening: "Good evening",
     home_verse_of_day: "Verse of the day", home_share: "Share",
     home_saint_of_day: "Saint of the day", home_saint_loading: "Loading saint of the day...",
-    home_saint_prayer: "🙏 Prayer", home_saint_fact: "💡 Did you know?",
+    home_saint_prayer: "Prayer", home_saint_fact: "Did you know?",
     liturgical_color_green: "Green", liturgical_color_white: "White", liturgical_color_gold: "Gold",
     liturgical_color_red: "Red", liturgical_color_violet: "Violet",
     home_weekly_rhythm: "Weekly rhythm", home_day_singular: "day this week", home_days_plural: "days this week",
@@ -327,24 +327,24 @@ const translations = {
     home_world_intention_read_more: "Read the full story →",
     home_ecclesial_intention: "Church intention", home_ecclesial_intention_prayer: "Prayer for the Church",
     home_daily_challenge: "Challenge of the day", home_daily_challenge_mark_done: "Mark as done",
-    home_daily_challenge_done: "Challenge completed today! 🎉",
+    home_daily_challenge_done: "Challenge completed today!",
     challenge_category_corporal: "Corporal work of mercy", challenge_category_espiritual: "Spiritual work of mercy",
     challenge_category_gesto: "Gesture of love for others", challenge_category_oracion: "Prayer challenge",
     home_talk_to_sofia: "Talk with Sofía", home_talk_to_sofia_sub: "Do you have something on your heart today?",
     home_questions_to_pray: "Questions to pray with", home_amen_done: "Amen ✓",
-    home_preparing_reflection: "✨ Mater is preparing your reflection...",
-    home_lectio_step_evangelio: "📜 GOSPEL — Full text",
-    home_lectio_step_lectio: "📖 LECTIO — Read", home_lectio_step_meditatio: "🤔 MEDITATIO — Reflect",
-    home_lectio_step_oratio: "🙏 ORATIO — Respond", home_lectio_step_contemplatio: "✨ CONTEMPLATIO — Rest",
+    home_preparing_reflection: "Mater is preparing your reflection...",
+    home_lectio_step_evangelio: "GOSPEL — Full text",
+    home_lectio_step_lectio: "LECTIO — Read", home_lectio_step_meditatio: "MEDITATIO — Reflect",
+    home_lectio_step_oratio: "ORATIO — Respond", home_lectio_step_contemplatio: "CONTEMPLATIO — Rest",
 
     chat_status: "● Spiritual guide",
-    chat_greeting: "Hi 🙏 I'm Sofía, your spiritual guide. I'm here to walk with you on your journey of faith. How is your heart today?",
+    chat_greeting: "Hi I'm Sofía, your spiritual guide. I'm here to walk with you on your journey of faith. How is your heart today?",
     chat_placeholder: "Write what's on your heart...",
     chat_error: "There was a connection error. Please try again.",
     chat_suggestion_1: "I don't know what my vocation is", chat_suggestion_2: "I struggle to pray day to day", chat_suggestion_3: "I feel like God is far away",
 
     plan_header_label: "Formation plan", plan_title: "30 days toward God",
-    plan_questions_to_pray: "Questions to pray with", plan_preparing: "✨ Mater is preparing your reflection...",
+    plan_questions_to_pray: "Questions to pray with", plan_preparing: "Mater is preparing your reflection...",
     plan_completed: "✓ Completed", plan_mark_done: "Amen ✓ — Mark as done",
     plan_of_days_completed: "of", plan_days_completed_suffix: "completed",
     plan_week_short: "Wk.",
@@ -357,9 +357,9 @@ const translations = {
     diary_tag_consolacion: "Consolation", diary_tag_discernimiento: "Discernment", diary_tag_gracias: "Thanksgiving", diary_tag_desolacion: "Desolation",
 
     profile_edit_name: "Edit name", profile_about: "About Mater",
-    profile_about_title: "🌿 About Mater", profile_about_version: "Version 1.0 · materapp.org",
+    profile_about_title: "About Mater", profile_about_version: "Version 1.0 · materapp.org",
     profile_about_body: "Mater is a Catholic spiritual coaching platform for young adults aged 25-35. It integrates Ignatian, Marian, Franciscan, Carmelite, and Schoenstatt spirituality.",
-    profile_about_footer: "Made with ❤️ for the young Church",
+    profile_about_footer: "Made with love for the young Church",
     profile_dark_mode: "Dark mode",
     profile_language: "Language", profile_language_es: "Español", profile_language_en: "English",
     profile_font_size: "Text size",
@@ -369,19 +369,19 @@ const translations = {
     profile_biometric_standalone_warning: "Face ID / Touch ID isn't available inside the app installed on your home screen. Open materapp.org directly in Safari to enable it.",
     biometric_lock_title: "Mater is locked",
     biometric_lock_subtitle: "Unlock with Face ID or Touch ID to continue",
-    biometric_unlock_button: "Unlock 🔓",
+    biometric_unlock_button: "Unlock",
     biometric_unlock_failed: "Verification failed. Try again.",
     biometric_use_password: "Use my password instead",
     profile_reminders: "Daily reminders",
     profile_name_updated: "✓ Name updated",
     profile_save: "Save",
-    profile_notifications_title: "🔔 Daily reminders",
+    profile_notifications_title: "Daily reminders",
     profile_notifications_enable: "Enable notifications", profile_notifications_enable_sub: "Get reminders for your 3 practices",
     profile_notifications_granted: "✓ Notifications enabled",
     profile_notifications_denied: "Permission denied. Enable it in your browser settings.",
     profile_notifications_choose_times: "Choose your times",
     profile_notifications_iphone_hint: "On iPhone, install Mater on your home screen (Share → Add to Home Screen) to receive notifications.",
-    profile_share: "Share Mater 🔗", profile_share_copied: "Link copied!",
+    profile_share: "Share Mater", profile_share_copied: "Link copied!",
     profile_share_title: "Mater — Spiritual coaching", profile_share_text: "I'm inviting you to Mater, a Catholic spiritual coaching app.",
     profile_logout: "Log out",
     profile_delete_account: "Delete account",
@@ -409,8 +409,8 @@ const translations = {
     more_telefono_title: "The Father's Telephone", more_telefono_sub: "Sayings of Father Kentenich",
     telefono_title: "The Father's Telephone",
     telefono_intro: "A Schoenstatt spiritual tradition: by \"calling the Father,\" you receive a saying from Father Joseph Kentenich to carry with you through the day. Tap the button, or shake your phone, to receive a new one.",
-    telefono_new_phrase: "Another saying 🔄",
-    telefono_shake_activate: "Enable shake 📳",
+    telefono_new_phrase: "Another saying",
+    telefono_shake_activate: "Enable shake",
     telefono_shake_hint: "Shake your phone to receive another saying",
     telefono_shake_denied: "Motion detection couldn't be enabled on this device. You can keep using the button.",
     more_sanjosedormido_title: "Sleeping Saint Joseph", more_sanjosedormido_sub: "Place your intentions under his pillow",
@@ -432,31 +432,31 @@ const translations = {
 
     miracles_title: "Eucharistic Miracles",
     miracles_intro: "Documented cases throughout the Church's history. Each one is marked with a different degree of official recognition — we note it on each card.",
-    miracles_fact: "💡 Did you know?", miracles_recognition: "📜 Recognition", miracles_share: "📤 Share",
+    miracles_fact: "Did you know?", miracles_recognition: "Recognition", miracles_share: "Share",
 
     devocionario_title: "Prayer Book",
     devocionario_intro: "The prayers every Christian prays, together with the prayers proper to Schoenstatt spirituality. Tap any of them to read it in full.",
     devocionario_section_christian: "Christian prayers",
     devocionario_section_schoenstatt: "Schoenstatt prayers",
-    devocionario_share: "📤 Share",
+    devocionario_share: "Share",
     devocionario_schoenstatt_note: "The first three are traditional prayers of Schoenstatt communities; the last one was written for Mater as a simple petition for the Founder's cause of canonization.",
 
     rosary_title: "Holy Rosary", rosary_mysteries_today: "Today's mysteries", rosary_five_mysteries: "The 5 mysteries",
-    rosary_fruit: "Fruit", rosary_begin: "Begin the Rosary 🙏", rosary_exit: "Exit",
+    rosary_fruit: "Fruit", rosary_begin: "Begin the Rosary", rosary_exit: "Exit",
     rosary_decade: "Decade", rosary_of_5: "of 5", rosary_fruit_of_mystery: "Fruit of the mystery",
-    rosary_previous: "‹ Previous", rosary_next: "Next ›", rosary_finish: "Finish 🙏",
+    rosary_previous: "‹ Previous", rosary_next: "Next ›", rosary_finish: "Finish",
     divinemercy_title: "Chaplet of Divine Mercy", divinemercy_intro_title: "About this devotion",
     divinemercy_intro_text: "Revealed by Jesus to Saint Faustina Kowalska, this chaplet is traditionally prayed on Rosary beads. It's especially recommended at 3 p.m., the \"Hour of Mercy,\" in memory of Christ's death on the cross.",
-    divinemercy_begin: "Begin the Chaplet 🙏",
+    divinemercy_begin: "Begin the Chaplet",
     sanjose_title: "Rosary of Saint Joseph", sanjose_intro_title: "About this devotion",
     sanjose_intro_text: "This devotion began in 1871, when Pope Pius IX promoted devotion to Saint Joseph as the foster father of Jesus. It is prayed with a 60-bead chaplet in 7 groups of 7, each dedicated to a mystery of his life.",
-    sanjose_begin: "Begin the Rosary 🙏", sanjose_group: "Group", sanjose_of_7: "of 7",
+    sanjose_begin: "Begin the Rosary", sanjose_group: "Group", sanjose_of_7: "of 7",
 
     horario_title: "Spiritual Schedule", horario_loading: "Loading your Schedule...",
     horario_particular_purpose: "Personal resolution", horario_purposes: "Resolutions",
     horario_add_purpose: "Add resolution", horario_new_category: "New category",
     horario_monthly_goals: "Monthly goals", horario_purpose_placeholder: "Write your resolution...",
-    horario_reminder_title: "🔔 Daily reminder", horario_reminder_enable: "Enable reminder",
+    horario_reminder_title: "Daily reminder", horario_reminder_enable: "Enable reminder",
     horario_reminder_enable_sub: "One reminder a day to review your Schedule",
     horario_reminder_time: "Reminder time",
     horario_reminder_granted: "✓ Reminder enabled",
@@ -559,6 +559,16 @@ const Icon = ({ name, size = 22, color = "currentColor" }) => {
     check: <><circle cx="12" cy="12" r="9" stroke={color} strokeWidth="1.8" fill="none" /><polyline points="8,12.5 10.5,15 16,9" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" /></>,
     pillow: <><path d="M3 9.5C3 7.6 4.6 6 6.5 6h11C19.4 6 21 7.6 21 9.5v3.6c0 3-2.4 5.4-5.4 5.4H8.4C5.4 18.5 3 16.1 3 13.1V9.5z" stroke={color} strokeWidth="1.8" strokeLinejoin="round" fill="none" /><path d="M9 11.5c0-1 .5-2 1.5-2M15 11.5c0-1-.5-2-1.5-2" stroke={color} strokeWidth="1.3" strokeLinecap="round" fill="none" /></>,
     biometric: <><path d="M4 8V6a2 2 0 012-2h2" stroke={color} strokeWidth="1.8" strokeLinecap="round" fill="none" /><path d="M20 8V6a2 2 0 00-2-2h-2" stroke={color} strokeWidth="1.8" strokeLinecap="round" fill="none" /><path d="M4 16v2a2 2 0 002 2h2" stroke={color} strokeWidth="1.8" strokeLinecap="round" fill="none" /><path d="M20 16v2a2 2 0 01-2 2h-2" stroke={color} strokeWidth="1.8" strokeLinecap="round" fill="none" /><circle cx="12" cy="12" r="3" stroke={color} strokeWidth="1.6" fill="none" /></>,
+    x: <><line x1="18" y1="6" x2="6" y2="18" stroke={color} strokeWidth="1.8" strokeLinecap="round" /><line x1="6" y1="6" x2="18" y2="18" stroke={color} strokeWidth="1.8" strokeLinecap="round" /></>,
+    share: <><path d="M12 15V3" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" /><path d="M8 7l4-4 4 4" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" /><path d="M4 13v6a2 2 0 002 2h12a2 2 0 002-2v-6" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" /></>,
+    info: <><circle cx="12" cy="12" r="9" stroke={color} strokeWidth="1.8" fill="none" /><line x1="12" y1="11" x2="12" y2="16.5" stroke={color} strokeWidth="1.8" strokeLinecap="round" /><circle cx="12" cy="7.7" r="1" fill={color} /></>,
+    scroll: <><path d="M6 2h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2z" stroke={color} strokeWidth="1.6" strokeLinejoin="round" fill="none" /><path d="M15 2v5h5" stroke={color} strokeWidth="1.6" strokeLinejoin="round" fill="none" /><line x1="8" y1="13" x2="16" y2="13" stroke={color} strokeWidth="1.4" strokeLinecap="round" /><line x1="8" y1="17" x2="13" y2="17" stroke={color} strokeWidth="1.4" strokeLinecap="round" /></>,
+    refresh: <><path d="M21 12a9 9 0 11-3-6.7" stroke={color} strokeWidth="1.8" strokeLinecap="round" fill="none" /><polyline points="21,3 21,9 15,9" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" /></>,
+    link: <><path d="M10 13a5 5 0 007.5.5l2-2a5 5 0 00-7.1-7.1l-1 1" stroke={color} strokeWidth="1.7" strokeLinecap="round" fill="none" /><path d="M14 11a5 5 0 00-7.5-.5l-2 2a5 5 0 007.1 7.1l1-1" stroke={color} strokeWidth="1.7" strokeLinecap="round" fill="none" /></>,
+    sparkle: <path d="M12 3l1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7z" stroke={color} strokeWidth="1.4" strokeLinejoin="round" fill="none" />,
+    globe: <><circle cx="12" cy="12" r="9" stroke={color} strokeWidth="1.8" fill="none" /><ellipse cx="12" cy="12" rx="4" ry="9" stroke={color} strokeWidth="1.6" fill="none" /><line x1="3" y1="12" x2="21" y2="12" stroke={color} strokeWidth="1.6" /></>,
+    church: <><path d="M12 2v3.5M10.3 3.7h3.4" stroke={color} strokeWidth="1.6" strokeLinecap="round" /><path d="M5 21V11l7-5.2 7 5.2v10" stroke={color} strokeWidth="1.7" strokeLinejoin="round" fill="none" /><line x1="3" y1="21" x2="21" y2="21" stroke={color} strokeWidth="1.7" strokeLinecap="round" /><path d="M10 21v-5.5a2 2 0 014 0V21" stroke={color} strokeWidth="1.6" strokeLinejoin="round" fill="none" /></>,
+    download: <><path d="M12 3v12" stroke={color} strokeWidth="1.8" strokeLinecap="round" /><polyline points="7,10 12,15 17,10" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" /><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke={color} strokeWidth="1.8" strokeLinecap="round" fill="none" /></>,
   };
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" style={{ display: "block", flexShrink: 0 }}>
@@ -580,14 +590,14 @@ function shareContent(text, title = "Mater") {
 const PRACTICE_NAMES = ["Oración de la mañana", "Lectio Divina", "Examen de conciencia"];
 const PRACTICE_NAMES_EN = ["Morning prayer", "Lectio Divina", "Examination of conscience"];
 const PRACTICE_MESSAGES = [
-  "🙏 Es momento de tu oración de la mañana. Comienza el día con Dios.",
-  "📖 Tu Lectio Divina te espera. Deja que la Palabra de hoy te hable.",
-  "🌙 Termina el día con el Examen de conciencia. Revisa tu jornada con Dios."
+  "Es momento de tu oración de la mañana. Comienza el día con Dios.",
+  "Tu Lectio Divina te espera. Deja que la Palabra de hoy te hable.",
+  "Termina el día con el Examen de conciencia. Revisa tu jornada con Dios."
 ];
 const PRACTICE_MESSAGES_EN = [
-  "🙏 It's time for your morning prayer. Start the day with God.",
-  "📖 Your Lectio Divina awaits. Let today's Word speak to you.",
-  "🌙 End the day with the Examination of conscience. Review your day with God."
+  "It's time for your morning prayer. Start the day with God.",
+  "Your Lectio Divina awaits. Let today's Word speak to you.",
+  "End the day with the Examination of conscience. Review your day with God."
 ];
 
 // ─── Reto del día — batería de 30, uno por día del mes, se renueva solo ────
@@ -1316,7 +1326,7 @@ function scheduleNotifications(times) {
     }
     const delay = target.getTime() - now.getTime();
     const timer = setTimeout(() => {
-      new Notification("Mater 🙏 " + names[index], {
+      new Notification("Mater " + names[index], {
         body: messages[index],
         icon: "/logo.jpeg",
         badge: "/logo.jpeg",
@@ -1356,13 +1366,13 @@ function LandingScreen({ onEnter, language, fontScale = 1 }) {
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 10, width: "100%", marginBottom: 32 }}>
           {[
-            ["🕊️", t(language, "landing_feature_chat_title"), t(language, "landing_feature_chat_sub")],
-            ["📖", t(language, "landing_feature_lectio_title"), t(language, "landing_feature_lectio_sub")],
-            ["📋", t(language, "landing_feature_plan_title"), t(language, "landing_feature_plan_sub")],
-            ["📓", t(language, "landing_feature_diary_title"), t(language, "landing_feature_diary_sub")],
+            ["chat", t(language, "landing_feature_chat_title"), t(language, "landing_feature_chat_sub")],
+            ["book", t(language, "landing_feature_lectio_title"), t(language, "landing_feature_lectio_sub")],
+            ["plan", t(language, "landing_feature_plan_title"), t(language, "landing_feature_plan_sub")],
+            ["diary", t(language, "landing_feature_diary_title"), t(language, "landing_feature_diary_sub")],
           ].map(([icon, title, sub], i) => (
             <div key={i} style={{ display: "flex", alignItems: "center", gap: 14, background: C.cream, border: "1px solid " + C.mist, borderLeft: `3px solid ${C.navy}`, borderRadius: 12, padding: "12px 14px" }}>
-              <span style={{ fontSize: 20 }}>{icon}</span>
+              <Icon name={icon} size={20} color={C.navy} />
               <div style={{ textAlign: "left" }}>
                 <p style={{ fontSize: 13, fontWeight: 600, color: C.ink, margin: 0 }}>{title}</p>
                 <p style={{ fontSize: 11, color: C.inkLight, margin: 0 }}>{sub}</p>
@@ -2017,100 +2027,100 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
     const day = new Date().getDate();
 
     const examenQuestionsEs = [
-      "🙏 VÍNCULO CON DIOS: ¿He descubierto hoy la mano amorosa de Dios en los acontecimientos de mi jornada? ¿Dediqué tiempo a la oración o me dejé llevar por el activismo?",
-      "💙 ALIANZA DE AMOR: ¿He actuado hoy como un instrumento dócil en manos de María? ¿Visité el Santuario — espiritual o físicamente — en mis pensamientos o con una oración?",
-      "🤝 PRÓJIMO: ¿He sido paciente, comprensivo y caritativo con las personas que me rodean? ¿Juzgué a los demás o busqué ayudarles?"
+      "VÍNCULO CON DIOS: ¿He descubierto hoy la mano amorosa de Dios en los acontecimientos de mi jornada? ¿Dediqué tiempo a la oración o me dejé llevar por el activismo?",
+      "ALIANZA DE AMOR: ¿He actuado hoy como un instrumento dócil en manos de María? ¿Visité el Santuario — espiritual o físicamente — en mis pensamientos o con una oración?",
+      "PRÓJIMO: ¿He sido paciente, comprensivo y caritativo con las personas que me rodean? ¿Juzgué a los demás o busqué ayudarles?"
     ];
     const examenQuestionsEn = [
-      "🙏 BOND WITH GOD: Have I discovered God's loving hand today in the events of my day? Did I devote time to prayer, or did I get swept up in activism?",
-      "💙 COVENANT OF LOVE: Have I acted today as a docile instrument in Mary's hands? Did I visit the Shrine — spiritually or physically — in my thoughts or with a prayer?",
-      "🤝 NEIGHBOR: Have I been patient, understanding, and charitable with the people around me? Did I judge others or seek to help them?"
+      "BOND WITH GOD: Have I discovered God's loving hand today in the events of my day? Did I devote time to prayer, or did I get swept up in activism?",
+      "COVENANT OF LOVE: Have I acted today as a docile instrument in Mary's hands? Did I visit the Shrine — spiritually or physically — in my thoughts or with a prayer?",
+      "NEIGHBOR: Have I been patient, understanding, and charitable with the people around me? Did I judge others or seek to help them?"
     ];
 
     const laudesContent = language === "en" ? [
       {
         santo: "Monday · Prayer of strength",
         cita: "«I can do all things through him who strengthens me.» — Philippians 4:13",
-        reflexion: `Lord and my God,\n\nHere I am, at the start of this day, with all that I am and all that I have.\n\nI thank you for this dawn I did not deserve — for the air I breathe, for the life running through my veins, for the immense gift of a new day.\n\nToday I rise knowing I am not alone. You go before me. You walk beside me. You hold me up from behind. Nothing I encounter today can separate you from me.\n\nGive me strength to face what is difficult without running away. Give me clarity to make the decisions that are mine to make. Give me love to give the best of myself to the people I meet.\n\nMay this day be yours, Lord. May everything I do, say, and think bear your mark.\n\nAmen. 🙏`,
+        reflexion: `Lord and my God,\n\nHere I am, at the start of this day, with all that I am and all that I have.\n\nI thank you for this dawn I did not deserve — for the air I breathe, for the life running through my veins, for the immense gift of a new day.\n\nToday I rise knowing I am not alone. You go before me. You walk beside me. You hold me up from behind. Nothing I encounter today can separate you from me.\n\nGive me strength to face what is difficult without running away. Give me clarity to make the decisions that are mine to make. Give me love to give the best of myself to the people I meet.\n\nMay this day be yours, Lord. May everything I do, say, and think bear your mark.\n\nAmen.`,
         preguntas: ["What specific challenge of today do you want to place in God's hands?", "Is there someone you want to love better today — and how will you do it?", "With what attitude do you want to begin this day?"]
       },
       {
         santo: "Tuesday · Prayer of trust",
         cita: "«Fear not, for I am with you; be not dismayed, for I am your God.» — Isaiah 41:10",
-        reflexion: `Good Father,\n\nBefore the noise of the day reaches me, I stop here with you.\n\nI recognize that fear sometimes paralyzes me, that uncertainty weighs on me, that there are moments when I don't know where I'm going. But today I choose trust. I choose to believe that You are in control of what I cannot control.\n\nGive me the courage of one who knows they are accompanied. The strength of one who has found their source. The joy of one who lives as a child and not as an orphan.\n\nMay I not give up today at the first difficulty. May every obstacle be an opportunity to see you act. May I be able to say at the end of the day: I trusted, and You did not fail me.\n\nThank you, Lord, for this new day. I am yours.\n\nAmen. 🙏`,
+        reflexion: `Good Father,\n\nBefore the noise of the day reaches me, I stop here with you.\n\nI recognize that fear sometimes paralyzes me, that uncertainty weighs on me, that there are moments when I don't know where I'm going. But today I choose trust. I choose to believe that You are in control of what I cannot control.\n\nGive me the courage of one who knows they are accompanied. The strength of one who has found their source. The joy of one who lives as a child and not as an orphan.\n\nMay I not give up today at the first difficulty. May every obstacle be an opportunity to see you act. May I be able to say at the end of the day: I trusted, and You did not fail me.\n\nThank you, Lord, for this new day. I am yours.\n\nAmen.`,
         preguntas: ["What specific fear or worry do you want to hand over to God this morning?", "What would your day look like if you lived from trust instead of fear?", "Is there something God is asking you to let go of today so you can move forward?"]
       },
       {
         santo: "Wednesday · Prayer of presence",
         cita: "«But seek first the kingdom of God and his righteousness, and all these things will be added to you.» — Matthew 6:33",
-        reflexion: `Jesus,\n\nToday I want to live with you, not just alongside you.\n\nI don't want a day of rushing where I forget you until nightfall. I want a day where your presence is the thread that binds every moment — the morning meeting, the hurried lunch, the difficult conversation, the trip back home.\n\nHelp me to be present. Present in what I do, present to whoever is in front of me, present in you.\n\nMay I not lose myself today in the urgent and forget the important. May I know how to distinguish what deserves my attention from what only drains my energy.\n\nI offer you this Wednesday — with its tasks, its encounters, and its surprises — as an offering of love.\n\nStay with me, Lord. That is all I need.\n\nAmen. 🙏`,
+        reflexion: `Jesus,\n\nToday I want to live with you, not just alongside you.\n\nI don't want a day of rushing where I forget you until nightfall. I want a day where your presence is the thread that binds every moment — the morning meeting, the hurried lunch, the difficult conversation, the trip back home.\n\nHelp me to be present. Present in what I do, present to whoever is in front of me, present in you.\n\nMay I not lose myself today in the urgent and forget the important. May I know how to distinguish what deserves my attention from what only drains my energy.\n\nI offer you this Wednesday — with its tasks, its encounters, and its surprises — as an offering of love.\n\nStay with me, Lord. That is all I need.\n\nAmen.`,
         preguntas: ["How can you keep the awareness of God's presence in the busiest moments of the day?", "What is the 'important' thing you don't want to forget today despite the urgent?", "To whom will you give your best presence today?"]
       },
       {
         santo: "Thursday · Prayer of gratitude",
         cita: "«Give thanks in all circumstances, for this is the will of God for you.» — 1 Thessalonians 5:18",
-        reflexion: `My God,\n\nBefore asking, before worrying, before planning — I want to give thanks.\n\nThank you for the night that passed and the day that begins. Thank you for the people who love me and whom I love. Thank you for the health I have, for the work waiting for me, for the small pleasures you give me without my asking.\n\nI know there will be difficult things today. I know not everything will go as I plan. But today I choose to look first at what I have, not at what I lack.\n\nGive me a grateful heart. The kind of gratitude that doesn't depend on circumstances but on the certainty that You are good — always, in everything, even when I don't see it.\n\nMay gratitude be the tone of this Thursday. May it be contagious to those around me.\n\nAmen. 🙏`,
+        reflexion: `My God,\n\nBefore asking, before worrying, before planning — I want to give thanks.\n\nThank you for the night that passed and the day that begins. Thank you for the people who love me and whom I love. Thank you for the health I have, for the work waiting for me, for the small pleasures you give me without my asking.\n\nI know there will be difficult things today. I know not everything will go as I plan. But today I choose to look first at what I have, not at what I lack.\n\nGive me a grateful heart. The kind of gratitude that doesn't depend on circumstances but on the certainty that You are good — always, in everything, even when I don't see it.\n\nMay gratitude be the tone of this Thursday. May it be contagious to those around me.\n\nAmen.`,
         preguntas: ["What three specific things can you thank God for this morning?", "Is there a person in your life you should thank for something — and can you do it today?", "How does your perspective on the day change when you begin it with gratitude?"]
       },
       {
         santo: "Friday · Prayer of surrender",
         cita: "«Not my will, but yours be done.» — Luke 22:42",
-        reflexion: `Lord,\n\nToday is Friday — the day I remember that the greatest love was expressed in total surrender.\n\nI too want to give myself today. Not heroically or dramatically — in small things. In patience with whoever irritates me. In honesty when it would be convenient to lie. In service when I would rather rest.\n\nTake this day, Lord. Take my plans and align them with yours. Take my strength and use it for good. Take my limitations and show yourself strong in them.\n\nI am not afraid to surrender because I know to whom I surrender. To someone who knows me completely and loves me completely. That is enough.\n\nToday, like Mary at the Annunciation: 'Let it be done to me according to your word.'\n\nAmen. 🙏`,
+        reflexion: `Lord,\n\nToday is Friday — the day I remember that the greatest love was expressed in total surrender.\n\nI too want to give myself today. Not heroically or dramatically — in small things. In patience with whoever irritates me. In honesty when it would be convenient to lie. In service when I would rather rest.\n\nTake this day, Lord. Take my plans and align them with yours. Take my strength and use it for good. Take my limitations and show yourself strong in them.\n\nI am not afraid to surrender because I know to whom I surrender. To someone who knows me completely and loves me completely. That is enough.\n\nToday, like Mary at the Annunciation: 'Let it be done to me according to your word.'\n\nAmen.`,
         preguntas: ["Is there something in your day today that is hard for you to surrender to God — and why?", "In what area of your life do you need to say 'not my will but yours'?", "What would your Friday look like if you lived it with an attitude of total surrender?"]
       },
       {
         santo: "Saturday · Prayer of renewal",
         cita: "«The Lord is my shepherd; I shall not want. He makes me lie down in green pastures.» — Psalm 23:1-2",
-        reflexion: `Father,\n\nSaturday is the day of rest — but also the day of renewal. Today I want to let You repair me from within.\n\nI come with the weariness of the week. With what went well and what didn't. With pending conversations and unfinished projects. With the joy of the good moments and the weight of the difficult ones.\n\nTake it all. And give me back renewed.\n\nGive me real rest today — not just from activity but from anxiety. Give me the ability to be without doing, to be without producing, to love without merit.\n\nMay this Saturday be a foretaste of the eternal rest You have promised. A day where I learn to receive instead of only giving.\n\nThank you for being my shepherd. Thank you that I lack nothing when I am with you.\n\nAmen. 🙏`,
+        reflexion: `Father,\n\nSaturday is the day of rest — but also the day of renewal. Today I want to let You repair me from within.\n\nI come with the weariness of the week. With what went well and what didn't. With pending conversations and unfinished projects. With the joy of the good moments and the weight of the difficult ones.\n\nTake it all. And give me back renewed.\n\nGive me real rest today — not just from activity but from anxiety. Give me the ability to be without doing, to be without producing, to love without merit.\n\nMay this Saturday be a foretaste of the eternal rest You have promised. A day where I learn to receive instead of only giving.\n\nThank you for being my shepherd. Thank you that I lack nothing when I am with you.\n\nAmen.`,
         preguntas: ["What do you need to let rest today — not just the body but the soul?", "How can you make today's rest a spiritual act and not just a physical one?", "What do you want to recover this Saturday for the week ahead?"]
       },
       {
         santo: "Sunday · Prayer of consecration",
         cita: "«This is the day that the Lord has made; let us rejoice and be glad in it.» — Psalm 118:24",
-        reflexion: `Risen Lord,\n\nToday is Sunday — the first day of the new creation. The day death lost and love won.\n\nI rise with that joy in my heart. Not because everything is perfect in my life — but because You conquered what seemed unconquerable. And that victory is mine too.\n\nToday I consecrate myself to you again. I give you this week that begins. I give you my projects, my relationships, my fears, and my hopes. Place them on the altar together with the bread and wine of today's Mass.\n\nMay this Sunday recharge me for the week. May today's Eucharist be the fuel for the days ahead.\n\nI am yours, Lord. Completely yours. Do with me what you will — because I know that all you want for me is love.\n\nAmen. 🙏`,
+        reflexion: `Risen Lord,\n\nToday is Sunday — the first day of the new creation. The day death lost and love won.\n\nI rise with that joy in my heart. Not because everything is perfect in my life — but because You conquered what seemed unconquerable. And that victory is mine too.\n\nToday I consecrate myself to you again. I give you this week that begins. I give you my projects, my relationships, my fears, and my hopes. Place them on the altar together with the bread and wine of today's Mass.\n\nMay this Sunday recharge me for the week. May today's Eucharist be the fuel for the days ahead.\n\nI am yours, Lord. Completely yours. Do with me what you will — because I know that all you want for me is love.\n\nAmen.`,
         preguntas: ["With what attitude do you come to Mass today — what do you want God to do in you?", "What do you want to consecrate to God at the start of this new week?", "How do you want the joy of Sunday to extend into the days ahead?"]
       },
     ] : [
       {
         santo: "Lunes · Oración de fortaleza",
         cita: "«Todo lo puedo en Cristo que me fortalece.» — Filipenses 4:13",
-        reflexion: `Señor y Dios mío,\n\nAquí estoy, al comienzo de este día, con todo lo que soy y todo lo que tengo.\n\nTe doy gracias por este amanecer que no merecía — por el aire que respiro, por la vida que corre en mis venas, por el regalo inmenso de un día nuevo.\n\nHoy me levanto sabiendo que no estoy solo. Tú vas delante de mí. Tú caminas a mi lado. Tú me sostienes por detrás. Nada de lo que encuentre hoy podrá separarte de mí.\n\nDame fortaleza para enfrentar lo difícil sin huir. Dame claridad para tomar las decisiones que me tocan. Dame amor para dar lo mejor de mí a las personas que encontraré.\n\nQue este día sea tuyo, Señor. Que todo lo que haga, lo diga y lo piense lleve tu sello.\n\nAmén. 🙏`,
+        reflexion: `Señor y Dios mío,\n\nAquí estoy, al comienzo de este día, con todo lo que soy y todo lo que tengo.\n\nTe doy gracias por este amanecer que no merecía — por el aire que respiro, por la vida que corre en mis venas, por el regalo inmenso de un día nuevo.\n\nHoy me levanto sabiendo que no estoy solo. Tú vas delante de mí. Tú caminas a mi lado. Tú me sostienes por detrás. Nada de lo que encuentre hoy podrá separarte de mí.\n\nDame fortaleza para enfrentar lo difícil sin huir. Dame claridad para tomar las decisiones que me tocan. Dame amor para dar lo mejor de mí a las personas que encontraré.\n\nQue este día sea tuyo, Señor. Que todo lo que haga, lo diga y lo piense lleve tu sello.\n\nAmén.`,
         preguntas: ["¿Qué desafío específico de hoy quieres poner en manos de Dios?", "¿Hay alguien a quien quieres amar mejor hoy — y cómo lo harás?", "¿Con qué actitud quieres arrancar este día?"]
       },
       {
         santo: "Martes · Oración de confianza",
         cita: "«No temas, porque yo estoy contigo; no te angusties, porque yo soy tu Dios.» — Isaías 41:10",
-        reflexion: `Padre bueno,\n\nAntes de que el ruido del día me alcance, me detengo aquí contigo.\n\nReconozco que a veces el miedo me paraliza, que la incertidumbre me pesa, que hay momentos en que no sé hacia dónde voy. Pero hoy elijo la confianza. Elijo creer que Tú tienes el control de lo que yo no puedo controlar.\n\nDame el ánimo de quien sabe que está acompañado. La fuerza de quien ha encontrado su fuente. La alegría de quien vive como hijo y no como huérfano.\n\nQue hoy no me rinda ante la primera dificultad. Que cada obstáculo sea una oportunidad de verte actuar. Que al final del día pueda decir: confié, y Tú no me fallaste.\n\nGracias, Señor, por este nuevo día. Soy tuyo.\n\nAmén. 🙏`,
+        reflexion: `Padre bueno,\n\nAntes de que el ruido del día me alcance, me detengo aquí contigo.\n\nReconozco que a veces el miedo me paraliza, que la incertidumbre me pesa, que hay momentos en que no sé hacia dónde voy. Pero hoy elijo la confianza. Elijo creer que Tú tienes el control de lo que yo no puedo controlar.\n\nDame el ánimo de quien sabe que está acompañado. La fuerza de quien ha encontrado su fuente. La alegría de quien vive como hijo y no como huérfano.\n\nQue hoy no me rinda ante la primera dificultad. Que cada obstáculo sea una oportunidad de verte actuar. Que al final del día pueda decir: confié, y Tú no me fallaste.\n\nGracias, Señor, por este nuevo día. Soy tuyo.\n\nAmén.`,
         preguntas: ["¿Qué miedo o preocupación específica quieres entregarle a Dios esta mañana?", "¿Cómo sería tu día si vivieras desde la confianza en lugar del miedo?", "¿Hay algo que Dios te pide soltar hoy para poder avanzar?"]
       },
       {
         santo: "Miércoles · Oración de presencia",
         cita: "«Busca primero el Reino de Dios y su justicia, y todo lo demás se te dará por añadidura.» — Mateo 6:33",
-        reflexion: `Jesús,\n\nHoy quiero vivir contigo, no solo junto a ti.\n\nNo quiero un día de carreras donde te olvido hasta la noche. Quiero un día donde tu presencia sea el hilo que une cada momento — la reunión de la mañana, el almuerzo apresurado, la conversación difícil, el trayecto de vuelta a casa.\n\nAyúdame a estar presente. Presente en lo que hago, presente en quien tengo delante, presente en ti.\n\nQue hoy no me pierda en lo urgente y olvide lo importante. Que sepa distinguir lo que merece mi atención de lo que solo roba mi energía.\n\nTe ofrezco este miércoles — con sus tareas, sus encuentros y sus sorpresas — como una ofrenda de amor.\n\nQuédate conmigo, Señor. Eso es todo lo que necesito.\n\nAmén. 🙏`,
+        reflexion: `Jesús,\n\nHoy quiero vivir contigo, no solo junto a ti.\n\nNo quiero un día de carreras donde te olvido hasta la noche. Quiero un día donde tu presencia sea el hilo que une cada momento — la reunión de la mañana, el almuerzo apresurado, la conversación difícil, el trayecto de vuelta a casa.\n\nAyúdame a estar presente. Presente en lo que hago, presente en quien tengo delante, presente en ti.\n\nQue hoy no me pierda en lo urgente y olvide lo importante. Que sepa distinguir lo que merece mi atención de lo que solo roba mi energía.\n\nTe ofrezco este miércoles — con sus tareas, sus encuentros y sus sorpresas — como una ofrenda de amor.\n\nQuédate conmigo, Señor. Eso es todo lo que necesito.\n\nAmén.`,
         preguntas: ["¿Cómo puedes mantener la conciencia de la presencia de Dios en los momentos más ocupados del día?", "¿Qué es lo 'importante' que no quieres olvidar hoy a pesar de lo urgente?", "¿A quién vas a dar tu mejor presencia hoy?"]
       },
       {
         santo: "Jueves · Oración de gratitud",
         cita: "«Den gracias en toda ocasión, porque esta es la voluntad de Dios para ustedes.» — 1 Tesalonicenses 5:18",
-        reflexion: `Dios mío,\n\nAntes de pedir, antes de preocuparme, antes de planificar — quiero dar gracias.\n\nGracias por la noche que pasó y el día que comienza. Gracias por las personas que me aman y a quienes amo. Gracias por la salud que tengo, por el trabajo que me espera, por los pequeños placeres que me regalas sin que los pida.\n\nSé que habrá cosas difíciles hoy. Sé que no todo saldrá como planeo. Pero hoy elijo mirar primero lo que tengo, no lo que me falta.\n\nDame corazón agradecido. El tipo de gratitud que no depende de las circunstancias sino de la certeza de que Tú eres bueno — siempre, en todo, incluso cuando no lo veo.\n\nQue la gratitud sea el tono de este jueves. Que contagie a quienes me rodean.\n\nAmén. 🙏`,
+        reflexion: `Dios mío,\n\nAntes de pedir, antes de preocuparme, antes de planificar — quiero dar gracias.\n\nGracias por la noche que pasó y el día que comienza. Gracias por las personas que me aman y a quienes amo. Gracias por la salud que tengo, por el trabajo que me espera, por los pequeños placeres que me regalas sin que los pida.\n\nSé que habrá cosas difíciles hoy. Sé que no todo saldrá como planeo. Pero hoy elijo mirar primero lo que tengo, no lo que me falta.\n\nDame corazón agradecido. El tipo de gratitud que no depende de las circunstancias sino de la certeza de que Tú eres bueno — siempre, en todo, incluso cuando no lo veo.\n\nQue la gratitud sea el tono de este jueves. Que contagie a quienes me rodean.\n\nAmén.`,
         preguntas: ["¿Por qué tres cosas concretas puedes dar gracias esta mañana?", "¿Hay una persona en tu vida a quien deberías agradecerle algo — y puedes hacerlo hoy?", "¿Cómo cambia tu perspectiva del día cuando lo comienzas con gratitud?"]
       },
       {
         santo: "Viernes · Oración de entrega",
         cita: "«No mi voluntad, sino la tuya.» — Lucas 22:42",
-        reflexion: `Señor,\n\nHoy es viernes — el día en que recuerdo que el amor más grande se expresó en la entrega total.\n\nYo también quiero entregarme hoy. No de manera heroica ni dramática — en lo pequeño. En la paciencia con quien me irrita. En la honestidad cuando me conviene mentir. En el servicio cuando preferiría descansar.\n\nToma este día, Señor. Toma mis planes y ajústalos a los tuyos. Toma mis fuerzas y úsalas para el bien. Toma mis limitaciones y muéstrate fuerte en ellas.\n\nNo tengo miedo de entregarme porque sé a quién me entrego. A alguien que me conoce por completo y me ama por completo. Eso es suficiente.\n\nHoy, como María en la Anunciación: 'Hágase en mí según tu palabra.'\n\nAmén. 🙏`,
+        reflexion: `Señor,\n\nHoy es viernes — el día en que recuerdo que el amor más grande se expresó en la entrega total.\n\nYo también quiero entregarme hoy. No de manera heroica ni dramática — en lo pequeño. En la paciencia con quien me irrita. En la honestidad cuando me conviene mentir. En el servicio cuando preferiría descansar.\n\nToma este día, Señor. Toma mis planes y ajústalos a los tuyos. Toma mis fuerzas y úsalas para el bien. Toma mis limitaciones y muéstrate fuerte en ellas.\n\nNo tengo miedo de entregarme porque sé a quién me entrego. A alguien que me conoce por completo y me ama por completo. Eso es suficiente.\n\nHoy, como María en la Anunciación: 'Hágase en mí según tu palabra.'\n\nAmén.`,
         preguntas: ["¿Hay algo en tu día de hoy que te cuesta entregar a Dios — y por qué?", "¿En qué área de tu vida necesitas decir 'no mi voluntad sino la tuya'?", "¿Cómo sería tu viernes si lo vivieras con la actitud de entrega total?"]
       },
       {
         santo: "Sábado · Oración de renovación",
         cita: "«El Señor es mi pastor; nada me falta. En verdes praderas me hace reposar.» — Salmo 23:1-2",
-        reflexion: `Padre,\n\nEl sábado es el día del descanso — pero también el día de la renovación. Hoy quiero dejar que Tú me repares por dentro.\n\nVengo con el cansancio de la semana. Con lo que salió bien y lo que no. Con las conversaciones pendientes y los proyectos sin terminar. Con la alegría de los momentos buenos y el peso de los difíciles.\n\nTómalo todo. Y devuélveme renovado.\n\nDame hoy descanso real — no solo de actividad sino de ansiedad. Dame la capacidad de estar sin hacer, de ser sin producir, de amar sin mérito.\n\nQue este sábado sea un anticipo del descanso eterno que Tú has prometido. Un día donde aprenda a recibir en lugar de solo dar.\n\nGracias por ser mi pastor. Gracias porque nada me falta cuando estoy contigo.\n\nAmén. 🙏`,
+        reflexion: `Padre,\n\nEl sábado es el día del descanso — pero también el día de la renovación. Hoy quiero dejar que Tú me repares por dentro.\n\nVengo con el cansancio de la semana. Con lo que salió bien y lo que no. Con las conversaciones pendientes y los proyectos sin terminar. Con la alegría de los momentos buenos y el peso de los difíciles.\n\nTómalo todo. Y devuélveme renovado.\n\nDame hoy descanso real — no solo de actividad sino de ansiedad. Dame la capacidad de estar sin hacer, de ser sin producir, de amar sin mérito.\n\nQue este sábado sea un anticipo del descanso eterno que Tú has prometido. Un día donde aprenda a recibir en lugar de solo dar.\n\nGracias por ser mi pastor. Gracias porque nada me falta cuando estoy contigo.\n\nAmén.`,
         preguntas: ["¿Qué necesitas dejar descansar hoy — no solo el cuerpo sino el alma?", "¿Cómo puedes hacer del descanso de hoy un acto espiritual y no solo físico?", "¿Qué quieres recuperar este sábado para la semana que viene?"]
       },
       {
         santo: "Domingo · Oración de consagración",
         cita: "«Este es el día que hizo el Señor: regocijémonos y alegrémonos en él.» — Salmo 118:24",
-        reflexion: `Señor resucitado,\n\nHoy es domingo — el primer día de la nueva creación. El día en que la muerte perdió y el amor ganó.\n\nMe levanto con esa alegría en el corazón. No porque todo esté perfecto en mi vida — sino porque Tú venciste lo que parecía invencible. Y esa victoria es también la mía.\n\nHoy me consagro a ti de nuevo. Te doy esta semana que comienza. Te doy mis proyectos, mis relaciones, mis miedos y mis esperanzas. Ponlos en el altar junto con el pan y el vino de la Misa de hoy.\n\nQue este domingo me recargue para la semana. Que la Eucaristía de hoy sea el combustible de los días que vienen.\n\nSoy tuyo, Señor. Completamente tuyo. Haz conmigo lo que quieras — porque sé que todo lo que quieres para mí es amor.\n\nAmén. 🙏`,
+        reflexion: `Señor resucitado,\n\nHoy es domingo — el primer día de la nueva creación. El día en que la muerte perdió y el amor ganó.\n\nMe levanto con esa alegría en el corazón. No porque todo esté perfecto en mi vida — sino porque Tú venciste lo que parecía invencible. Y esa victoria es también la mía.\n\nHoy me consagro a ti de nuevo. Te doy esta semana que comienza. Te doy mis proyectos, mis relaciones, mis miedos y mis esperanzas. Ponlos en el altar junto con el pan y el vino de la Misa de hoy.\n\nQue este domingo me recargue para la semana. Que la Eucaristía de hoy sea el combustible de los días que vienen.\n\nSoy tuyo, Señor. Completamente tuyo. Haz conmigo lo que quieras — porque sé que todo lo que quieres para mí es amor.\n\nAmén.`,
         preguntas: ["¿Con qué actitud llegas a la Misa de hoy — qué quieres que Dios haga en ti?", "¿Qué quieres consagrar a Dios al comienzo de esta nueva semana?", "¿Cómo quieres que la alegría del domingo se extienda a los días que vienen?"]
       },
     ];
@@ -2261,8 +2271,8 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
           model: "claude-sonnet-4-6",
           max_tokens: 500,
           system: language === "en"
-            ? "You are a Catholic writer preparing a daily world prayer intention based on general world news (politics, economy, international relations, society, disasters, etc. — not only tragedies). You will be given a VERIFIED real news headline and summary from a news API. Do NOT invent additional facts, numbers, or details — base your writing strictly and only on the given headline and summary. Write a prayer intention appropriate to whatever the topic actually is: if it describes suffering, pray for those affected; if it's about a decision, negotiation, election, or event, pray for wisdom, justice, and the common good of those involved instead of assuming victims. Respond ONLY with valid JSON, in English, no code blocks: {lugar: 'country or region mentioned in the headline', descripcion: 'a respectful, factual 2-3 sentence summary of what is happening, based only on the given headline/summary', oracion: 'a 3-4 line Catholic intercessory prayer appropriate to the topic', emoji: 'one appropriate emoji'}"
-            : "Eres un redactor católico que prepara una intención diaria de oración por el mundo, basada en noticias generales de actualidad (política, economía, relaciones internacionales, sociedad, desastres, etc. — no solo tragedias). Se te dará un titular de noticia REAL y VERIFICADO junto con su resumen, obtenidos de una API de noticias. NO inventes datos, cifras ni detalles adicionales — basa tu redacción estricta y únicamente en el titular y resumen dados. Escribe una intención de oración apropiada al tema real: si describe sufrimiento, ora por los afectados; si es sobre una decisión, negociación, elección o evento, ora por sabiduría, justicia y el bien común de los involucrados en vez de asumir víctimas. Responde SOLO con JSON válido, en español, sin bloques de código: {lugar: 'país o región mencionado en el titular', descripcion: 'un resumen respetuoso y factual de 2-3 frases sobre lo que está pasando, basado solo en el titular/resumen dado', oracion: 'una oración católica de intercesión de 3-4 líneas apropiada al tema', emoji: 'un emoji apropiado'}",
+            ? "You are a Catholic writer preparing a daily world prayer intention based on general world news (politics, economy, international relations, society, disasters, etc. — not only tragedies). You will be given a VERIFIED real news headline and summary from a news API. Do NOT invent additional facts, numbers, or details — base your writing strictly and only on the given headline and summary. Write a prayer intention appropriate to whatever the topic actually is: if it describes suffering, pray for those affected; if it's about a decision, negotiation, election, or event, pray for wisdom, justice, and the common good of those involved instead of assuming victims. Respond ONLY with valid JSON, in English, no code blocks: {lugar: 'country or region mentioned in the headline', descripcion: 'a respectful, factual 2-3 sentence summary of what is happening, based only on the given headline/summary', oracion: 'a 3-4 line Catholic intercessory prayer appropriate to the topic'}"
+            : "Eres un redactor católico que prepara una intención diaria de oración por el mundo, basada en noticias generales de actualidad (política, economía, relaciones internacionales, sociedad, desastres, etc. — no solo tragedias). Se te dará un titular de noticia REAL y VERIFICADO junto con su resumen, obtenidos de una API de noticias. NO inventes datos, cifras ni detalles adicionales — basa tu redacción estricta y únicamente en el titular y resumen dados. Escribe una intención de oración apropiada al tema real: si describe sufrimiento, ora por los afectados; si es sobre una decisión, negociación, elección o evento, ora por sabiduría, justicia y el bien común de los involucrados en vez de asumir víctimas. Responde SOLO con JSON válido, en español, sin bloques de código: {lugar: 'país o región mencionado en el titular', descripcion: 'un resumen respetuoso y factual de 2-3 frases sobre lo que está pasando, basado solo en el titular/resumen dado', oracion: 'una oración católica de intercesión de 3-4 líneas apropiada al tema'}",
           messages: [{
             role: "user",
             content: `Titular verificado: "${newsData.titulo}". Resumen: "${newsData.resumen_original || ""}". Fuente: ${newsData.fuente || "desconocida"}.`
@@ -2278,7 +2288,6 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
         lugar: parsed.lugar || "",
         descripcion: parsed.descripcion,
         oracion: parsed.oracion,
-        emoji: parsed.emoji || "🙏",
         fuente: newsData.fuente || "",
         url: newsData.url || "",
         ...colors,
@@ -2295,7 +2304,6 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
         lugar: "",
         descripcion: "Today we couldn't reach the latest world news, but there is always a part of the world quietly suffering — waiting for someone to remember it in prayer.",
         oracion: "Lord of the nations, we lift up to you all who suffer today from war, disaster, hunger, or injustice, even those whose stories haven't reached us. Open our hearts to the suffering of the world and use us as instruments of your peace. Amen.",
-        emoji: "🙏",
         fuente: "", url: "",
         ...colors,
       } : {
@@ -2303,7 +2311,6 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
         lugar: "",
         descripcion: "Hoy no pudimos obtener las últimas noticias del mundo, pero siempre hay una parte del mundo sufriendo en silencio — esperando que alguien la recuerde en oración.",
         oracion: "Señor de las naciones, te presentamos a todos los que hoy sufren por la guerra, el desastre, el hambre o la injusticia, incluso a quienes su historia no ha llegado hasta nosotros. Abre nuestro corazón al sufrimiento del mundo y úsanos como instrumentos de tu paz. Amén.",
-        emoji: "🙏",
         fuente: "", url: "",
         ...colors,
       };
@@ -2345,8 +2352,8 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
           model: "claude-sonnet-4-6",
           max_tokens: 500,
           system: language === "en"
-            ? "You are a Catholic writer preparing a daily prayer intention for the Church, based on real news about the worldwide Catholic Church (the Pope, bishops, synods, dioceses, religious life, evangelization, etc.). You will be given a VERIFIED real news headline and summary from a news API. Do NOT invent additional facts, numbers, or details — base your writing strictly and only on the given headline and summary. Write a prayer intention appropriate to whatever the topic actually is: if it concerns suffering or controversy, pray for healing, truth, and justice; if it's about a pastoral visit, decision, or ordinary Church activity, pray for the fruitfulness of that mission and for the Pope, pastors, and the People of God involved. Respond ONLY with valid JSON, in English, no code blocks: {lugar: 'place, diocese, or institution mentioned in the headline', descripcion: 'a respectful, factual 2-3 sentence summary of what is happening, based only on the given headline/summary', oracion: 'a 3-4 line Catholic intercessory prayer for the Church appropriate to the topic', emoji: 'one appropriate emoji'}"
-            : "Eres un redactor católico que prepara una intención diaria de oración por la Iglesia, basada en noticias reales sobre la Iglesia Católica en el mundo (el Papa, obispos, sínodos, diócesis, vida religiosa, evangelización, etc.). Se te dará un titular de noticia REAL y VERIFICADO junto con su resumen, obtenidos de una API de noticias. NO inventes datos, cifras ni detalles adicionales — basa tu redacción estricta y únicamente en el titular y resumen dados. Escribe una intención de oración apropiada al tema real: si trata de sufrimiento o controversia, ora por sanación, verdad y justicia; si es sobre una visita pastoral, decisión o actividad ordinaria de la Iglesia, ora por la fecundidad de esa misión y por el Papa, los pastores y el Pueblo de Dios involucrados. Responde SOLO con JSON válido, en español, sin bloques de código: {lugar: 'lugar, diócesis o institución mencionada en el titular', descripcion: 'un resumen respetuoso y factual de 2-3 frases sobre lo que está pasando, basado solo en el titular/resumen dado', oracion: 'una oración católica de intercesión de 3-4 líneas por la Iglesia apropiada al tema', emoji: 'un emoji apropiado'}",
+            ? "You are a Catholic writer preparing a daily prayer intention for the Church, based on real news about the worldwide Catholic Church (the Pope, bishops, synods, dioceses, religious life, evangelization, etc.). You will be given a VERIFIED real news headline and summary from a news API. Do NOT invent additional facts, numbers, or details — base your writing strictly and only on the given headline and summary. Write a prayer intention appropriate to whatever the topic actually is: if it concerns suffering or controversy, pray for healing, truth, and justice; if it's about a pastoral visit, decision, or ordinary Church activity, pray for the fruitfulness of that mission and for the Pope, pastors, and the People of God involved. Respond ONLY with valid JSON, in English, no code blocks: {lugar: 'place, diocese, or institution mentioned in the headline', descripcion: 'a respectful, factual 2-3 sentence summary of what is happening, based only on the given headline/summary', oracion: 'a 3-4 line Catholic intercessory prayer for the Church appropriate to the topic'}"
+            : "Eres un redactor católico que prepara una intención diaria de oración por la Iglesia, basada en noticias reales sobre la Iglesia Católica en el mundo (el Papa, obispos, sínodos, diócesis, vida religiosa, evangelización, etc.). Se te dará un titular de noticia REAL y VERIFICADO junto con su resumen, obtenidos de una API de noticias. NO inventes datos, cifras ni detalles adicionales — basa tu redacción estricta y únicamente en el titular y resumen dados. Escribe una intención de oración apropiada al tema real: si trata de sufrimiento o controversia, ora por sanación, verdad y justicia; si es sobre una visita pastoral, decisión o actividad ordinaria de la Iglesia, ora por la fecundidad de esa misión y por el Papa, los pastores y el Pueblo de Dios involucrados. Responde SOLO con JSON válido, en español, sin bloques de código: {lugar: 'lugar, diócesis o institución mencionada en el titular', descripcion: 'un resumen respetuoso y factual de 2-3 frases sobre lo que está pasando, basado solo en el titular/resumen dado', oracion: 'una oración católica de intercesión de 3-4 líneas por la Iglesia apropiada al tema'}",
           messages: [{
             role: "user",
             content: `Titular verificado: "${newsData.titulo}". Resumen: "${newsData.resumen_original || ""}". Fuente: ${newsData.fuente || "desconocida"}.`
@@ -2362,7 +2369,6 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
         lugar: parsed.lugar || "",
         descripcion: parsed.descripcion,
         oracion: parsed.oracion,
-        emoji: parsed.emoji || "⛪",
         fuente: newsData.fuente || "",
         url: newsData.url || "",
         ...colors,
@@ -2378,7 +2384,6 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
         lugar: "",
         descripcion: "Today we couldn't reach the latest Church news, but the Body of Christ around the world is always in need of prayer — its pastors, its missionaries, and all the People of God.",
         oracion: "Lord Jesus, head of the Church, we pray for Pope Leo, for our bishops and priests, and for all who serve your people. Strengthen the Church in holiness and unity, and make her a sign of your love in the world. Amen.",
-        emoji: "⛪",
         fuente: "", url: "",
         ...colors,
       } : {
@@ -2386,7 +2391,6 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
         lugar: "",
         descripcion: "Hoy no pudimos obtener las últimas noticias de la Iglesia, pero el Cuerpo de Cristo en el mundo siempre necesita oración — sus pastores, sus misioneros y todo el Pueblo de Dios.",
         oracion: "Señor Jesús, cabeza de la Iglesia, oramos por el Papa León, por nuestros obispos y sacerdotes, y por todos los que sirven a tu pueblo. Fortalece a la Iglesia en santidad y unidad, y hazla signo de tu amor en el mundo. Amén.",
-        emoji: "⛪",
         fuente: "", url: "",
         ...colors,
       };
@@ -2499,7 +2503,7 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
                   <p style={{ fontSize: 11, color: C.slateLight, margin: 0 }}>{practiceContent[openCard].sub}</p>
                 </div>
               </div>
-              <button onClick={() => setOpenCard(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+              <button onClick={() => setOpenCard(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer", display: "flex" }}><Icon name="x" size={18} color={C.slateLight} /></button>
             </div>
             {loadingPractice ? (
               <div style={{ textAlign: "center", padding: "40px 0" }}>
@@ -2525,10 +2529,10 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
             )}
             <div style={{ display: "flex", gap: 10, marginTop: 28 }}>
               <button
-                onClick={() => shareContent(practiceAIContent[openCard]?.cita || practiceContent[openCard]?.saintQuote || "", "Reflexión de Mater 🙏")}
+                onClick={() => shareContent(practiceAIContent[openCard]?.cita || practiceContent[openCard]?.saintQuote || "", "Reflexión de Mater")}
                 style={{ padding: "14px", background: C.iceBlue, border: "none", borderRadius: 14, color: C.navy, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif", display: "flex", alignItems: "center", gap: 6 }}
               >
-                📤
+                <Icon name="share" size={16} color={C.navy} />
               </button>
               <button
                 onClick={() => { markPracticeDone(openCard); setOpenCard(null); }}
@@ -2560,8 +2564,8 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
         <div style={{ marginTop: 20, borderRadius: 12, background: C.navy, padding: "20px 22px", color: C.cream, borderLeft: `3px solid ${C.gold}` }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
             <p style={{ fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", opacity: 0.6, margin: 0 }}>{t(language, "home_verse_of_day")}</p>
-            <button onClick={() => shareContent(dailyVerse?.text + " — " + dailyVerse?.ref + "\n\nCompartido desde Mater 🙏")} style={{ background: "rgba(255,255,255,0.15)", border: "none", borderRadius: 8, padding: "4px 10px", color: C.cream, fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
-              <span>📤</span> {t(language, "home_share")}
+            <button onClick={() => shareContent(dailyVerse?.text + " — " + dailyVerse?.ref + "\n\nCompartido desde Mater")} style={{ background: "rgba(255,255,255,0.15)", border: "none", borderRadius: 8, padding: "4px 10px", color: C.cream, fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+              <Icon name="share" size={12} color={C.cream} /> {t(language, "home_share")}
             </button>
           </div>
           <p style={{ fontSize: 15, lineHeight: 1.7, fontStyle: "italic", margin: "0 0 10px", fontFamily: "'Cormorant Garamond', serif" }}>{dailyVerse?.text}</p>
@@ -2575,7 +2579,10 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
                 <div>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-                    <p style={{ fontSize: 10, color: C.gold, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>✨ {t(language, "home_saint_of_day")}</p>
+                    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                      <Icon name="sparkle" size={10} color={C.gold} />
+                      <p style={{ fontSize: 10, color: C.gold, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>{t(language, "home_saint_of_day")}</p>
+                    </div>
                     <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 10, fontWeight: 600, color: C.inkMid, background: C.fog, borderRadius: 20, padding: "2px 8px" }}>
                       <span style={{ width: 8, height: 8, borderRadius: "50%", background: saintColor.hex, border: saintColor.border ? `1px solid ${C.mist}` : "none", flexShrink: 0 }} />
                       {t(language, saintColor.key)}
@@ -2584,7 +2591,7 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
                   <p style={{ fontSize: 18, fontWeight: 800, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>{saintOfDay.nombre}</p>
                   {saintOfDay.siglo && <p style={{ fontSize: 11, color: C.slateLight, margin: "2px 0 0" }}>{saintOfDay.siglo}</p>}
                 </div>
-                <button onClick={() => setSaintOpen(false)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+                <button onClick={() => setSaintOpen(false)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer", display: "flex" }}><Icon name="x" size={18} color={C.slateLight} /></button>
               </div>
               <p style={{ fontSize: 13, color: C.inkMid, lineHeight: 1.8, margin: "0 0 20px", whiteSpace: "pre-line" }}>{saintOfDay.historia}</p>
               <div style={{ background: C.iceBlue, borderRadius: 14, padding: "14px 16px", marginBottom: 16, borderLeft: `3px solid ${saintColor.hex}` }}>
@@ -2600,7 +2607,7 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
         )}
 
         <button onClick={() => setSaintOpen(true)} style={{ marginTop: 12, width: "100%", borderRadius: 12, background: C.cream, border: `1px solid ${C.mist}`, borderLeft: `3px solid ${saintColor.hex}`, padding: "14px 16px", display: "flex", alignItems: "center", gap: 12, cursor: "pointer", textAlign: "left" }}>
-          <span style={{ fontSize: 24 }}>✨</span>
+          <Icon name="sparkle" size={20} color={C.gold} />
           <div style={{ flex: 1 }}>
             {loadingSaint ? (
               <p style={{ fontSize: 13, color: C.slateLight, margin: 0 }}>{t(language, "home_saint_loading")}</p>
@@ -2625,13 +2632,13 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
           <div style={sheetOverlay} onClick={() => setChallengeOpen(false)}>
             <div onClick={e => e.stopPropagation()} style={sheetCard()}>
               <div style={{ borderRadius: 16, background: `linear-gradient(135deg, ${challengeColor}, #E8A33D)`, padding: "20px", marginBottom: 20, textAlign: "center" }}>
-                <p style={{ fontSize: 40, margin: "0 0 8px" }}>🎯</p>
+                <div style={{ display: "flex", justifyContent: "center", marginBottom: 8 }}><Icon name="target" size={36} color="#fff" /></div>
                 <p style={{ fontSize: 11, color: "rgba(255,255,255,0.8)", letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 4px" }}>{t(language, `challenge_category_${challenge.categoria}`)}</p>
                 <p style={{ fontSize: 18, fontWeight: 800, color: "#fff", margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>{challenge.titulo}</p>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
                 <p style={{ fontSize: 10, color: C.gold, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>{t(language, "home_daily_challenge")}</p>
-                <button onClick={() => setChallengeOpen(false)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+                <button onClick={() => setChallengeOpen(false)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer", display: "flex" }}><Icon name="x" size={18} color={C.slateLight} /></button>
               </div>
               <p style={{ fontSize: 13, color: C.inkMid, lineHeight: 1.8, margin: "0 0 20px" }}>{challenge.descripcion}</p>
               {challengeDone ? (
@@ -2648,7 +2655,7 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
         )}
         <button onClick={() => setChallengeOpen(true)} style={{ width: "100%", borderRadius: 16, overflow: "hidden", cursor: "pointer", border: "none", padding: 0, textAlign: "left" }}>
           <div style={{ background: `linear-gradient(135deg, ${challengeColor}, #E8A33D)`, padding: "16px 18px", display: "flex", alignItems: "center", gap: 14 }}>
-            <span style={{ fontSize: 28, flexShrink: 0 }}>{challengeDone ? "✅" : "🎯"}</span>
+            <span style={{ flexShrink: 0, display: "flex" }}>{challengeDone ? <Icon name="check" size={26} color="#fff" /> : <Icon name="target" size={26} color="#fff" />}</span>
             <div style={{ flex: 1 }}>
               <p style={{ fontSize: 10, color: "rgba(255,255,255,0.8)", letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 2px" }}>{t(language, "home_daily_challenge")}</p>
               <p style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>{challenge.titulo}</p>
@@ -2704,13 +2711,13 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
           <div style={sheetOverlay} onClick={() => setIntentionOpen(false)}>
             <div onClick={e => e.stopPropagation()} style={sheetCard()}>
               <div style={{ borderRadius: 16, background: "linear-gradient(135deg, " + (worldIntention.color1 || "#1a3a5c") + ", " + (worldIntention.color2 || "#2d6a8f") + ")", padding: "20px", marginBottom: 20, textAlign: "center" }}>
-                <p style={{ fontSize: 40, margin: "0 0 8px" }}>{worldIntention.emoji}</p>
+                <div style={{ display: "flex", justifyContent: "center", marginBottom: 8 }}><Icon name="globe" size={36} color="#fff" /></div>
                 <p style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 4px" }}>{worldIntention.lugar}</p>
                 <p style={{ fontSize: 18, fontWeight: 800, color: "#fff", margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>{worldIntention.titulo}</p>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
                 <p style={{ fontSize: 10, color: C.gold, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>{t(language, "home_world_intention")}</p>
-                <button onClick={() => setIntentionOpen(false)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>x</button>
+                <button onClick={() => setIntentionOpen(false)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer", display: "flex" }}><Icon name="x" size={18} color={C.slateLight} /></button>
               </div>
               <p style={{ fontSize: 13, color: C.inkMid, lineHeight: 1.8, margin: "0 0 20px" }}>{worldIntention.descripcion}</p>
               <div style={{ background: C.iceBlue, borderRadius: 14, padding: "16px", borderLeft: "3px solid " + (worldIntention.color1 || C.navy) }}>
@@ -2730,7 +2737,7 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
         )}
         <button onClick={() => setIntentionOpen(true)} style={{ width: "100%", borderRadius: 16, overflow: "hidden", cursor: "pointer", border: "none", padding: 0, textAlign: "left" }}>
           <div style={{ background: "linear-gradient(135deg, " + (worldIntention && worldIntention.color1 ? worldIntention.color1 : "#1a3a5c") + ", " + (worldIntention && worldIntention.color2 ? worldIntention.color2 : "#2d6a8f") + ")", padding: "16px 18px", display: "flex", alignItems: "center", gap: 14 }}>
-            <span style={{ fontSize: 28, flexShrink: 0 }}>{worldIntention ? worldIntention.emoji : "🌍"}</span>
+            <span style={{ flexShrink: 0, display: "flex" }}><Icon name="globe" size={26} color="#fff" /></span>
             <div style={{ flex: 1 }}>
               <p style={{ fontSize: 10, color: "rgba(255,255,255,0.7)", letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 2px" }}>{t(language, "home_world_intention")}</p>
               <p style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>{worldIntention ? worldIntention.titulo : t(language, "home_loading")}</p>
@@ -2746,13 +2753,13 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
           <div style={sheetOverlay} onClick={() => setEcclesialOpen(false)}>
             <div onClick={e => e.stopPropagation()} style={sheetCard()}>
               <div style={{ borderRadius: 16, background: "linear-gradient(135deg, " + (ecclesialIntention.color1 || "#4a1420") + ", " + (ecclesialIntention.color2 || "#7a2438") + ")", padding: "20px", marginBottom: 20, textAlign: "center" }}>
-                <p style={{ fontSize: 40, margin: "0 0 8px" }}>{ecclesialIntention.emoji}</p>
+                <div style={{ display: "flex", justifyContent: "center", marginBottom: 8 }}><Icon name="church" size={36} color="#fff" /></div>
                 <p style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 4px" }}>{ecclesialIntention.lugar}</p>
                 <p style={{ fontSize: 18, fontWeight: 800, color: "#fff", margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>{ecclesialIntention.titulo}</p>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
                 <p style={{ fontSize: 10, color: C.gold, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>{t(language, "home_ecclesial_intention")}</p>
-                <button onClick={() => setEcclesialOpen(false)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>x</button>
+                <button onClick={() => setEcclesialOpen(false)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer", display: "flex" }}><Icon name="x" size={18} color={C.slateLight} /></button>
               </div>
               <p style={{ fontSize: 13, color: C.inkMid, lineHeight: 1.8, margin: "0 0 20px" }}>{ecclesialIntention.descripcion}</p>
               <div style={{ background: C.iceBlue, borderRadius: 14, padding: "16px", borderLeft: "3px solid " + (ecclesialIntention.color1 || C.navy) }}>
@@ -2772,7 +2779,7 @@ function HomeScreen({ user, profile, onTabChange, language, fontScale = 1 }) {
         )}
         <button onClick={() => setEcclesialOpen(true)} style={{ width: "100%", borderRadius: 16, overflow: "hidden", cursor: "pointer", border: "none", padding: 0, textAlign: "left" }}>
           <div style={{ background: "linear-gradient(135deg, " + (ecclesialIntention && ecclesialIntention.color1 ? ecclesialIntention.color1 : "#4a1420") + ", " + (ecclesialIntention && ecclesialIntention.color2 ? ecclesialIntention.color2 : "#7a2438") + ")", padding: "16px 18px", display: "flex", alignItems: "center", gap: 14 }}>
-            <span style={{ fontSize: 28, flexShrink: 0 }}>{ecclesialIntention ? ecclesialIntention.emoji : "⛪"}</span>
+            <span style={{ flexShrink: 0, display: "flex" }}><Icon name="church" size={26} color="#fff" /></span>
             <div style={{ flex: 1 }}>
               <p style={{ fontSize: 10, color: "rgba(255,255,255,0.7)", letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 2px" }}>{t(language, "home_ecclesial_intention")}</p>
               <p style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>{ecclesialIntention ? ecclesialIntention.titulo : t(language, "home_loading")}</p>
@@ -3152,7 +3159,7 @@ function PlanScreen({ user, language, fontScale = 1 }) {
                 <p style={{ fontSize: 15, fontWeight: 800, color: C.ink, margin: 0 }}>{weeks[activeWeek].days[openDay]?.title}</p>
                 <span style={pill(`${(typeColor[weeks[activeWeek].days[openDay]?.type] || C.blue)}20`, typeColor[weeks[activeWeek].days[openDay]?.type] || C.blue)}>{weeks[activeWeek].days[openDay]?.type}</span>
               </div>
-              <button onClick={() => { setOpenDay(null); setDayContent(null); }} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+              <button onClick={() => { setOpenDay(null); setDayContent(null); }} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer", display: "flex" }}><Icon name="x" size={18} color={C.slateLight} /></button>
             </div>
             {loadingContent ? (
               <div style={{ textAlign: "center", padding: "40px 0" }}>
@@ -3176,10 +3183,10 @@ function PlanScreen({ user, language, fontScale = 1 }) {
                 </div>
                 <div style={{ display: "flex", gap: 10 }}>
                   <button
-                    onClick={() => shareContent(dayContent?.cita + "\n\n" + dayContent?.santo + "\n\nCompartido desde Mater 🙏", "Reflexión de Mater")}
+                    onClick={() => shareContent(dayContent?.cita + "\n\n" + dayContent?.santo + "\n\nCompartido desde Mater", "Reflexión de Mater")}
                     style={{ padding: "14px", background: C.iceBlue, border: "none", borderRadius: 14, color: C.navy, fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}
                   >
-                    📤
+                    <Icon name="share" size={16} color={C.navy} />
                   </button>
                   <button
                     onClick={() => { toggleDay(activeWeek, openDay); setOpenDay(null); setDayContent(null); }}
@@ -3383,7 +3390,7 @@ function DiaryScreen({ user, language, fontScale = 1 }) {
           <p style={{ textAlign: "center", color: C.slateLight, fontSize: 13, marginTop: 32 }}>{t(language, "diary_loading")}</p>
         ) : entries.length === 0 && !writing ? (
           <div style={{ textAlign: "center", marginTop: 48 }}>
-            <p style={{ fontSize: 32, marginBottom: 12 }}>📓</p>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}><Icon name="diary" size={30} color={C.slateLight} /></div>
             <p style={{ fontSize: 14, color: C.slateLight }}>{t(language, "diary_empty_1")}</p>
             <p style={{ fontSize: 12, color: C.slateLight }}>{t(language, "diary_empty_2")}</p>
           </div>
@@ -3554,7 +3561,7 @@ function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDa
           <div onClick={e => e.stopPropagation()} style={sheetCard()}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <h2 style={{ fontSize: 18, fontWeight: 800, color: C.ink, margin: 0 }}>{t(language, "profile_about_title")}</h2>
-              <button onClick={() => setActiveModal(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+              <button onClick={() => setActiveModal(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer", display: "flex" }}><Icon name="x" size={18} color={C.slateLight} /></button>
             </div>
             <div style={{ textAlign: "center", marginBottom: 24 }}>
               <div style={{ width: 80, height: 80, borderRadius: 24, overflow: "hidden", margin: "0 auto 12px" }}>
@@ -3673,7 +3680,7 @@ function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDa
           <div onClick={e => e.stopPropagation()} style={sheetCard()}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <h2 style={{ fontSize: 18, fontWeight: 800, color: C.ink, margin: 0 }}>{t(language, "profile_notifications_title")}</h2>
-              <button onClick={() => setActiveModal(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+              <button onClick={() => setActiveModal(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer", display: "flex" }}><Icon name="x" size={18} color={C.slateLight} /></button>
             </div>
 
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: C.iceBlue, borderRadius: 14, padding: "14px 16px", marginBottom: 20 }}>
@@ -3744,7 +3751,7 @@ function ProfileScreen({ user, profile, setProfile, onLogout, darkMode, toggleDa
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
               <h2 style={{ fontSize: 18, fontWeight: 800, color: "#C0392B", margin: 0 }}>{t(language, "profile_delete_title")}</h2>
               {!deletingAccount && (
-                <button onClick={() => setActiveModal(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+                <button onClick={() => setActiveModal(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer", display: "flex" }}><Icon name="x" size={18} color={C.slateLight} /></button>
               )}
             </div>
             <p style={{ fontSize: 13.5, color: C.inkMid, lineHeight: 1.7, marginBottom: 14 }}>
@@ -4051,11 +4058,14 @@ function MiraclesScreen({ onBack, language, fontScale = 1 }) {
           <div onClick={e => e.stopPropagation()} style={sheetCard()}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
               <div>
-                <p style={{ fontSize: 10, color: C.gold, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 4px" }}>✨ {active.lugar}</p>
+                <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 4 }}>
+                  <Icon name="sparkle" size={10} color={C.gold} />
+                  <p style={{ fontSize: 10, color: C.gold, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>{active.lugar}</p>
+                </div>
                 <p style={{ fontSize: 18, fontWeight: 800, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>{active.titulo}</p>
                 <p style={{ fontSize: 11, color: C.slateLight, margin: "2px 0 0" }}>{active.anio}</p>
               </div>
-              <button onClick={() => setOpenId(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+              <button onClick={() => setOpenId(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer", display: "flex" }}><Icon name="x" size={18} color={C.slateLight} /></button>
             </div>
             <p style={{ fontSize: 13, color: C.inkMid, lineHeight: 1.8, margin: "0 0 20px", whiteSpace: "pre-line" }}>{active.resumen}</p>
             <div style={{ background: C.iceBlue, borderRadius: 14, padding: "14px 16px", marginBottom: 16, borderLeft: `3px solid ${C.gold}` }}>
@@ -4067,7 +4077,7 @@ function MiraclesScreen({ onBack, language, fontScale = 1 }) {
               <p style={{ fontSize: 12, color: C.inkMid, lineHeight: 1.65, margin: 0 }}>{active.estado}</p>
             </div>
             <button
-              onClick={() => shareContent(active.titulo + " (" + active.lugar + ", " + active.anio + ")\n\n" + active.dato + "\n\nCompartido desde Mater 🙏", "Milagro Eucarístico — Mater")}
+              onClick={() => shareContent(active.titulo + " (" + active.lugar + ", " + active.anio + ")\n\n" + active.dato + "\n\nCompartido desde Mater", "Milagro Eucarístico — Mater")}
               style={{ width: "100%", padding: "14px", background: C.iceBlue, border: "none", borderRadius: 14, color: C.navy, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "'DM Sans', system-ui, sans-serif" }}
             >
               {t(language, "miracles_share")}
@@ -4165,7 +4175,7 @@ function DevocionarioScreen({ onBack, language, fontScale = 1 }) {
           <div onClick={e => e.stopPropagation()} style={sheetCard}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
               <p style={{ fontSize: 17, fontWeight: 800, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif", flex: 1, paddingRight: 12 }}>{active.titulo}</p>
-              <button onClick={() => setOpenId(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+              <button onClick={() => setOpenId(null)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer", display: "flex" }}><Icon name="x" size={18} color={C.slateLight} /></button>
             </div>
             <p style={{ fontSize: 14, color: C.inkMid, lineHeight: 1.9, margin: "0 0 20px", whiteSpace: "pre-line" }}>{active.texto}</p>
             <button
@@ -4364,7 +4374,7 @@ function construirPasosCoronilla(language) {
     holyGodTitle: L === "en" ? "Holy God" : "Dios Santo",
     of3: L === "en" ? "of 3" : "de 3",
     closingTitle: L === "en" ? "Closing prayer" : "Oración final",
-    finalTitle: L === "en" ? "Amen 🙏" : "Amén 🙏",
+    finalTitle: L === "en" ? "Amen" : "Amén",
     finalText: L === "en"
       ? "You have finished the Chaplet of Divine Mercy. May Jesus, in whom I trust, pour out His mercy on you and on the whole world."
       : "Has terminado tu Coronilla a la Divina Misericordia. Que Jesús, en quien confío, derrame su misericordia sobre ti y sobre el mundo entero.",
@@ -4443,7 +4453,7 @@ function construirPasosRosarioSanJose(language) {
     gloryTitle: L === "en" ? "Glory Be" : "Gloria",
     rememberTitle: L === "en" ? "Remember, O Saint Joseph" : "Acuérdate de San José",
     litanyTitle: L === "en" ? "Litany of Saint Joseph" : "Letanías a San José",
-    finalTitle: L === "en" ? "Amen 🙏" : "Amén 🙏",
+    finalTitle: L === "en" ? "Amen" : "Amén",
     finalText: L === "en"
       ? "You have finished the Rosary of Saint Joseph. May he who was the faithful guardian of Jesus and Mary watch over you and your family."
       : "Has terminado el Rosario a San José. Que quien fue el guardián fiel de Jesús y María vele por ti y por tu familia.",
@@ -4493,7 +4503,7 @@ function construirPasosRosario(misterios, language) {
     offeringText: L === "en"
       ? "Receive, Lord, this time of prayer.\n\nTake what I am and what I have, and keep forming me as an instrument available in your hands and in Mary's, for the good of those you place on my path today.\n\nAmen."
       : "Recibe, Señor, este tiempo de oración.\n\nToma lo que soy y lo que tengo, y sigue formándome como un instrumento disponible en tus manos y en las de María, para el bien de quienes hoy pongas en mi camino.\n\nAmén.",
-    finalTitle: L === "en" ? "Amen 🙏" : "Amén 🙏",
+    finalTitle: L === "en" ? "Amen" : "Amén",
     finalText: L === "en"
       ? "You have finished your Holy Rosary. May Mary intercede for all your intentions today."
       : "Has terminado tu Santo Rosario. Que María interceda por todas tus intenciones de hoy.",
@@ -5024,7 +5034,7 @@ function TelefonoPadreScreen({ onBack, language, fontScale = 1 }) {
           display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center",
           opacity: visible ? 1 : 0, transform: visible ? "scale(1)" : "scale(0.96)", transition: "opacity 0.18s ease, transform 0.18s ease",
         }}>
-          <p style={{ fontSize: 28, margin: "0 0 14px" }}>☎️</p>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 14 }}><Icon name="phone" size={26} color="#fff" /></div>
           <p style={{ fontSize: 18, fontWeight: 600, color: "#fff", margin: 0, fontFamily: "'Cormorant Garamond', serif", lineHeight: 1.4, fontStyle: "italic" }}>
             «{frase.mensaje}»
           </p>
@@ -5176,7 +5186,7 @@ function SanJoseDormidoScreen({ user, onBack, language, fontScale = 1 }) {
           <div onClick={e => e.stopPropagation()} style={sheetCard()}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
               <p style={{ fontSize: 16, fontWeight: 800, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>{t(language, "sanjosedormido_modal_title")}</p>
-              <button onClick={() => setAddOpen(false)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+              <button onClick={() => setAddOpen(false)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer", display: "flex" }}><Icon name="x" size={18} color={C.slateLight} /></button>
             </div>
             <textarea
               value={newText}
@@ -5197,7 +5207,7 @@ function SanJoseDormidoScreen({ user, onBack, language, fontScale = 1 }) {
           <div onClick={e => e.stopPropagation()} style={sheetCard()}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
               <p style={{ fontSize: 16, fontWeight: 800, color: C.ink, margin: 0, fontFamily: "'Cormorant Garamond', serif" }}>{t(language, "sanjosedormido_list_title")}</p>
-              <button onClick={() => setListOpen(false)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+              <button onClick={() => setListOpen(false)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer", display: "flex" }}><Icon name="x" size={18} color={C.slateLight} /></button>
             </div>
 
             {loadingIntentions ? (
@@ -5288,7 +5298,7 @@ function scheduleHorarioReminder(time) {
   if (target <= now) target.setDate(target.getDate() + 1);
   const delay = target.getTime() - now.getTime();
   window._materHorarioTimer = setTimeout(() => {
-    new Notification("Mater 🕊️ Horario Espiritual", {
+    new Notification("Mater Horario Espiritual", {
       body: "Es momento de revisar tu Horario Espiritual de hoy.",
       icon: "/logo.jpeg",
       badge: "/logo.jpeg",
@@ -5781,7 +5791,7 @@ async function exportarInformePDF() {
           <div onClick={e => e.stopPropagation()} style={sheetCard()}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <h2 style={{ fontSize: 18, fontWeight: 800, color: C.ink, margin: 0 }}>{t(language, "horario_reminder_title")}</h2>
-              <button onClick={() => setRemindOpen(false)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer" }}>✕</button>
+              <button onClick={() => setRemindOpen(false)} style={{ background: "none", border: "none", fontSize: 22, color: C.slateLight, cursor: "pointer", display: "flex" }}><Icon name="x" size={18} color={C.slateLight} /></button>
             </div>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: C.iceBlue, borderRadius: 14, padding: "14px 16px", marginBottom: 16 }}>
               <div>
@@ -5813,8 +5823,8 @@ async function exportarInformePDF() {
         <button onClick={() => setRemindOpen(true)} style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
           <Icon name="bell" size={19} color={C.inkLight} />
         </button>
-        <button onClick={exportarInformePDF} style={{ background: "none", border: "none", cursor: "pointer", padding: 4, fontSize: 19 }}>
-          ⬇️
+        <button onClick={exportarInformePDF} style={{ background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex" }}>
+          <Icon name="download" size={19} color={C.inkLight} />
         </button>
       </div>
 
