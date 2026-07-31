@@ -160,7 +160,7 @@ const translations = {
 
     profile_edit_name: "Editar nombre", profile_about: "Acerca de Mater",
     profile_about_title: "Acerca de Mater", profile_about_version: "Versión 1.0 · materapp.org",
-    profile_about_body: "Mater es una plataforma de coaching espiritual católico para jóvenes adultos de 25-35 años. Integra espiritualidad ignaciana, mariana, franciscana, carmelita y schoenstattiana.",
+    profile_about_body: "Mater es una plataforma de coaching espiritual católico para todos aquellos que quieren fortalecer su vida espiritual de una forma atractiva y perseverante. Integra espiritualidad ignaciana, mariana, franciscana, carmelita y schoenstattiana.",
     profile_about_footer: "Hecho con amor para la Iglesia joven",
     profile_dark_mode: "Modo oscuro",
     profile_language: "Idioma", profile_language_es: "Español", profile_language_en: "English",
@@ -358,7 +358,7 @@ const translations = {
 
     profile_edit_name: "Edit name", profile_about: "About Mater",
     profile_about_title: "About Mater", profile_about_version: "Version 1.0 · materapp.org",
-    profile_about_body: "Mater is a Catholic spiritual coaching platform for young adults aged 25-35. It integrates Ignatian, Marian, Franciscan, Carmelite, and Schoenstatt spirituality.",
+    profile_about_body: "Mater is a Catholic spiritual coaching platform for everyone who wants to strengthen their spiritual life in an engaging and persevering way. It integrates Ignatian, Marian, Franciscan, Carmelite, and Schoenstatt spirituality.",
     profile_about_footer: "Made with love for the young Church",
     profile_dark_mode: "Dark mode",
     profile_language: "Language", profile_language_es: "Español", profile_language_en: "English",
