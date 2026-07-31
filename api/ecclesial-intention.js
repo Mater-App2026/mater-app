@@ -24,6 +24,16 @@ const VATICAN_NEWS_RSS = {
   es: "https://www.vaticannews.va/es.rss.xml",
 };
 
+// El feed de Vatican News mezcla noticias propiamente eclesiales con
+// cobertura general de actualidad mundial (secciones "mundo"/"world",
+// "africa", etc.) — sin este filtro, la primera noticia del feed puede
+// no tener nada que ver con la Iglesia Católica. Solo aceptamos noticias
+// cuyo URL pertenezca a una sección genuinamente eclesial.
+const CHURCH_CATEGORY_PATTERN = {
+  es: /\/es\/(iglesia|papa|vaticano)\//,
+  en: /\/en\/(church|pope|vatican-city)\//,
+};
+
 function decodeXmlEntities(str) {
   return str
     .replace(/&amp;/g, "&")
@@ -54,23 +64,27 @@ async function fetchFirstVaticanNewsItem(lang) {
   });
   if (!res.ok) throw new Error("Error al consultar Vatican News: " + res.status);
   const xml = await res.text();
-  const itemMatch = xml.match(/<item>([\s\S]*?)<\/item>/);
-  if (!itemMatch) return null;
-  const itemXml = itemMatch[1];
+  const categoryPattern = CHURCH_CATEGORY_PATTERN[lang];
 
-  const title = extractTag(itemXml, "title");
-  const description = extractTag(itemXml, "description");
-  const linkMatch = itemXml.match(/<link>([\s\S]*?)<\/link>/);
-  const pubDateMatch = itemXml.match(/<pubDate>([\s\S]*?)<\/pubDate>/);
+  for (const m of xml.matchAll(/<item>([\s\S]*?)<\/item>/g)) {
+    const itemXml = m[1];
+    const linkMatch = itemXml.match(/<link>([\s\S]*?)<\/link>/);
+    const link = linkMatch ? linkMatch[1].trim() : "";
+    if (!categoryPattern.test(link)) continue; // no es de una sección eclesial, saltar
 
-  if (!title) return null;
+    const title = extractTag(itemXml, "title");
+    if (!title) continue;
+    const description = extractTag(itemXml, "description");
+    const pubDateMatch = itemXml.match(/<pubDate>([\s\S]*?)<\/pubDate>/);
 
-  return {
-    title,
-    description,
-    link: linkMatch ? linkMatch[1].trim() : "",
-    pubDate: pubDateMatch ? pubDateMatch[1].trim() : "",
-  };
+    return {
+      title,
+      description,
+      link,
+      pubDate: pubDateMatch ? pubDateMatch[1].trim() : "",
+    };
+  }
+  return null;
 }
 
 export default async function handler(req, res) {
